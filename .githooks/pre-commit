@@ -22,7 +22,7 @@ fi
 
 # Strict mode only: block on a CRITICAL (Codex top-priority) finding.
 if [ "${CODEX_REVIEW_STRICT:-0}" = "1" ]; then
-  if printf '%s\n' "$output" | grep -Eiq '\[P1\]|\[CRITICAL\]'; then
+  if printf '%s\n' "$output" | grep -Eiq '\[P0\]|\[P1\]|\[CRITICAL\]'; then
     echo "[codex-review] STRICT: CRITICAL finding(s) — commit blocked. Fix, or bypass: git commit --no-verify"
     exit 1
   fi
