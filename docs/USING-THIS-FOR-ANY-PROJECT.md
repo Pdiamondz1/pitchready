@@ -44,7 +44,7 @@ how to do them by hand.
 
 Then **make it autonomous:** schedule the `maintenance-loop` skill (ingest → self-improve → advise) to
 run weekly so the system keeps itself current and proactively proposes project ideas without you.
-See `docs/SCHEDULING.md`; the advisor reads live usage data from the [metrics feed](docs/METRICS-FEED.md).
+See `docs/SCHEDULING.md`; the advisor reads live usage data from the [metrics feed](METRICS-FEED.md).
 
 ## The capability / infra ladder
 

@@ -72,8 +72,10 @@ live-metric or repeated evidence, lower for a one-off hunch. Sort highest-first;
 
 ### 5. Write the queue
 Append new ideas to today's `outputs/ideas-YYYY-MM-DD.md` using the anchor-line +
-indented-block contract below (**new ids, never renumber** existing items). Log each one
-`proposed` in `outputs/ideas-log.md`.
+indented-block contract below (**new ids, never renumber** existing items). When creating the
+file fresh, start it with RAG-ready frontmatter (`title`, `source_id: outputs:ideas-<date>`,
+`updated: <date>`), like the other `outputs/` files. Log each one `proposed` in
+`outputs/ideas-log.md`.
 
 ### 6. Promote approved
 For any `- [x]` idea from a prior queue, promote it by lane:
