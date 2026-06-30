@@ -1,0 +1,24 @@
+#!/bin/sh
+# codex-review pre-push hook (SAMPLE — opt-in). See .githooks/pre-commit for notes.
+if ! command -v codex >/dev/null 2>&1; then
+  exit 0
+fi
+
+base=$(git rev-parse --abbrev-ref --symbolic-full-name '@{upstream}' 2>/dev/null || echo "main")
+echo "[codex-review] reviewing changes vs $base..."
+output=$(codex review --base "$base" 2>&1)
+status=$?
+printf '%s\n' "$output"
+
+if [ "$status" -ne 0 ]; then
+  echo "[codex-review] codex unavailable (exit $status) — skipping gate."
+  exit 0
+fi
+
+if [ "${CODEX_REVIEW_STRICT:-0}" = "1" ]; then
+  if printf '%s\n' "$output" | grep -Eiq '\[P1\]|\[CRITICAL\]'; then
+    echo "[codex-review] STRICT: CRITICAL finding(s) — push blocked. Bypass: git push --no-verify"
+    exit 1
+  fi
+fi
+exit 0

@@ -1,0 +1,30 @@
+#!/bin/sh
+# codex-review pre-commit hook (SAMPLE — opt-in, advisory by default).
+# Activate:  git config core.hooksPath .githooks
+# Strict (block on CRITICAL):  export CODEX_REVIEW_STRICT=1
+# Bypass anytime:  git commit --no-verify
+#
+# Graceful-off: if codex isn't installed, do nothing.
+if ! command -v codex >/dev/null 2>&1; then
+  exit 0
+fi
+
+echo "[codex-review] reviewing staged changes..."
+output=$(codex review --uncommitted 2>&1)
+status=$?
+printf '%s\n' "$output"
+
+# Never block on a tooling/auth failure.
+if [ "$status" -ne 0 ]; then
+  echo "[codex-review] codex unavailable (exit $status) — skipping gate."
+  exit 0
+fi
+
+# Strict mode only: block on a CRITICAL (Codex top-priority) finding.
+if [ "${CODEX_REVIEW_STRICT:-0}" = "1" ]; then
+  if printf '%s\n' "$output" | grep -Eiq '\[P1\]|\[CRITICAL\]'; then
+    echo "[codex-review] STRICT: CRITICAL finding(s) — commit blocked. Fix, or bypass: git commit --no-verify"
+    exit 1
+  fi
+fi
+exit 0
