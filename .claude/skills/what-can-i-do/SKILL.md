@@ -19,6 +19,7 @@ everyone*).
 1. **Show a short, plain menu** — 4–5 everyday actions, no skill names or jargon. Tailor the
    wording to the project's type if you know it. A good default:
    - **Get clear on your project** — figure out its goal, who it's for, and what success looks like → runs `define-project`
+   - **Pressure-test an idea** — get a brutal second opinion before you build → runs `roast`
    - **Make it look great** — set your project's design: style, colors, and feel → runs `define-design`
    - **Add something** — save a note, a file, or a link → runs `add-new-resource`
    - **Find something** — search what you've saved so far → searches the knowledge base
