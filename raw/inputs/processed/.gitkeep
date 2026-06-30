@@ -1,0 +1,2 @@
+# raw/inputs/processed/ — clean per-session summaries of Claude Code history.
+# Written by the sync-claude-sessions skill. Immutable once written.

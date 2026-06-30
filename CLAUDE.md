@@ -1,0 +1,80 @@
+# CLAUDE.md — Project Foundation operating rules
+
+This repository is a **self-improving project foundation**. It pairs a file-based
+knowledge base (the "second brain") with Claude Code skills that grow and maintain it,
+plus a file-first AIOS web console (`aios/`) that surfaces it.
+
+These rules are load-bearing. Honor them in every session.
+
+## The three-folder knowledge system
+
+- **`raw/` — original, immutable assets.** Anything ingested lands here *unaltered*.
+  Never edit, rewrite, reorganize, rename, or delete anything inside `raw/`. It is
+  append-only: add new files, never mutate existing ones. `raw/` is the ground truth
+  everything else points back to.
+  - `raw/inputs/processed/` — clean per-session summaries of Claude Code history
+  - `raw/ecosystem/` — files, email, transcripts, and connected-source data
+  - `raw/curated/` — content pulled from tracked creators/publications
+
+- **`wiki/` — the AI-written table of contents over `raw/`.** Written and maintained
+  *only* by AI, never by hand. Every wiki page is a distilled, navigable index that
+  references the underlying `raw/` files it summarizes. Keep pages small and
+  cross-linked. Do not paste raw content here — reference it.
+  - `wiki/index.md` — the master index
+  - `wiki/sources.md` — creators/publications to track
+  - `wiki/_candidates/` — proposed wiki changes await sign-off here (see below)
+
+- **`outputs/` — generated reports and the self-improvement queues.**
+  - `outputs/change-log.md` — append-only ledger of applied changes
+  - `outputs/review-*.md` — NEEDS SIGN-OFF checkbox lists (do not apply until checked)
+  - `outputs/needs-context-*.md` — MORE CONTEXT questions for the human
+
+## Wiki page frontmatter (RAG-ready)
+
+Every `wiki/` page starts with YAML frontmatter so it can later be embedded into a
+vector store with no rework:
+
+    ---
+    title: <human title>
+    source_id: <stable id, e.g. wiki:index or raw/curated/2026-06-29-foo.md>
+    path: <what this page indexes, relative to repo root>
+    tags: [topic, topic]
+    updated: <YYYY-MM-DD>
+    ---
+
+## Approval discipline (how the system stays safe)
+
+- **Normal wiki maintenance is allowed directly.** Skills doing their job — e.g.
+  `add-new-resource` and the sync skills creating/updating topical index pages — write to
+  `wiki/` directly. What needs sign-off is *structural* change (reorganizing, merging or
+  renaming many pages, changing conventions) and any *new or edited skill*; those go to
+  `wiki/_candidates/` or `outputs/review-*.md` and wait.
+- The `improve-system` skill sorts every proposed change into one of three buckets:
+  - **AUTO-APPROVE** — low-risk fixes; apply directly and log to `outputs/change-log.md`.
+  - **NEEDS SIGN-OFF** — skill edits, new skills, structural rewrites, contradictions;
+    write to `outputs/review-*.md` as a checkbox list and wait.
+  - **MORE CONTEXT** — ambiguous calls; write to `outputs/needs-context-*.md` as questions.
+- **`review-*.md` item format.** Each item carries a stable id the GUI and the skill both
+  depend on; never renumber or rewrite existing pending items — append new ones:
+
+      - [ ] `rv-YYYYMMDD-NNN` — <concise change>  ·  target: <path>  ·  detail: <what changes>
+
+- **Write ownership.** `outputs/change-log.md` is an append-only ledger written *by skills*
+  when they apply a change (each line attributed to its skill, `auto` or `applied`). The
+  AIOS GUI never writes it — the GUI's *only* mutation is toggling a checkbox in
+  `outputs/review-*.md`, which `improve-system` reads on its next run.
+
+## Skills (the brain)
+
+Run any skill manually with zero arguments first; it interviews you before acting.
+
+- **`add-new-resource`** — add a file into `raw/`, then create/update the `wiki/`
+  entries that should reference it. *(available)*
+- Planned (later phases): `sync-claude-sessions`, `sync-ecosystem-data`,
+  `sync-curated-content`, `data-ingestion` (orchestrator), `improve-system`,
+  `human-improve-system`.
+
+## Pointers
+
+- Design spec: `docs/superpowers/specs/2026-06-29-hma-project-foundation-design.md`
+- The AIOS web console lives in `aios/` (file-first; reads this KB, writes only to `outputs/`).
