@@ -24,6 +24,7 @@ import matter from "gray-matter";
 import { handleIntelligenceApi } from "./intelligence";
 import { storeSearch } from "./kb/store";
 import { kbStatsSummary } from "./kb/reindex";
+import { parseIdeaItems, toggleIdeaCheckbox, type IdeaItem } from "./ideas";
 
 /* ─────────────────────────── KB root resolution ─────────────────────────── */
 
@@ -274,6 +275,24 @@ async function listReviews(): Promise<ReviewFilePayload[]> {
   return out;
 }
 
+interface IdeaFilePayload { file: string; title: string; items: IdeaItem[]; }
+
+async function listIdeas(): Promise<IdeaFilePayload[]> {
+  // listOutputFiles("ideas") ALSO matches the dedup ledger ideas-log.md (it
+  // starts with "ideas-"). Exclude it: it has no idea anchor lines, so it would
+  // render a spurious empty card AND keep `files` non-empty, making the page's
+  // EmptyState unreachable on a fresh clone.
+  const files = (await listOutputFiles("ideas")).filter((f) => f !== "ideas-log.md");
+  const out: IdeaFilePayload[] = [];
+  for (const file of files) {
+    const parsed = matter(await fs.readFile(path.join(OUTPUTS_DIR, file), "utf8"));
+    const data = parsed.data as Record<string, unknown>;
+    const title = typeof data.title === "string" ? data.title : file;
+    out.push({ file, title, items: parseIdeaItems(parsed.content) });
+  }
+  return out;
+}
+
 interface NeedsContextPayload {
   file: string;
   title: string;
@@ -500,6 +519,27 @@ export async function handleFileApi(
       }
       // Re-parse so the client gets the authoritative item state back.
       const item = parseReviewItems(matter(updated).content).find((i) => i.id === id) ?? null;
+      sendJson(res, 200, { ok: true, changed: updated !== original, item });
+      return true;
+    }
+
+    if (method === "GET" && route === "/api/outputs/ideas") {
+      sendJson(res, 200, { files: await listIdeas() });
+      return true;
+    }
+
+    if (method === "POST" && route === "/api/outputs/ideas/check") {
+      const body = await readJsonBody(req);
+      const file = String(body.file ?? "");
+      const id = String(body.id ?? "");
+      const checked = Boolean(body.checked);
+      if (!/^ideas-[^/\\]+\.md$/.test(file)) { sendJson(res, 400, { error: "Invalid ideas file." }); return true; }
+      const abs = path.join(OUTPUTS_DIR, file);
+      if (!existsSync(abs)) { sendJson(res, 404, { error: "Ideas file not found." }); return true; }
+      const original = await fs.readFile(abs, "utf8");
+      const updated = toggleIdeaCheckbox(original, id, checked);
+      if (updated !== original) await fs.writeFile(abs, updated, "utf8");
+      const item = parseIdeaItems(matter(updated).content).find((i) => i.id === id) ?? null;
       sendJson(res, 200, { ok: true, changed: updated !== original, item });
       return true;
     }
