@@ -35,6 +35,7 @@ Condense *wording*, never a *rule*; raise the line cap before dropping a directi
   - `outputs/review-*.md` — NEEDS SIGN-OFF checkbox lists (do not apply until checked)
   - `outputs/needs-context-*.md` — MORE CONTEXT questions for the human
   - `outputs/ideas-*.md` — ranked project ideas from the proactive advisor (approve by checkbox)
+  - `outputs/vetting/` — `roast` verdicts + `storm-research` briefings (indexed in `wiki/vetting.md`)
 
 ## Wiki page frontmatter (RAG-ready)
 
@@ -74,6 +75,8 @@ orchestrator's run log in `outputs/runs/data-ingestion.md`.
 - **`setup-project`** — specialize a fresh clone (brand, project type, capability tier, `aios/.env`); offers to schedule autonomy. Run this first after cloning.
 - **`define-project`** — interview that grills you into a clear **project charter** (`wiki/charter.md`): purpose, audience, success, scope; proposes options when unsure; re-run on a pivot. The north star other skills read.
 - **`define-design`** — interview that grills you into a **design system** (`wiki/design-system.md`, the look-and-feel north star Claude reads before building any UI): style, color, type, voice. Google Stitch–aware (manual default; optional MCP); offers to theme the console. See `docs/DESIGN-SYSTEM.md`.
+- **`roast`** — convene a 5-persona council that pressure-tests an idea, then a Judge returns one **GO / RESHAPE / KILL** verdict + the cheapest 48-hour test; saves the verdict to `outputs/vetting/` and can commission `storm-research`. Triggers: "roast" / "convene the council" / "brutal second opinion" / `/roast`.
+- **`storm-research`** — turn a topic or idea into a verified, multi-perspective HTML briefing (5 expert lenses → contradiction map → self-review + primary-source citation checks → `outputs/vetting/<date>-<slug>/`). Needs web; refuses rather than fabricates offline. See `docs/IDEA-VETTING.md`.
 - **`what-can-i-do`** — show a friendly menu of everyday actions for anyone unsure what to do next.
 - **`add-new-resource`** — add a file into `raw/`, then index it in `wiki/`.
 - **`sync-claude-sessions`** — summarize new `~/.claude/projects/` sessions → `raw/inputs/processed/`.
