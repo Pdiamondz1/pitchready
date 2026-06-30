@@ -4,7 +4,7 @@
  * changes (fetch → supabase.rpc), not these signatures.
  */
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { fileApi, type ReviewFile } from "@/lib/fileApi";
+import { fileApi, type IdeaFile, type ReviewFile } from "@/lib/fileApi";
 
 export function useStats() {
   return useQuery({ queryKey: ["kb", "stats"], queryFn: fileApi.stats });
@@ -65,6 +65,42 @@ export function useToggleReview() {
     },
     onSettled: () => {
       void qc.invalidateQueries({ queryKey: ["kb", "reviews"] });
+      void qc.invalidateQueries({ queryKey: ["kb", "stats"] });
+    },
+  });
+}
+
+export function useIdeas() {
+  return useQuery({ queryKey: ["kb", "ideas"], queryFn: fileApi.ideas });
+}
+
+/**
+ * Toggle an idea checkbox — the one GUI mutation for the Ideas surface.
+ * Optimistically flips the item in the cached idea list, rolls back on error,
+ * and on settle invalidates stats (open-count changes).
+ */
+export function useToggleIdea() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ file, id, checked }: { file: string; id: string; checked: boolean }) =>
+      fileApi.checkIdea(file, id, checked),
+    onMutate: async ({ file, id, checked }) => {
+      await qc.cancelQueries({ queryKey: ["kb", "ideas"] });
+      const previous = qc.getQueryData<IdeaFile[]>(["kb", "ideas"]);
+      qc.setQueryData<IdeaFile[]>(["kb", "ideas"], (old) =>
+        old?.map((idf) =>
+          idf.file === file
+            ? { ...idf, items: idf.items.map((it) => (it.id === id ? { ...it, checked } : it)) }
+            : idf
+        )
+      );
+      return { previous };
+    },
+    onError: (_err, _vars, ctx) => {
+      if (ctx?.previous) qc.setQueryData(["kb", "ideas"], ctx.previous);
+    },
+    onSettled: () => {
+      void qc.invalidateQueries({ queryKey: ["kb", "ideas"] });
       void qc.invalidateQueries({ queryKey: ["kb", "stats"] });
     },
   });
