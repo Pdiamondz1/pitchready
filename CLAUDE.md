@@ -6,10 +6,8 @@ plus a file-first AIOS web console (`aios/`) that surfaces it.
 
 These rules are load-bearing. Honor them in every session.
 
-**Maintaining this file:** CLAUDE.md loads every session, so keep it lean — invariants and
-pointers only; put elaboration, examples, and procedures in the referenced docs/skills.
-Condense *wording*, never a *rule*; if the invariants genuinely won't fit, raise the line
-cap rather than drop a directive.
+**Maintaining this file:** Keep it lean — invariants and pointers only; elaboration goes in docs/skills.
+Condense *wording*, never a *rule*; raise the line cap before dropping a directive.
 
 ## The three-folder knowledge system
 
@@ -21,6 +19,7 @@ cap rather than drop a directive.
   - `raw/ecosystem/` — files, email, transcripts, and connected-source data
   - `raw/curated/` — content pulled from tracked creators/publications
   - `raw/metrics/` — live usage snapshots (DAU etc.) the advisor reads
+  - `raw/project/` — `define-project` discovery record; the north star lives at `wiki/charter.md`
 
 - **`wiki/` — the AI-written table of contents over `raw/`.** Written and maintained
   *only* by AI, never by hand. Every wiki page is a distilled, navigable index that
@@ -72,6 +71,7 @@ skills are incremental: per-skill config (sources/filters) lives in the skill's 
 orchestrator's run log in `outputs/runs/data-ingestion.md`.
 
 - **`setup-project`** — specialize a fresh clone (brand, project type, capability tier, `aios/.env`); offers to schedule autonomy. Run this first after cloning.
+- **`define-project`** — interview that grills you into a clear **project charter** (`wiki/charter.md`): purpose, audience, success, scope; proposes options when unsure; re-run on a pivot. The north star other skills read.
 - **`what-can-i-do`** — show a friendly menu of everyday actions for anyone unsure what to do next.
 - **`add-new-resource`** — add a file into `raw/`, then index it in `wiki/`.
 - **`sync-claude-sessions`** — summarize new `~/.claude/projects/` sessions → `raw/inputs/processed/`.

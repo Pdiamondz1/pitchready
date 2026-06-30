@@ -75,7 +75,7 @@ Three folders do the work (all clickable):
 ## Make it your project
 
 This is meant to become *your* thing — a web or mobile app, a workflow, a portfolio or data
-manager, a research notebook. The easiest route is to let the **setup** step do it for you
+manager, a research notebook. Before you specialize it, run **[`define-project`](.claude/skills/define-project/SKILL.md)** — a short discovery interview that captures your goal, audience, and success in `wiki/charter.md` so the rest of the system has a north star. The easiest route is to let the **setup** step do it for you
 (it's part of [Start here](docs/START-HERE.md)). To go deeper, see
 [Using this for any project](docs/USING-THIS-FOR-ANY-PROJECT.md) and [Extending](docs/EXTENDING.md).
 

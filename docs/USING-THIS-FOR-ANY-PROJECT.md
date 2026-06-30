@@ -21,6 +21,8 @@ Nothing above assumes a domain. You make it *your* project by turning a few knob
 
 ## Specialize it in six moves
 
+**Define it first:** run **`define-project`** before specializing — a short discovery interview that captures your purpose, audience, and success criteria in `wiki/charter.md`, which `setup-project` will then read to pre-fill most questions.
+
 **Fast path:** run the **`setup-project`** skill — it does moves 1–2 for you (interviews you,
 then writes `project.ts`, `brand.ts`, `features.ts`, `index.html`, and scaffolds `aios/.env`
 for your chosen tier), and offers to schedule the loop. The moves below are what it sets, and

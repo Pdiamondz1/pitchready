@@ -191,3 +191,21 @@ pattern). It is propose-only and never applies changes — `improve-system` stay
 applier. It rides the `maintenance-loop` tick as step 3, so ideas accumulate on the same weekly
 schedule with no new scheduling needed. Full design:
 `docs/superpowers/specs/2026-06-30-proactive-project-advisor-design.md`.
+
+## Phase 8 addendum — Project discovery (`define-project`) (2026-06-30)
+
+The `define-project` skill ships a discovery-interview flow that grills the user — one
+question at a time, with proposed options and a recommended default when answers are thin —
+across five dimensions: purpose, audience, success, scope, and constraints. The raw Q&A
+record lands append-only in `raw/project/<YYYY-MM-DD>-discovery.md`; the distilled north
+star is written (or updated on a pivot) to `wiki/charter.md` and pinned at the top of
+`wiki/index.md`.
+
+Integration wired in this phase:
+- **`setup-project`** — charter check runs before the interview; pre-fills name/type/tagline
+  from the charter if present, or offers to run `define-project` first.
+- **`advise-project`** — "Project identity" signal now reads `wiki/charter.md` (richer
+  purpose/audience/success/constraints) when present, falling back to `project.ts`/`brand.ts`.
+- **`what-can-i-do`** — "Get clear on your project" is the first menu item.
+- **`CLAUDE.md`** — `define-project` listed in the skills index; `raw/project/` added to the
+  `raw/` subfolder list with a pointer to `wiki/charter.md` as the north star.
