@@ -43,10 +43,12 @@ interview can use the existing choices as defaults and focus only on what is cha
 Read behaviour from `.claude/skills/define-design/config.json` (all optional; never block on a
 missing file or key):
 
-- **`stitch_mode`** — `"manual"` (default; emit a paste-back prompt) or `"mcp"` (use the Stitch MCP).
-- **`default_archetype`** — a preferred style archetype to recommend first (`""` = infer from charter).
+- **`default_archetype`** — optional pre-pick of a style archetype (`""` = infer from charter); if set,
+  recommend it first in Phase 1.
 - **`theme_console`** — `true` to offer the opt-in console-theming step (Phase 7); `false` to skip the offer.
-- **`mcp_enabled`** — `false` by default; the MCP path self-skips to manual if this is off or no key is present.
+- **`mcp_enabled`** — the single Stitch toggle. Default `false` = the manual paste-back Stitch path. Set
+  `true` **and** put the Stitch/Google AI key in `aios/.env` to let Claude drive the Stitch MCP directly —
+  and even then it **gracefully falls back to the manual path** if the key or MCP is absent at runtime.
 
 ## Procedure
 
@@ -83,7 +85,8 @@ recommend the one that fits the charter:
 - **Bold / playful** — saturated, energetic (consumer apps).
 - **Professional / dashboard** — dense, precise, data-first (B2B, analytics — the AIOS console's current look).
 - **Elegant / premium** — refined, high-contrast, generous space (brand/luxury).
-Recommend the closest fit, then let them confirm or adjust.
+Recommend `default_archetype` from config if it's set; otherwise recommend the archetype that best
+fits the charter. Then let them confirm or adjust.
 
 **2. Color & mood**
 Ask for a palette seed, or offer "match my logo / brand words." Recommend a mood from the
@@ -113,9 +116,9 @@ targets, and any must-keep brand marks. This is often quick; "no constraints" is
 ### Phase 2 — Stitch step (tiered, graceful-off)
 
 **Default (no keys) — the manual paste-back path.** Assemble a **ready-to-paste Stitch prompt**
-from the interview, plus a `DESIGN.md` scaffold. Direct the user to `stitch.withgoogle.com`,
-have them generate and iterate on the design there, then drop the export (Stitch's `design.md`
-plus any screenshots) into the dated `raw/design/` folder for this run. **If the user skips
+from the interview. Direct the user to `stitch.withgoogle.com`, have them generate and iterate on
+the design there, then drop the export (Stitch's `design.md` plus any screenshots) into the dated
+`raw/design/` folder for this run. **If the user skips
 Stitch entirely, synthesize the system from the interview alone** — Stitch is an accelerator,
 not a dependency.
 
@@ -193,7 +196,11 @@ an explicit yes**, edit exactly two files — never more:
 
 - **`aios/src/index.css`** — regenerate the `:root` (light) and `.dark` HSL color tokens from the
   design system's palette. This is **new logic**: **preserve the file's comments and structure,
-  changing only the token *values*** (the `--token: H S% L%` triplets).
+  changing only the token *values*** (the `--token: H S% L%` triplets). When applying, also
+  re-derive and sanity-check the **paired contrast tokens** against the new palette — the
+  `*-foreground` pairs (`--primary-foreground`, `--secondary-foreground`, `--accent-foreground`,
+  `--muted-foreground`, `--card-foreground`) plus `--popover` / `--popover-foreground` — so text
+  stays legible on every surface after a strong palette change.
 - **`aios/src/config/brand.ts`** — update `productName` / `tagline` / the assistant words **only
   if** the voice changed.
 
