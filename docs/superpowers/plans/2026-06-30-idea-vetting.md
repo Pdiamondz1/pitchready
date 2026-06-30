@@ -142,7 +142,8 @@ to:
 
 - [ ] **Step 6: Adaptation B (cont.) — remap the Output section and add KB indexing**
 
-Replace the entire `## Output` section with:
+Replace the `## Output` section — from the `## Output` heading up to (but **not** including) the next
+heading `## Notes & guardrails` — with:
 ```markdown
 ## Output
 
@@ -385,15 +386,20 @@ git commit -m "docs(idea-vetting): add IDEA-VETTING.md (council/STORM design, we
 - [ ] **Step 1: Definition of done**
 ```bash
 grep -q "brutal second opinion" .claude/skills/define-project/SKILL.md && echo GATE_OK
-grep -q "## Vetting" .claude/skills/define-project/SKILL.md && echo CHARTER_OK
+grep -q "^## Vetting" .claude/skills/define-project/SKILL.md && echo CHARTER_OK   # column-0 heading = the charter template, NOT the gate prose (which has it inline in backticks)
 ```
 Expect: `GATE_OK CHARTER_OK`.
 
 - [ ] **Step 2: Add the optional roast offer at the draft-confirm gate**
 
-In the `#### Draft-confirm gate` subsection, **after** the line
-`Only proceed to Phase 2 after the user confirms (or makes corrections — then show the updated draft and confirm again).`
-and before the following `---`, insert:
+Insert the new subsection at the **end of the `#### Draft-confirm gate` subsection**, immediately
+before the `---` that precedes `### Phase 2 — Write the raw record`. The gate ends with this sentence,
+which is **wrapped across two lines** in the real file (match it verbatim — do not collapse to one line):
+
+    Only proceed to Phase 2 after the user confirms (or makes corrections — then show the
+    updated draft and confirm again).
+
+Insert the following between that sentence and the `---`:
 ```markdown
 
 #### Optional: roast the idea before locking it in
@@ -407,8 +413,8 @@ Right after the user confirms the draft (and before Phase 2), offer one optional
 - **On yes:** run the `roast` skill on the project idea. When it returns, fill the charter's
   `## Vetting` section with the verdict + a link to the `outputs/vetting/<date>-<slug>/` folder. If the
   verdict is RESHAPE or KILL, surface it and ask whether they want to adjust the charter before writing it.
-- **On skip/no:** proceed exactly as today; the charter's `## Vetting` line stays
-  `Not yet vetted — run `roast` any time for a second opinion.`
+- **On skip/no:** proceed exactly as today; the charter's `## Vetting` line keeps its default
+  ("Not yet vetted — run `roast` for a second opinion").
 ```
 
 - [ ] **Step 3: Add the `## Vetting` section to the charter template**
@@ -470,7 +476,7 @@ The clause is additive, scoped to on-demand, and explicitly never auto-runs in t
 propose-only safety invariants are unchanged.
 ```bash
 grep -q "Never auto-run a roast" .claude/skills/advise-project/SKILL.md && echo CLAUSE_OK
-grep -c "propose-only" .claude/skills/advise-project/SKILL.md   # expect: unchanged (still present, invariants intact)
+grep -c "propose-only" .claude/skills/advise-project/SKILL.md   # expect: 3 (was 2; the new clause adds one mention — invariants intact)
 ```
 Expect: `CLAUSE_OK`.
 
