@@ -104,6 +104,33 @@ gh repo edit <you>/my-new-project \
   --add-topic claude-code,ai-agents,knowledge-base,second-brain
 ```
 
+## Updating from the foundation later
+
+A project created from this template is a **snapshot**, not a live dependency — there's no
+git link back. So:
+
+- **New projects** you create *after* the foundation is updated start from the newer snapshot
+  automatically.
+- **Existing projects** stay frozen at the day you created them; foundation updates do **not**
+  flow in on their own.
+
+To pull a specific foundation update into an existing project, do it manually — cherry-pick the
+files you want rather than merging the whole thing:
+
+```
+# inside the existing project
+git remote add foundation https://github.com/Pdiamondz1/hma_project_foundation.git
+git fetch foundation
+# bring over just what you want, e.g. a new skill + doc:
+git checkout foundation/main -- .claude/skills/maintenance-loop docs/SCHEDULING.md
+git commit -m "chore: pull maintenance-loop + scheduling from foundation"
+```
+
+Rule of thumb: **new self-contained pieces** (a whole new skill folder, a new doc) backport
+cleanly. **Edits to files you've rebranded** (`aios/src/config/brand.ts`, `CLAUDE.md`, etc.)
+will conflict — pull those by hand. A full `git merge foundation/main` works too but tends to
+fight your specialization, so prefer the targeted `checkout` above.
+
 ## When you want more
 
 - `docs/USING-THIS-FOR-ANY-PROJECT.md` — fuller mental model + project-type recipes.
