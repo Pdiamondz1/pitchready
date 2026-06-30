@@ -44,14 +44,17 @@ This repo is the template. To use it for a new project:
 
 The operating rules in `CLAUDE.md` load automatically every session.
 
+**New here?** Follow the simple step-by-step in **`docs/NEW-PROJECT-WALKTHROUGH.md`**.
+
 ## Make it your project
 
 This foundation is meant to be cloned and specialized into anything — a web/mobile app, a
 workflow, a portfolio or data manager, a research second-brain. The fastest path is the
-**`setup-project`** skill (it does the specialization for you). For the mental model and the
-extension points, read **`docs/USING-THIS-FOR-ANY-PROJECT.md`** (the capability/infra ladder),
-**`docs/EXTENDING.md`** (concrete "add a skill / source / agent tool / surface / store" steps),
-and **`docs/SCHEDULING.md`** (run the self-improving loop on its own).
+**`setup-project`** skill (it does the specialization for you). For the step-by-step, read
+**`docs/NEW-PROJECT-WALKTHROUGH.md`**. For the mental model and the extension points, read
+**`docs/USING-THIS-FOR-ANY-PROJECT.md`** (the capability/infra ladder), **`docs/EXTENDING.md`**
+(concrete "add a skill / source / agent tool / surface / store" steps), and
+**`docs/SCHEDULING.md`** (run the self-improving loop on its own).
 
 The intelligence layer is **opt-in and graceful**: with no `aios/.env` the console runs
 zero-config (file-first + keyword search); add an `ANTHROPIC_API_KEY` for the live agent,
