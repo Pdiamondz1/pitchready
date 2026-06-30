@@ -253,3 +253,6 @@ Example:
 >
 > 2 items marked "assumed — confirm later": tech stack preference; launch deadline.
 > Re-run define-project any time the project pivots or those assumptions resolve.
+
+Next, let's define how it **looks** — run `define-design` to capture your design system
+(`wiki/design-system.md`).

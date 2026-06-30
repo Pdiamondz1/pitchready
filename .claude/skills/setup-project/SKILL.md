@@ -28,6 +28,8 @@ deeper options only to someone who wants them.
 
 **Charter check (do this first).** Before the numbered questions, check whether `wiki/charter.md` exists. If it does not, offer: *"Want to get clear on your project's goal first? It only takes a few minutes and makes the rest easier. (recommended)"* — if yes, run `define-project` first, then read the resulting charter to pre-fill question 1 below (name, `projectType`, tagline, one-liner — the user confirms or tweaks each value). If a charter is already present, read it now and pre-fill from it. Proceed normally if the user declines — setup-project works fine without one.
 
+**Design check.** A separate, optional check beside the charter one. Look for `wiki/design-system.md`. If it does not exist, offer: *"Want to set how your project looks, too? (recommended) — it takes a few minutes and keeps your UI from looking generic"* — if yes, run `define-design`. If it already exists, offer to theme the console from it (via `define-design`'s opt-in theming). Either way, keep it light, never collect the Stitch (or any) key in chat, and proceed normally if the user declines — brand words and colors below still default as they do today.
+
 1. **Project name + one line on what you're building** → `productName`, `tagline`, and a
    short `projectType` slug (e.g. `portfolio-manager`, `research-vault`, `web-app`).
 2. **Assistant name + persona** (optional; defaults: name "Ada", persona "a knowledge-base
