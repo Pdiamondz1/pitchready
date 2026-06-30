@@ -44,7 +44,10 @@ This repo is the template. To use it for a new project:
 
 The operating rules in `CLAUDE.md` load automatically every session.
 
-**New here?** Follow the simple step-by-step in **`docs/NEW-PROJECT-WALKTHROUGH.md`**.
+**Not technical?** Start with **`docs/START-HERE-NON-TECHIE.md`** — a plain-language guide (no
+terminal, no commands; you just talk to the Claude Code app).
+
+**Comfortable with the basics?** Follow the step-by-step in **`docs/NEW-PROJECT-WALKTHROUGH.md`**.
 
 ## Make it your project
 
