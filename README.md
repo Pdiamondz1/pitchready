@@ -38,6 +38,7 @@ Four things, built in from day one:
 - 📈 **Self-learning** — repeated work turns into reusable, saved know-how.
 - 🩹 **Self-healing** — it spots and proposes fixes, and **always asks before** changing anything important.
 - 💡 **Proactive advisor** — it reads your usage data and proactively proposes improve, scale, and maintain ideas for you to approve (see [metrics feed](docs/METRICS-FEED.md)).
+- 🎨 **Designed, not generic** — a guided design step (Google Stitch–aware) captures your look-and-feel so what you build looks intentional, not AI-default.
 
 ---
 
@@ -75,7 +76,7 @@ Three folders do the work (all clickable):
 ## Make it your project
 
 This is meant to become *your* thing — a web or mobile app, a workflow, a portfolio or data
-manager, a research notebook. Before you specialize it, run **[`define-project`](.claude/skills/define-project/SKILL.md)** — a short discovery interview that captures your goal, audience, and success in `wiki/charter.md` so the rest of the system has a north star. The easiest route is to let the **setup** step do it for you
+manager, a research notebook. Before you specialize it, run **[`define-project`](.claude/skills/define-project/SKILL.md)** — a short discovery interview that captures your goal, audience, and success in `wiki/charter.md` so the rest of the system has a north star. Then run **[`define-design`](.claude/skills/define-design/SKILL.md)** to capture how it should *look* — a design system in `wiki/design-system.md` so your UI isn't generic. The easiest route is to let the **setup** step do it for you
 (it's part of [Start here](docs/START-HERE.md)). To go deeper, see
 [Using this for any project](docs/USING-THIS-FOR-ANY-PROJECT.md) and [Extending](docs/EXTENDING.md).
 
@@ -108,3 +109,6 @@ The technical reference — skip this if you just want to use it.
 - Phase 4 — optional intelligence layer (semantic search + Anthropic agent) ✅
 - Phase 5 — guided `setup-project` + autonomous `maintenance-loop` (scheduling) ✅
 - Phase 6 — `advise-project` proactive advisor (propose-only, rides `maintenance-loop` tick) ✅
+- Phase 7 — optional `codex-review` cross-model code-review gate (graceful-off) ✅
+- Phase 8 — `define-project` discovery interview → project charter (`wiki/charter.md`) ✅
+- Phase 9 — `define-design` design-discovery + design system (`wiki/design-system.md`, Google Stitch–aware) ✅

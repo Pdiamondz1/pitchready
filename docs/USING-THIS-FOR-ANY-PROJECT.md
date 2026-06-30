@@ -23,6 +23,8 @@ Nothing above assumes a domain. You make it *your* project by turning a few knob
 
 **Define it first:** run **`define-project`** before specializing — a short discovery interview that captures your purpose, audience, and success criteria in `wiki/charter.md`, which `setup-project` will then read to pre-fill most questions.
 
+**Then define how it looks:** run **`define-design`** — a design-discovery interview that captures your style, palette, and voice in `wiki/design-system.md` (the look-and-feel north star), is Google Stitch–aware, and can theme the console.
+
 **Fast path:** run the **`setup-project`** skill — it does moves 1–2 for you (interviews you,
 then writes `project.ts`, `brand.ts`, `features.ts`, `index.html`, and scaffolds `aios/.env`
 for your chosen tier), and offers to schedule the loop. The moves below are what it sets, and
@@ -67,6 +69,8 @@ If a key or service isn't present, the system **degrades gracefully** — e.g. n
 back to BM25. You can never end up with a broken console because you skipped a tier.
 
 **Optional capability:** `codex-review` adds cross-model code review (needs the Codex CLI + OpenAI auth) and can surface CRITICAL findings as sign-off items in the maintenance loop — see `docs/CODE-REVIEW.md`.
+
+**Optional capability:** the **Stitch MCP** lets `define-design` generate and pull UI designs from Google Stitch directly (needs a Google AI key in `aios/.env`); without it, `define-design` works fully in manual mode — see `docs/DESIGN-SYSTEM.md`.
 
 ## Recipes by project type
 

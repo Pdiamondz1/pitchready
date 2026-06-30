@@ -209,3 +209,12 @@ Integration wired in this phase:
 - **`what-can-i-do`** — "Get clear on your project" is the first menu item.
 - **`CLAUDE.md`** — `define-project` listed in the skills index; `raw/project/` added to the
   `raw/` subfolder list with a pointer to `wiki/charter.md` as the north star.
+
+## Phase 9 addendum — Design discovery (`define-design`) (2026-06-30)
+
+Phase 9 adds the design layer: the `define-design` skill grills the user into a **design
+system** (`wiki/design-system.md`, the look-and-feel north star Claude reads before building
+any UI) covering style, color, type, and voice, with append-only Stitch exports landing in
+`raw/design/`. It is Google Stitch–aware (manual default; optional Stitch MCP when a Google
+AI key is present) and offers to theme the console. Full design:
+`docs/superpowers/specs/2026-06-30-define-design-design.md`.
