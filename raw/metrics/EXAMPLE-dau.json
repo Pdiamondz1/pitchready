@@ -1,0 +1,14 @@
+{
+  "captured_at": "2026-06-29T00:00:00Z",
+  "metrics": {
+    "dau": 100,
+    "wau": 420,
+    "mau": 1200,
+    "d1_retention": 0.22,
+    "d7_retention": 0.09,
+    "signups": 35,
+    "errors": 12,
+    "feature_usage": { "search": 540, "upload": 88 }
+  },
+  "notes": "Example only. Files named EXAMPLE* are ignored by advise-project. Drop real dated snapshots like 2026-06-29-dau.json beside this one."
+}
