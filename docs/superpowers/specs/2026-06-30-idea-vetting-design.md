@@ -30,7 +30,10 @@ credited in `docs/IDEA-VETTING.md`:
    verdict (markdown) and the storm HTML save to the KB; the wiki page indexes vetted ideas.
 3. **Wiring → `define-project` gate + `what-can-i-do` menu + `CLAUDE.md` (+ a light `advise-project`
    touch).** (Rejected: standalone-only; deep wiring into setup-project too.)
-4. **`CLAUDE.md` line cap raised from `<100` to `<125`** (user-approved breathing room).
+4. **`CLAUDE.md` working line cap raised to `<125`** (user-approved breathing room). Note: the cap is
+   a convention tracked in these specs, not a literal string in `CLAUDE.md` (its "Maintaining this
+   file" note says only "raise the line cap before dropping a directive") — so the build simply keeps
+   the file under 125 lines; there is no `<100` to edit.
 
 **Intended outcome.** A fresh clone's idea no longer goes straight to build: it gets roasted (a
 brutal council verdict + the cheapest 48-hour test) and, on request, a verified multi-perspective
@@ -95,15 +98,16 @@ read · the cheapest 48-hour test · the RESHAPE pivot) + the one-line council s
    a few minutes, needs web access)."* On yes **and web available** → run `storm-research` on the idea
    so its HTML lands in the **same** `outputs/vetting/<date>-<slug>/` folder → the Judge folds the
    briefing's findings/contradictions into (or appends them to) the verdict.
-3. **Graceful-off.** The Researcher persona degrades to reasoning-only when web is unavailable (its
-   existing design); the storm offer is skipped with a one-line note when web is unavailable.
+3. **Graceful-off.** When web is unavailable the Researcher persona degrades to reasoning-only (a
+   Tier-0 adaptation — the source prompt assumes web search), and the storm offer is skipped with a
+   one-line note. roast still returns a full verdict.
 
 Zero-argument safe (no args → ask the brief questions). No API keys; nothing collected in chat.
 
 ## The `storm-research` skill
 
-`.claude/skills/storm-research/{SKILL.md, storm-research-report-template.html}` — embed
-`storm-research-SKILL.md` + its HTML template faithfully: the 4-phase pipeline (5 expert lenses —
+`.claude/skills/storm-research/{SKILL.md, report-template.html}` — embed `storm-research-SKILL.md` +
+its HTML template faithfully: the 4-phase pipeline (5 expert lenses —
 Practitioner / Academic / Skeptic / Economist / Historian — in **parallel** with their exact return
 contracts → contradiction map → **clone the template, keep its `<style>` verbatim**, fill every
 section → adversarial self-review + **parallel primary-source citation verification** with
@@ -117,10 +121,17 @@ rules (no invented studies/numbers/URLs; verify against the primary source, not 
    `storm-reports/`), update `wiki/vetting.md`, and append one attributed `change-log.md` line. Keep
    the **best-effort** auto-open (`start "" <path>` on Windows) — never block on it.
 2. **Graceful-off web guard (critical).** `storm-research` REQUIRES the built-in web tools
-   (WebSearch/WebFetch; no key). Add an explicit **Phase 0 guard**: if web access is unavailable,
-   **STOP and say so** ("storm-research needs web access to find and verify primary sources —
-   unavailable now; try again with web, or use `roast` for a reasoning-only take") rather than
-   inventing sources. This upholds the foundation's never-fabricate ethos.
+   (WebSearch/WebFetch; no key). Add a **pre-flight web check that runs first — at the very top of
+   Phase 0, before the source's scope-the-topic step**: if web access is unavailable, **STOP and say
+   so** ("storm-research needs web access to find and verify primary sources — unavailable now; try
+   again with web, or use `roast` for a reasoning-only take") rather than inventing sources. This
+   upholds the foundation's never-fabricate ethos.
+
+**Packaging note (template filename).** The source `storm-research-SKILL.md` reads
+`report-template.html` from its own folder (Phase 3 step 1), so ship the cloned template under that
+exact name — `.claude/skills/storm-research/report-template.html` — and keep the SKILL.md's read
+reference verbatim. (The source package stores it as `storm-research-report-template.html`; renaming
+on embed is what makes the faithfully-copied skill find its template at runtime.)
 
 Zero-argument safe (accepts a `[topic]` or asks one line; one-line scoping only).
 
@@ -138,18 +149,21 @@ Zero-argument safe (accepts a `[topic]` or asks one line; one-line scoping only)
 
 ## Wiring (the gate)
 
-- **`define-project`** — at the **draft-confirm gate** (end of Phase 1, before Phase 2 writes the
-  charter), add an optional step: *"Before we lock this in, want a brutal second opinion on the core
+- **`define-project`** — at the **draft-confirm gate** (end of Phase 1, before the raw record and
+  charter are written in Phases 2–3), add an optional step: *"Before we lock this in, want a brutal second opinion on the core
   idea? (runs `roast`)."* On yes → run `roast`; then record a one-line **`## Vetting`** section in the
   charter template (the verdict + the `outputs/vetting/<slug>/` path). Declining is fine — the skill
   works exactly as today.
 - **`what-can-i-do`** — new menu item: *"Pressure-test an idea — get a brutal second opinion before
   you build → runs `roast`."*
-- **`advise-project`** *(light)* — one additive clause: a high-weight idea may be `roast`ed before it
-  is promoted to a brief. **No change** to scoring, lenses, or the propose-only invariants.
+- **`advise-project`** *(light)* — one additive clause: when a high-weight idea is approved/acted on,
+  it may be `roast`ed (attended, on-demand) before it is promoted to a brief. The roast is **never
+  auto-spawned inside the unattended `maintenance-loop` tick** — `advise-project` stays propose-only
+  and unattended. **No change** to scoring, lenses, or the propose-only invariants.
 - **`CLAUDE.md`** — add two Skills bullets (`roast`, `storm-research`); add `outputs/vetting/` to the
-  `outputs/` section and note `wiki/vetting.md`; **raise the "Maintaining this file" cap from `<100`
-  to `<125` lines** and keep the file under 125. Detail lives in `docs/IDEA-VETTING.md`.
+  `outputs/` section and note `wiki/vetting.md`; **keep the file under the `<125`-line working cap**
+  (currently 99 lines; the cap is a convention, not a literal in the file — no `<100` string to
+  change). Detail lives in `docs/IDEA-VETTING.md`.
 - **`docs/IDEA-VETTING.md`** *(new)* — the council/lens design, the storm pipeline, the **web
   requirement + graceful-off**, where artifacts land, the "vet before you build" workflow, and
   provenance/credit (the source packages + the two video links). **`README.md` /
@@ -170,8 +184,8 @@ Zero-argument safe (accepts a `[topic]` or asks one line; one-line scoping only)
 ## Files
 
 **Create:** `.claude/skills/roast/SKILL.md`, `.claude/skills/storm-research/SKILL.md`,
-`.claude/skills/storm-research/storm-research-report-template.html`, `outputs/vetting/.gitkeep`,
-`docs/IDEA-VETTING.md`.
+`.claude/skills/storm-research/report-template.html` (the source template, renamed to the name the
+SKILL.md reads), `outputs/vetting/.gitkeep`, `docs/IDEA-VETTING.md`.
 (`wiki/vetting.md` and `outputs/vetting/<date>-<slug>/…` are written by the skills at runtime, not
 shipped.)
 
@@ -193,14 +207,16 @@ shipped.)
   `outputs/vetting/<slug>/` and has the **Phase 0 web guard (refuse-don't-fabricate)**.
 - **Wiring:** `define-project` offers the roast at the draft gate and records the charter `## Vetting`
   line; `what-can-i-do` shows the item; the `advise-project` change is additive only (no scoring/lens
-  edits); `wc -l CLAUDE.md` **< 125** with the two bullets and the cap line bumped to `<125`;
+  edits); `wc -l CLAUDE.md` **< 125** with the two bullets added (the `<125` cap is a working
+  convention, not an edited string);
   README/USING mention it; the design-spec addendum points here.
 - **Graceful-off:** with no web, storm refuses cleanly (no fabricated citations) and roast still
   produces a verdict (Researcher reasoning-only). No key is requested anywhere.
 - **No pollution:** `git status` clean aside from the intended files; **no real `wiki/vetting.md`, no
   `outputs/vetting/<date>-…` run** committed (only `outputs/vetting/.gitkeep`); `improve-system`
-  unchanged (still the single applier / change-log writer); do **not** run a real roast/storm against
-  this repo.
+  unchanged (still the single applier for the self-improvement lanes — roast/storm write their own
+  `auto` change-log lines, exactly as `define-project`/`define-design` already do); do **not** run a
+  real roast/storm against this repo.
 
 ## Out of scope (v1)
 
