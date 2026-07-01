@@ -320,3 +320,40 @@ rewired and no skill's attended behavior is touched** — `maintenance-loop`, `i
 additive notes only. This fleet is the foundation the next slice stands on: **autopilot (Phase 15) is
 sequenced next and will delegate to these agents** rather than inventing its own. Full design:
 `docs/superpowers/specs/2026-07-01-subagent-fleet-design.md`; how-to: `docs/SUBAGENTS.md`.
+
+## Phase 15 addendum — The `autopilot` capstone (2026-07-01)
+
+Phase 15 adds `autopilot`, the capstone skill that collapses the whole define→vet→design→build journey
+into **one goal, one grill, one confirm** — removing the friction that made the *user* the orchestrator of
+five separate interviews and confirm gates. It is **attended-started, hands-off-executed**: a human types
+the goal and gives a single plan-confirm, and after that it runs to completion untouched. The procedure
+front-loads **all** the engagement into Phase A — one concentrated grill (ten dimensions across project /
+design / target, each question proposing 2–4 options + a recommended default, capped at
+`grill_round_cap` rounds so a thin answer becomes a flagged assumption rather than a blocking loop) —
+then runs the UPFRONT confidence chain autonomously: `define-project` writes `wiki/charter.md` from the
+consolidated `intake.md`, `roast` convenes its 5-persona council to VET the charter into a
+**GO / RESHAPE / KILL** verdict, and (web-gated, graceful-off) `storm-research` RESEARCHES the vetted idea
+into a citation-verified briefing — so the **one stop is a KILL verdict, and it surfaces *before* the
+confirm** (reshape / proceed-anyway / stop, while the human is still present), a non-KILL RESHAPE being
+auto-adopted. Phase B shows a single vetted + researched `plan.md` and asks once; that lone gate
+**satisfies each build skill's own confirm gate**, and Phase C then runs `define-design` →
+`build-<target>` **hands-off** (offline scaffold, no `npm install`), halting only on a genuine failure.
+The wiring into the existing pipeline is **additive**: each of the seven sub-skills
+(`define-project`, `roast`, `storm-research`, `define-design`, `build-app`/`-mobile`/`-plugin`) gains a
+`## Autonomous invocation (driven by `autopilot`)` note — infer the recommended defaults, flag each
+`(assumed — confirm later)` and report it upward, skip its own interview/confirm gate, hand the KILL/RESHAPE
+decision to `autopilot` — with **every skill's attended interview and gates left byte-for-byte unchanged**
+(the note mirrors the sync skills' `## Unattended invocation` note). A **decision ledger** under
+`outputs/autopilot/<date>-<slug>/` (`intake.md` · `plan.md` · `decisions.md` · `run.md`, run-state in
+`outputs/runs/autopilot.json`) records every autonomous call with stable `ap-YYYYMMDD-NNN` ids, shifting
+approval from **approve-before-each-step to decide-then-review-after**. Autopilot **delegates its grunt
+work to the Phase 14 `.claude/agents/` fleet** (research lenses → `web-researcher`, etc.) rather than
+inventing its own workers, and reconciles the `build-*` "never unattended" rule cleanly: that rule is
+about the cron loop, so `autopilot` is **user-initiated and NEVER added to `maintenance-loop`** — the
+unattended tick never chains into it or the build skills. It stays **Tier 0** (mock/local data, no
+backend, keys, or accounts; nothing collected in chat), and it **writes no `change-log.md` line of its
+own** — the sub-skills write their own provenance and `improve-system` remains the single applier, with
+`raw/` immutable and only the run folder + the sub-skills' canonical artifacts touched. Deferred to later
+tiers: looping `improve-system`/`advise-project` into the run, multi-target builds in one pass,
+deeper/keyed (Tier 1+) builds, and a silent no-grill mode for the confident user. Full design:
+`docs/superpowers/specs/2026-07-01-autopilot-design.md`; how-to: `docs/AUTOPILOT.md`.
