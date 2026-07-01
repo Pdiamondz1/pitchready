@@ -1,6 +1,6 @@
 ---
 name: autopilot
-description: Use when someone asks to "build my whole project", "do the whole thing for me", "take it from here", "set it and forget it", "run it on autopilot", "build it end-to-end", or says "/autopilot". The capstone — describe your goal once, get grilled once, confirm one vetted + researched plan, then it runs define-project → roast → storm-research → define-design → build (one or more of web/mobile/plugin) hands-off, pausing only on a KILL verdict. User-initiated, then hands-off. Delegates grunt work to the .claude/agents/ fleet. Tier 0 (mock/local data — no backend, keys, or accounts). Attended-started — NEVER runs in the unattended maintenance loop. Zero-argument safe.
+description: Use when someone asks to "build my whole project", "do the whole thing for me", "take it from here", "set it and forget it", "run it on autopilot", "build it end-to-end", or says "/autopilot". The capstone — describe your goal once, get grilled once, confirm one vetted + researched plan, then it runs define-project → roast → storm-research → define-design → build (one or more of web/mobile/plugin) hands-off, pausing only on a KILL verdict, then propose ranked next moves for the project (propose-only). User-initiated, then hands-off. Delegates grunt work to the .claude/agents/ fleet. Tier 0 (mock/local data — no backend, keys, or accounts). Attended-started — NEVER runs in the unattended maintenance loop. Zero-argument safe.
 argument-hint: "[describe your goal in one line, or leave blank and I'll ask]"
 ---
 
@@ -129,6 +129,20 @@ it includes the one-time install): `app/` → `cd app && npm install && npm run 
 && npm install && npm run start`, then scan the Expo Go QR; `plugin/` → `cd plugin && npm install && npm run
 build`, then Chrome → **Load unpacked** `plugin/dist`. Approval has
 shifted from approve-before-each-step to **decide-then-review-after**.
+
+### Phase E — Post-build advise ("what's next")
+
+The final step. After the build (Phase C) and the hand-over (Phase D), if `config.advise_after_build`
+(default `true`), run **`advise-project`** in a **post-build focus** — ground it on the just-built project:
+the charter's `Later`/`Out` deferred items (→ `scale`/`improve` ideas), the decision ledger's
+`(assumed — confirm later)` flags (→ `maintain`/validate ideas), the build record (`raw/builds/` + the
+run's `plan.md`/`run.md` + per-target outcomes → what exists now), and the deferred tiers (real data,
+deploy, more targets → next-step ideas). It files a ranked "what's next" list to `outputs/ideas-*.md`
+exactly as normal. **Propose-only and hands-off** — nothing is applied, so there is **no confirm gate**;
+`improve-system` stays the single applier. Log the pass to `run.md`, then close by pointing the user at the
+ideas: *"And here's what I'd tackle next — a ranked list in `outputs/ideas-*.md`; approve any you like
+(nothing changes until you do)."* (The `raw/metrics/` usage feed is empty for a fresh build — that's
+expected; ground on the charter/ledger/build-record instead.)
 
 ## The decision ledger + run record
 
