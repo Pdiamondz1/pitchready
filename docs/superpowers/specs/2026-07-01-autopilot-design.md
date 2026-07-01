@@ -102,8 +102,10 @@ autopilot", "build it end-to-end", `/autopilot`. Zero-argument safe.
    **Target (1)** web(`app/`)/phone(`mobile/`)/extension(`plugin/`). Follow-ups capped at
    `grill_round_cap`; anything still thin → recommended default flagged `(assumed — confirm later)` → the
    ledger. **Exit heuristic (encode as a checklist):** all 10 dims answered-or-defaulted, a target
-   chosen, no unresolved scope-changing either/or.
-2. **`define-project` (autonomous)** → writes `wiki/charter.md` + `raw/project/<date>-discovery.md` from
+   chosen, no unresolved scope-changing either/or. At the end of the grill, `autopilot` writes the gathered
+   project/design/target answers to `outputs/autopilot/<date>-<slug>/intake.md` — the consolidated intake
+   the Phase A sub-skills read (the confirmed `plan.md` comes later, at Phase B).
+2. **`define-project` (autonomous)** → reads `intake.md`, then writes `wiki/charter.md` + `raw/project/<date>-discovery.md` from
    the gathered answers (no interview, no draft-gate, no roast-offer — autopilot owns vetting).
 3. **`roast` (autonomous) → vet the charter.** Skips the 4Q brief, convenes the 5-persona council, Judge
    returns **GO/RESHAPE/KILL** + cheapest 48h test → `outputs/vetting/<date>-<slug>/roast-verdict.md` +
@@ -150,23 +152,28 @@ and the one-command preview path for the target.
 Add ONE new `## Autonomous invocation` H2 to `define-project`, `roast`, `storm-research`, `define-design`,
 `build-app`, `build-mobile`, `build-plugin` — mirroring the sync skills' existing `## Unattended
 invocation` note. **Attended behavior above it is byte-for-byte unchanged.** Shared preamble: *when
-invoked by `autopilot`, don't open your interview; read the consolidated plan
-(`outputs/autopilot/<date>-<slug>/plan.md`) + north-stars; infer/pick your recommended defaults, flag
+invoked by `autopilot`, don't open your interview; read the consolidated intake
+(`outputs/autopilot/<date>-<slug>/intake.md`, written at the end of the grill — and, once Phase B has
+written it, the confirmed `plan.md`) + north-stars; infer/pick your recommended defaults, flag
 each `(assumed — confirm later)` in your artifact AND report it to the ledger; skip your own
 draft-confirm/confirm gate (autopilot owns the single gate); then write your artifact + provenance +
 change-log line exactly as attended.* Specializations: `define-project` skips its roast-offer;
 `roast` skips the 4Q batch + hands KILL/RESHAPE to autopilot; **`storm-research` runs upfront, web-gated
 (refuses/skips offline rather than fabricating)**; `define-design` never runs console-theming; `build-*`
-skip the Phase 2 gate and don't run `npm install`. The *"never in `maintenance-loop`"* rule is untouched.
+skip the Phase 2 gate and don't run `npm install`. **Which artifact each reads:** `define-project` ←
+`intake.md`; `roast`/`storm-research` ← the charter `define-project` just wrote; `define-design`/`build-*`
+(Phase C) ← the confirmed `plan.md` + north-stars. The *"never in `maintenance-loop`"* rule is untouched.
 This leverages what already exists: build-* are autonomous-shaped (route-don't-guess, single gate,
 RESHAPE→auto-build, KILL "build anyway"); define-project/define-design already have propose-default +
 `(assumed — confirm later)` machinery; roast already returns a hard verdict.
 
 ## The decision ledger + run record
 
-Per-run dir **`outputs/autopilot/<YYYY-MM-DD>-<slug>/`** (dated-slug + `-2` same-day convention). Three
+Per-run dir **`outputs/autopilot/<YYYY-MM-DD>-<slug>/`** (dated-slug + `-2` same-day convention). Four
 RAG-frontmatter files:
-- **`plan.md`** — the confirmed, vetted+researched plan (the single-gate artifact the sub-skills read).
+- **`intake.md`** — the raw gathered answers from the grill (project + design + target); the artifact the
+  Phase A sub-skills read, written at the end of the grill.
+- **`plan.md`** — the confirmed, vetted+researched plan (the single-gate artifact the Phase C sub-skills read).
 - **`decisions.md`** — the **ledger**: append-only, stable `ap-YYYYMMDD-NNN` ids (never renumber), one
   anchor line + `why / basis / review` block per call; `type ∈ {assumption|inference|verdict|reshape|
   override|default}`. **Plain bullets, not checkboxes** (nothing consumes them the way `improve-system`
@@ -202,7 +209,10 @@ big consumer.
 - **Sub-skill failure mid-run** → chain has hard deps, so stop gracefully: log, set `status=failed` +
   `step_index`; **resumable** (re-invoke reads `autopilot.json` + on-disk artifacts, resumes from the
   failed step).
-- **Re-run** → resume / extend / restart (never blind redo; sub-skills already idempotent/incremental).
+- **Re-run** → resume / extend / restart (never blind redo; sub-skills already idempotent/incremental). A
+  re-run after a KILL-**stop** resumes from `autopilot.json` (`status=stopped_kill`) and re-presents the
+  reshape/proceed/stop choice rather than re-grilling; the use-as-is/refine/start-fresh offer below is for
+  a **fresh** invocation, not a resume.
 - **Charter/design already exist** → the grill offers use-as-is / refine / start-fresh; never silent
   overwrite.
 
