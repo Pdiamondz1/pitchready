@@ -18,6 +18,9 @@
    `mobile/` and/or `plugin/`) — no more questions.
 6. **It hands you a decision log** — every judgment call it made, in `outputs/autopilot/<date>-<slug>/`,
    for you to review after (not before).
+7. **It tells you what's next** — once it's built, it files a ranked list of next moves (from your deferred
+   "later" items, the assumptions it flagged, and the next tiers) to `outputs/ideas-*.md` — for you to
+   approve; nothing is applied.
 
 ## What you end up with
 
