@@ -262,3 +262,29 @@ Wired into `what-can-i-do`, `setup-project` (propose-only once a charter + desig
 `advise-project` (a GO-vetted brief may point to it). Installable app-store builds (EAS + an Expo
 account) and plugins remain later slices. Full design:
 `docs/superpowers/specs/2026-06-30-build-mobile-design.md`; how-to: `docs/BUILD-MOBILE.md`.
+
+## Phase 13 addendum — Build the browser extension (`build-plugin`) (2026-06-30)
+
+Phase 13 adds the browser-extension sibling of `build-app`: the build step is now **web, mobile, *or*
+browser extension**. The `build-plugin` skill turns the same three north-stars — charter (the MVP
+scope) + design system (the theme) + latest vetting verdict — into a working, themed **Manifest V3**
+browser extension (a **popup** + an **options page**) in a new top-level `plugin/` folder: its own plain
+**Vite + React + TypeScript + Tailwind** project (the same proven stack as the web app) that builds to
+an MV3 extension with a hand-written `manifest.json`. Plain Vite + a hand-authored manifest is chosen
+deliberately over a framework like WXT or @crxjs so the scaffold mirrors `build-app` exactly, with no
+generated-manifest magic (the tradeoff is no live popup hot-reload — the dev loop is `build:watch` +
+click-reload). You preview it in Chrome by turning on **Developer mode** and clicking **Load unpacked**
+on the built `dist/` folder — no store, no account, no packaging. The 13 HSL tokens carry over
+**unchanged** — a popup is just a themed web page, so the same palette, contrast pairs, `--radius`, and
+shadows apply (the one platform nuance: the popup gets an explicit ~380px width so it renders as a proper
+popup, not a sliver). Like its siblings it is attended-only (one view-plan confirm gate; never in the
+unattended `maintenance-loop`), Tier 0 (mock/local data, no keys/permissions/accounts/backend,
+offline-safe scaffolding), and re-runnable (incremental, never clobbers — it owns everything under
+`plugin/`, including its theme). `plugin/` is a build target outside the three-folder discipline, like
+`aios/`, `app/`, and `mobile/`. Provenance rides the **shared** `raw/builds/` + `wiki/build.md` spine —
+records tagged `target: plugin`, and `wiki/build.md` gains a Browser-extension section alongside Web and
+Mobile. Wired into `what-can-i-do`, `setup-project` (propose-only once a charter + design exist), and
+`advise-project` (a GO-vetted brief may point to it, propose-only). Packaging + Chrome Web Store
+submission (a paid developer account), cross-browser packaging, real permissions/host access, and a
+background service worker remain later slices. Full design:
+`docs/superpowers/specs/2026-06-30-build-plugin-design.md`; how-to: `docs/BUILD-PLUGIN.md`.
