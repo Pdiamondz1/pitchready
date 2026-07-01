@@ -20,6 +20,9 @@ outside the three-folder knowledge discipline.
 `docs/superpowers/specs/2026-06-30-build-mobile-design.md`. Verification is by `grep`/`wc`/`git` DoD
 checks (documentation, not code — there is no test suite).
 
+**Branch:** all work happens on `phase-12-build-mobile` (already created off `main`). The Task 8
+`git diff main..HEAD` checks depend on it — do not commit on `main`.
+
 **Discipline (every task):** Ship ONLY the skill + doc + wiring edits. **No new `.gitkeep`**
 (`raw/builds/.gitkeep` already ships). **Never** create a real `mobile/`, `raw/builds/<date>-<slug>.md`,
 or `wiki/build.md`. **Never** run a real build. Keep `CLAUDE.md` under 125 lines. Leave `build-app`,
@@ -482,8 +485,9 @@ with:
   build-app mention to include build-mobile. Change the phrase `point to \`build-app\` as the suggested
   next step` to `point to \`build-app\` (web) or \`build-mobile\` (phone) as the suggested next step`,
   and change `Never auto-run a roast or \`build-app\` inside the` to `Never auto-run a roast,
-  \`build-app\`, or \`build-mobile\` inside the`. (Read the file to match the exact surrounding text;
-  make both edits; preserve the propose-only invariant.)
+  \`build-app\`, or \`build-mobile\` inside the`. Also tidy the now-three-item grammar: change
+  `both are attended` to `all are attended`. (Read the file to match the exact surrounding text;
+  make all three edits; preserve the propose-only invariant.)
 
 - [ ] **Step 4: Verify DoD**
 
