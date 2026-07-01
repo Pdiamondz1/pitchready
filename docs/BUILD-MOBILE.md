@@ -79,8 +79,9 @@ Only the skill and this doc ship. **No `mobile/` is ever built into the template
   lift, so it's a dedicated later tier beyond the no-accounts default.
 - **Real data, accounts, and backend** — swap mock data for a real backend (e.g. Supabase) and add
   sign-in. These need keys/services, so they're opt-in tiers.
-- **Other targets** — the **web** app ([`build-app`](BUILD-APP.md)) and **plugins** are separate
-  slices; the `raw/builds/` + `wiki/build.md` provenance already accommodates them.
+- **Other targets** — the **web** app ([`build-app`](BUILD-APP.md)) and **browser extension**
+  ([`build-plugin`](BUILD-PLUGIN.md)) are separate slices; the `raw/builds/` + `wiki/build.md`
+  provenance already accommodates them.
 
 ## Credit / inspiration
 
