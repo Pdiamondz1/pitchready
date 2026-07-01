@@ -33,6 +33,8 @@ Nothing above assumes a domain. You make it *your* project by turning a few knob
 
 **Then make it real:** once you've built an app, run **`build-backend`** — it upgrades your `app/` from placeholder data to a real Supabase backend (schema derived from your data + a graceful-off data layer that keeps the app running on sample data until you add keys + email sign-in + tests), then hands you a 5-minute go-live checklist. Real data is the first rung of the full **path to production** (`docs/PATH-TO-PRODUCTION.md`): real data → testing → audit → deploy → a go/no-go ship-check → polish. The safety-sensitive rungs (keys, deploy, publish) always stay scaffold-and-checklist — you do the actual go-live. See `docs/BUILD-BACKEND.md`.
 
+**Then prove it works:** run **`test-app`** — it generates a real, runnable test suite (Vitest + Testing Library + Playwright + coverage) for your `app/` and maps it to your charter's success criteria, so the tests check *your* definition of done, not just that code runs. Scaffolds offline; it hands you one command to run them. This is the second rung of the path to production. See `docs/TEST-APP.md`.
+
 **Under the hood:** the template ships a tuned fleet of specialist subagents (`.claude/agents/`) that does the grunt work — the right model per job, read-only by default — so building is cheaper, safer, and consistent. See `docs/SUBAGENTS.md`.
 
 **Fast path:** run the **`setup-project`** skill — it does moves 1–2 for you (interviews you,

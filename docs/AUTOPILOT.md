@@ -42,6 +42,8 @@ once you say "go," it runs to the end. Everything else it decides on its own and
 
 Optionally, autopilot can make the built web app **backend-ready** in the same hands-off run: set `wire_backend_after_build: true` in `.claude/skills/autopilot/config.json` and, after the build, it runs `build-backend` (offline, graceful-off — no keys) so you finish with a real schema + data layer + sign-in scaffolded, and a go-live checklist. It's **off by default** (it adds sign-in, which changes the app's shape) and autopilot still never touches a key. See `docs/BUILD-BACKEND.md`.
 
+Autopilot can likewise **test** the built web app in the same hands-off run: set `test_after_build: true` in `.claude/skills/autopilot/config.json` and, after the build (and any backend wire), it runs `test-app` (offline, via the `test-writer` agent — nothing installed) to generate a test suite mapped to your success criteria, then adds the test manifest to the hand-over. **Off by default.** See `docs/TEST-APP.md`.
+
 - **It reuses your existing skills** — `define-project`, `roast`, `storm-research`, `define-design`, and
   `build-app`/`mobile`/`plugin` — driving each in an automatic mode. Their normal, one-at-a-time behavior
   is unchanged; autopilot just chains them for you, and hands the grunt work to the tuned
