@@ -104,3 +104,4 @@ The template ships no live trigger; `setup-project` offers to register one in yo
 ## Pointers
 
 - Design spec: `docs/superpowers/specs/2026-06-29-hma-project-foundation-design.md`. The AIOS console (`aios/`) is file-first — reads this KB, writes only to `outputs/`.
+- Subagents: the tuned `.claude/agents/` fleet (web-researcher · spec-reviewer · plan-reviewer · implementer · code-reviewer · doc-writer) does the grunt work — least-tools (read-only by default), model per task (haiku scan / sonnet build+review / opus reason); the phase-build pipeline delegates to spec-reviewer/plan-reviewer/implementer/code-reviewer. See `docs/SUBAGENTS.md`.
