@@ -1,0 +1,6 @@
+{
+  "plugin_dir": "plugin",
+  "surfaces": ["popup", "options"],
+  "max_views": 6,
+  "include_side_panel": false
+}
