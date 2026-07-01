@@ -365,7 +365,7 @@ untouched).
 ```bash
 grep -q "^name: build-backend" .claude/skills/build-backend/SKILL.md && echo NAME_OK
 for h in "### Phase 0" "### Phase 1" "### Phase 2" "### Phase 3" "### Phase 4" "### Phase 5" "## Autonomous invocation" "## Re-running" "## Rules & guardrails"; do grep -q "$h" .claude/skills/build-backend/SKILL.md || { echo "MISSING: $h"; exit 1; }; done; echo SECTIONS_OK
-grep -q "getActiveStore" .claude/skills/build-backend/SKILL.md && grep -q "MockStore" .claude/skills/build-backend/SKILL.md && grep -q "falls back to" .claude/skills/build-backend/SKILL.md && echo GRACEFUL_OK
+grep -q "getActiveStore" .claude/skills/build-backend/SKILL.md && grep -q "MockStore" .claude/skills/build-backend/SKILL.md && grep -q "fall back to" .claude/skills/build-backend/SKILL.md && echo GRACEFUL_OK
 grep -q "Keys never in chat" .claude/skills/build-backend/SKILL.md && grep -qi "never.*run the migration" .claude/skills/build-backend/SKILL.md && echo KEYS_OK
 grep -q "never runs in the unattended" .claude/skills/build-backend/SKILL.md && echo LOOP_OK
 ```
@@ -558,10 +558,12 @@ grep -q "build-backend" .claude/skills/what-can-i-do/SKILL.md && echo MENU_OK
 grep -q "the .build-backend. skill" .claude/skills/advise-project/SKILL.md && echo ADVISE_OK
 grep -q "\`build-backend\`" CLAUDE.md && grep -q "outputs/backend/" CLAUDE.md && echo CLAUDE_OK
 L=$(wc -l < CLAUDE.md); echo "CLAUDE.md: $L"; [ "$L" -lt 125 ] && echo CAP_OK || echo CAP_FAIL
-# advise-project: no deletions of pre-existing content (only additive within the Phase-17 note)
-git diff --numstat main..HEAD -- .claude/skills/advise-project/SKILL.md | awk '{print "advise-project deletions:", $2}'
+# advise-project: pre-existing sections intact (Task 6 only extends ONE in-line clause inside the Phase-17
+# note, so `git diff --numstat` legitimately shows 1 deletion + 1 insertion — do NOT assert 0 deletions;
+# assert the sections are all still present instead).
+grep -q "^## Safety invariants" .claude/skills/advise-project/SKILL.md && grep -q "^## Post-build invocation" .claude/skills/advise-project/SKILL.md && grep -q "Propose-only" .claude/skills/advise-project/SKILL.md && echo ADVISE_INTACT_OK
 ```
-Expect: MENU_OK ADVISE_OK CLAUDE_OK, CLAUDE.md < 125 (CAP_OK), advise-project deletions: 0.
+Expect: MENU_OK ADVISE_OK CLAUDE_OK, CLAUDE.md < 125 (CAP_OK), ADVISE_INTACT_OK.
 
 - [ ] **Step 5: Commit**
 ```bash
@@ -661,12 +663,14 @@ git diff --name-only main..HEAD -- .claude/skills/improve-system .claude/skills/
 ```
 Expect: EMPTY.
 
-- [ ] **Step 2: advise-project additive-only + autopilot phases intact.**
+- [ ] **Step 2: advise-project sections intact + autopilot phases intact.**
 ```bash
-git diff --numstat main..HEAD -- .claude/skills/advise-project/SKILL.md | awk '{print "advise-project deletions:", $2}'   # expect 0
+# Task 6 extends ONE in-line clause inside the Phase-17 note (1 deletion + 1 insertion is expected); assert
+# the pre-existing advise-project sections survive rather than a deletion count.
+grep -q "^## Safety invariants" .claude/skills/advise-project/SKILL.md && grep -q "^## Post-build invocation" .claude/skills/advise-project/SKILL.md && grep -q "Propose-only" .claude/skills/advise-project/SKILL.md && echo ADVISE_INTACT_OK
 for h in "### Phase A" "### Phase B" "### Phase D" "### Phase E"; do grep -q "$h" .claude/skills/autopilot/SKILL.md || { echo "MISSING $h"; exit 1; }; done; echo AUTOPILOT_PHASES_OK
 ```
-Expect: `advise-project deletions: 0`, AUTOPILOT_PHASES_OK.
+Expect: ADVISE_INTACT_OK, AUTOPILOT_PHASES_OK.
 
 - [ ] **Step 3: No pollution (no real build/backend artifacts committed).**
 ```bash
@@ -688,7 +692,10 @@ Expect exactly: `.claude/skills/build-backend/SKILL.md`, `.claude/skills/build-b
 `docs/AUTOPILOT.md`, `docs/BUILD-BACKEND.md`, `docs/PATH-TO-PRODUCTION.md`,
 `docs/USING-THIS-FOR-ANY-PROJECT.md`, `docs/superpowers/specs/2026-06-29-hma-project-foundation-design.md`,
 `docs/superpowers/specs/2026-07-01-build-backend-design.md`, `outputs/backend/.gitkeep` — plus this plan
-doc. Nothing else; CAP_OK.
+doc `docs/superpowers/plans/2026-07-01-build-backend.md`. Nothing else; CAP_OK. **Note:** the spec
+(`2026-07-01-build-backend-design.md`) and this plan doc were **already committed** to the branch before
+Task 1 (during the design/plan phase), so they legitimately appear in `git diff main..HEAD` — expected, not
+pollution.
 
 - [ ] **Step 5:** No commit (verification only). Proceed to the final gates (tuned `code-reviewer` + Codex
   `codex review --base main`), then `finishing-a-development-branch`. **Merge/push only on the user's
