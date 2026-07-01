@@ -6,7 +6,7 @@
 > layer + auth + tests + a go-live checklist — **scaffolded fully unattended**, with the one human step
 > (create the account, paste two keys, run the migration) deliberately left to the user. Ships a captured
 > `docs/PATH-TO-PRODUCTION.md` roadmap alongside. Backend = Supabase; web-first (mobile/plugin later).
-> Autopilot integration is an opt-in, default-off Phase F. Keys never in chat; never in `maintenance-loop`.
+> Autopilot integration is an opt-in, default-off backend-wire tail of Phase C. Keys never in chat; never in `maintenance-loop`.
 
 ## Context
 
@@ -49,12 +49,12 @@ them.
 
 **Intended outcome.** A captured roadmap doc; a `build-backend` skill that upgrades the built `app/` to
 real-data/backend-ready (fully scaffolded unattended, one human go-live step); and an opt-in autopilot Phase
-F so the hands-off arc can extend **define → vet → design → build → advise → (wire backend)**.
+tail so the hands-off arc can extend **define → vet → design → build (+ wire backend) → advise**.
 
 ## Architecture
 
-A new skill in the `build-*` family + a captured roadmap doc + light, additive wiring (autopilot Phase F is
-opt-in and off by default):
+A new skill in the `build-*` family + a captured roadmap doc + light, additive wiring (the autopilot
+backend-wire is opt-in and off by default):
 
 ```
   build-app (Tier 0)            build-backend (Tier 1, THIS)              go-live (human)
@@ -73,7 +73,8 @@ opt-in and off by default):
    → ship-check gate → polish/compliance).
 2. **`build-backend` SKILL.md + config.json** *(new skill)* — the attended tier + its `## Autonomous
    invocation` note.
-3. **`autopilot` SKILL.md + config.json** *(modified — additive)* — an opt-in, default-off Phase F.
+3. **`autopilot` SKILL.md + config.json** *(modified — additive)* — an opt-in, default-off backend-wire
+   tail of Phase C.
 4. **Light wiring** — `what-can-i-do`, `advise-project` deferred-tier clause, CLAUDE.md, README, USING,
    AUTOPILOT.md, master-spec Phase 18 addendum.
 
@@ -110,16 +111,29 @@ from scope & audience), the built `app/` (esp. `src/data/` fixtures → schema +
 (autonomous mode) the confirmed `plan.md`.
 
 **Generates (Part 1, offline, no keys):**
-- **DB schema/migrations** → `app/supabase/migrations/0001_init.sql`: tables/columns/relationships from the
-  charter's data model, **row-level-security policies**, and **seed data derived from the existing
-  `src/data/` mock arrays** (mock fixtures become the seed — zero data invented).
+- **DB schema/migrations** → `app/supabase/migrations/0001_init.sql`: one table per entity, **columns typed
+  from the concrete `src/data/` fixture shapes** (the source of truth the pages and seed already share; the
+  charter informs *which* entities/relationships matter and RLS intent, **not** column types — so schema ⟷
+  seed ⟷ pages cannot diverge), relationships as foreign keys, **seed data derived from the existing
+  `src/data/` mock arrays** (fixtures become the seed — zero data invented), and **RLS enabled with a
+  shared-read / authenticated-write default**: `SELECT` allowed to everyone (so the owner-less seed rows stay
+  visible — no empty screens after go-live) and `INSERT`/`UPDATE`/`DELETE` allowed only to authenticated
+  users (so it is never anon-writable). *(Owner-scoped private RLS — `auth.uid() = owner_id` — is a
+  documented later refinement for data models with genuine per-user ownership; v1 defaults to shared-read so
+  seed-from-mock is coherent. The cited `aios/.../0001_knowledge.sql` has no RLS to copy — this policy set is
+  written fresh.)*
 - **Graceful-off data layer** → `app/src/data/store/`: a `DataStore` interface, `MockStore` (wraps today's
-  fixtures), `SupabaseStore` (`@supabase/supabase-js`, inert unless env present), and `getActiveStore()`
-  (reads `import.meta.env.VITE_SUPABASE_URL`/`_ANON_KEY`; falls back to `MockStore`) — mirrors
-  `aios/server/kb/store.ts`.
+  fixtures), `SupabaseStore`, and `getActiveStore()` (reads `import.meta.env.VITE_SUPABASE_URL`/`_ANON_KEY`;
+  falls back to `MockStore` when either is absent) — mirrors `aios/server/kb/store.ts`. `SupabaseStore`
+  **dynamically `import()`s `@supabase/supabase-js` only when env is present** (as `aios/server/kb/store.ts`
+  does), so the no-keys / mock bundle never loads it — making "inert unless env present" *structurally*
+  guaranteed, not merely conventional.
 - **Page rewire** → the minimal change: pages call `store.listX()`/`store.getX()` (async) instead of
   importing mock getters directly; `@tanstack/react-query` is turned on here (build-app defaults it off) for
-  async fetch/cache.
+  async fetch/cache, which adds a `QueryClientProvider` wrap in `src/main.tsx`.
+- **Dependencies** → add to `app/package.json` the packages `build-app` deliberately excludes
+  (`build-app/SKILL.md:128-130`): `@supabase/supabase-js` + `@tanstack/react-query` (runtime) and `vitest` +
+  `@playwright/test` (dev). No other stack drift.
 - **Auth scaffolding** → Supabase email auth: sign-in/up page, session context, protected routes — **inert
   without keys** (the app still runs; auth simply not enforced) so the scaffold never breaks Tier 0.
 - **Env template** → `app/.env.example` with empty `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` slots +
@@ -146,26 +160,30 @@ north-stars + `plan.md`, **skip the confirm gate** (autopilot's single gate cove
 go-live), flag every `(assumed — confirm later)` to the ledger, write provenance as usual, and surface the
 `GO-LIVE.md` path for the hand-over. Attended behavior above is byte-for-byte unchanged.
 
-### 3. Optional autopilot Phase F (opt-in, default OFF)
-Add an optional **Phase F — Wire backend** to `autopilot` (config `wire_backend_after_build`, **default
-`false`**): when enabled, after Phase E it runs `build-backend` in scaffold-only/graceful-off mode for the
-web target and adds the go-live checklist to the hand-over. **Default off** because adding auth + a store
-abstraction materially changes the app's shape — a user who said "build my app" shouldn't silently get a
-login screen; it's one config flag / one grill answer to opt in. Autopilot stays **Tier 0** (never touches a
-key), **user-initiated**, and **never in `maintenance-loop`**.
+### 3. Optional autopilot backend wire (opt-in, default OFF) — a tail of Phase C
+Add an optional backend-wire step (config `wire_backend_after_build`, **default `false`**) as a **tail of
+Phase C — after the per-target `build-<target>` step and before the Phase D hand-over** (so the hand-over
+naturally includes the go-live checklist and the Phase E advise pass sees the backend-ready app). When
+enabled **and `web` is among the selected targets** (the grill is multi-select; this wires only the web
+`app/` — it is skipped otherwise, logged), it runs `build-backend` in scaffold-only / graceful-off mode.
+**Default off** because adding auth + a store abstraction materially changes the app's shape — a user who
+said "build my app" shouldn't silently get a login screen; it's one config flag / one grill answer to opt
+in. Autopilot stays **Tier 0** (never touches a key), **user-initiated**, and **never in
+`maintenance-loop`**. Autopilot's Phases A, B, D, E are unchanged; this is an additive, default-off tail of
+the existing Phase C build loop (no new lettered phase, avoiding any "after Phase E" ordering ambiguity).
 
 ### 4. Wiring (additive; light)
 `what-can-i-do` menu item; `advise-project` deferred-tier clause extended to name `build-backend` as the
 next step (additive); CLAUDE.md skill bullet + `outputs/backend/` pointer (hold < 125 lines); README
 build-status Phase 18 line + guide row; USING one clause + a real-data rung; `docs/AUTOPILOT.md` optional
-Phase F note; master-spec Phase 18 addendum.
+optional backend-wire note; master-spec Phase 18 addendum.
 
 ## Not changed
 
 `improve-system` (single applier), `maintenance-loop`, `build-app/mobile/plugin` SKILL.md (untouched — this
 ADDS a sibling; wiring backends for `mobile/`/`plugin/` is a later phase), `define-*`, `roast`,
 `storm-research`, `advise-project`'s scoring/lenses/propose-only role, `raw/` immutability. Autopilot's
-existing Phases A–E are unchanged (Phase F is additive and off by default).
+existing Phases A, B, D, E are unchanged; the backend-wire is an additive, default-off tail of Phase C.
 
 ## Safety / reconciliation
 
@@ -175,7 +193,7 @@ existing Phases A–E are unchanged (Phase F is additive and off by default).
 - **Graceful-off = no broken app.** With no keys the generated app runs on mock; keys flip it to real
   automatically. An unattended scaffold can never hand back a broken app.
 - **Attended for the irreversible; Tier 0 preserved for autopilot.** The skill's own run has a confirm gate;
-  autopilot's Phase F is opt-in and only does the key-free scaffold. Neither is ever added to
+  autopilot's backend-wire is opt-in and only does the key-free scaffold. Neither is ever added to
   `maintenance-loop`.
 - **`improve-system` stays the single applier; `raw/` immutable.** `build-backend` writes its own provenance
   (`raw/builds/` record + `wiki/build.md` section + one `change-log.md` line); code lives in `app/`, outside
@@ -214,7 +232,7 @@ manual smoke of a generated app:
   when both `VITE_SUPABASE_*` are present.
 - **Keys-never-in-chat + go-live-is-human:** SKILL.md forbids collecting keys and running
   migrations/install/deploy; only writes empty `.env` slots + `outputs/backend/<date>-<slug>/GO-LIVE.md`.
-- **Autopilot Phase F opt-in/off:** `autopilot/config.json` `wire_backend_after_build` defaults `false`;
+- **Autopilot backend-wire opt-in/off:** `autopilot/config.json` `wire_backend_after_build` defaults `false`;
   autopilot stays Tier 0 / never in `maintenance-loop`.
 - **Untouched invariants (expect empty):** `git diff --name-only main..HEAD` for `improve-system`,
   `maintenance-loop`, `build-app/mobile/plugin`, `define-*`, `roast`, `storm-research`, `raw`.
