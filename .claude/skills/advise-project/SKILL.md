@@ -147,3 +147,17 @@ existing item; only append new ones.**
 A short summary: counts per lens, the top ideas by weight, what was promoted (briefs written /
 review items appended), what is alerting, the new `tick` value, and the path to today's
 `outputs/ideas-YYYY-MM-DD.md`.
+
+## Post-build invocation (driven by `autopilot`)
+
+When invoked by `autopilot` right after a build (its **Phase E** — a distinct trigger from the build-chain
+`## Autonomous invocation` notes on the build skills), focus your four lenses on the **just-built project**:
+the charter's `Later`/`Out` deferred items → `scale`/`improve` ideas; the decision ledger's
+`(assumed — confirm later)` flags (`outputs/autopilot/<date>-<slug>/decisions.md`) → `maintain`/validate
+ideas; the deferred tiers (real data, deploy, more build targets) → next-step ideas; the build record
+(`raw/builds/` + the run's `plan.md`/`run.md`) → what exists now. The `raw/metrics/` usage feed will be
+empty for a fresh build — that's fine; skip it and ground on the charter/ledger/build-record. Write to
+`outputs/ideas-*.md` exactly as in your normal run, honoring every rule above — stable ids, the
+`max_ideas_per_tick` cap, `ideas-log.md` dedup, and the propose-only invariants (write only in `outputs/`,
+never apply, `improve-system` stays the single applier). This note is additive — your attended and
+maintenance-loop (unattended) behavior above is unchanged.
