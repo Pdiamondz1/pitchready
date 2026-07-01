@@ -121,12 +121,13 @@ dir is **`mobile/app/`**, distinct from the repo-root web `app/` (no collision):
 
 ```
 mobile/
-├── package.json          # own; pinned Expo SDK (config.expo_sdk, default 56): expo, react, react-native,
+├── package.json          # own; "main":"expo-router/entry" (REQUIRED by Expo Router — no index.html entry);
+│                         #   pinned Expo SDK (config.expo_sdk): expo, react, react-native,
 │                         #   expo-router, nativewind, react-native-safe-area-context, react-native-reanimated;
 │                         #   dev: typescript, tailwindcss@^3.4, babel-preset-expo, @types/*.
 │                         #   Scripts: start (expo start), android, ios, web (expo start --web).
 ├── app.json              # Expo config: name/slug from charter; expo-router plugin; icon/splash placeholders
-├── babel.config.js       # babel-preset-expo + nativewind/babel
+├── babel.config.js       # babel-preset-expo + nativewind/babel (add react-native-reanimated/plugin LAST if the SDK preset doesn't include it)
 ├── metro.config.js       # withNativeWind(config, { input: './global.css' })
 ├── tailwind.config.js    # presets:[nativewind/preset]; content globs; colors → hsl(var(--token)/<alpha-value>); --radius
 ├── global.css            # the 13 HSL tokens (:root + dark) FROM wiki/design-system.md — mirrors app/src/index.css
@@ -149,10 +150,13 @@ mobile/
 
 **Pin the stack from the Expo SDK (delta — no sibling to mirror).** Unlike `build-app` (which reads
 `aios/package.json`), there is no Expo project in the repo to mirror, so `build-mobile` pins the
-**stable Expo SDK named in `config.expo_sdk`** (default 56) and lets **`npx expo install`** reconcile
-native-dep versions at install time — the idiomatic RN approach (pin the SDK, don't hand-pin React
-Native). Hand-write `package.json` with the SDK-pinned versions; name the canonical SDK in
-`docs/BUILD-MOBILE.md` + `mobile/README.md`.
+**stable Expo SDK named in `config.expo_sdk`** and lets **`npx expo install`** reconcile native-dep
+versions at install time — the idiomatic RN approach (pin the SDK, don't hand-pin React Native).
+Hand-write `package.json` with the SDK-pinned versions, plus `"main": "expo-router/entry"`. The
+`config.expo_sdk` default (`56`, the latest stable at authoring) should be **confirmed against the
+current stable Expo SDK at build time** rather than trusted on faith — it's a single-knob, one-line
+bump, and `expo install` reconciles native versions. Name the canonical SDK in `docs/BUILD-MOBILE.md`
++ `mobile/README.md`.
 
 **Theme it exactly like the web app (delta = target file).** Write the same 13 HSL tokens (`:root` +
 dark) into **`mobile/global.css`** — identical names/format to `app/src/index.css` — re-derive and
@@ -186,8 +190,12 @@ The **record** lands in the knowledge base, on the same spine as `build-app`:
   kind, like `roast` creates `wiki/vetting.md`; RAG frontmatter per `docs/WIKI-FRONTMATTER.md`).
   `build-mobile` adds/maintains a **"Mobile app (`mobile/`)"** section (route list, where it lives, the
   QR-preview instructions, theme source, links to the `raw/builds/` record(s) + charter + design
-  system), and **preserves any existing "Web app (`app/`)" section** from a prior `build-app` run.
-  Cross-linked from `wiki/index.md` on first creation.
+  system), and **preserves any existing web content.** Note the *already-shipped* `build-app` writes
+  `wiki/build.md` as a **flat, un-sectioned** web index (no "Web app" heading). So on the first mobile
+  build into a pre-existing flat web index, **first wrap that existing web content under a
+  `## Web app (`app/`)` heading**, then add the `## Mobile app (`mobile/`)` section below it — never
+  drop or overwrite the web content. If `wiki/build.md` doesn't exist yet, create it (RAG frontmatter)
+  with just the Mobile section. Cross-linked from `wiki/index.md` on first creation.
 - **`outputs/change-log.md`** — one attributed line (newest-at-top):
   `- <YYYY-MM-DD> — build-mobile — scaffolded Expo mobile app (mobile/) from wiki/charter.md MVP; themed from wiki/design-system.md — applied`
 
