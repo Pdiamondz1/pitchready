@@ -1,0 +1,6 @@
+{
+  "app_dir": "app",
+  "provider": "supabase",
+  "include_auth": true,
+  "max_entities": 12
+}
