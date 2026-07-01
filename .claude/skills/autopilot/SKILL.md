@@ -88,7 +88,7 @@ as the `web-researcher` agent. **Graceful-off:** if web is unavailable, skip wit
 ### Phase B — Plan outline + SINGLE confirm gate (on a vetted + researched plan)
 
 Write the confirmed intent to `outputs/autopilot/<date>-<slug>/plan.md` (built from the intake + charter +
-verdict + research + design direction + target), and show it in **one** message: the app name + one-liner,
+verdict + research + design direction + target set), and show it in **one** message: the app name + one-liner,
 the charter summary (purpose/audience/success/scope), **the GO verdict + cheapest test**, **the key
 research findings**, the design direction, **the target set + what each target will build (keyed by its
 folder `app/`/`mobile/`/`plugin/` so each builder finds its own slice)**, and the
@@ -115,7 +115,7 @@ depends on it); then `build-<target>` runs **once per selected target**, and the
    `plugin`→`build-plugin`) — read `plan.md` + `wiki/charter.md` + `wiki/design-system.md` + the GO verdict;
    **skip the Phase 2 confirm gate** (your gate covered it); the RESHAPE pivot is already folded; scaffold
    that target's `app/`|`mobile/`|`plugin/` folder **offline** (do NOT run `npm install`) → its
-   `raw/builds/<date>-<slug>.md` (target-tagged) + its section of the shared `wiki/build.md` + its own
+   `raw/builds/<date>-<slug>.md` (target-tagged; the builder's own `-N` same-day rule keeps each target's record distinct) + its section of the shared `wiki/build.md` + its own
    `applied` change-log line. Record each target's outcome (built / failed / skipped) in `run.md` +
    `decisions.md`; a failed target does not stop the others.
 
@@ -123,8 +123,10 @@ depends on it); then `build-<target>` runs **once per selected target**, and the
 
 Close plainly: point the user at the **decision ledger** (`outputs/autopilot/<date>-<slug>/decisions.md`
 — every autonomous call, for review/override), the run log, the vetting verdict + research briefing, and
-the one-command preview path for **each** built target (`app/` → `npm run dev`; `mobile/` → `npm run
-start` / Expo Go QR; `plugin/` → `npm run build` + Chrome Load unpacked). Approval has
+the preview path for **each** built target — each build skill's full close-out (they scaffold offline, so
+it includes the one-time install): `app/` → `cd app && npm install && npm run dev`; `mobile/` → `cd mobile
+&& npm install && npm run start`, then scan the Expo Go QR; `plugin/` → `cd plugin && npm install && npm run
+build`, then Chrome → **Load unpacked** `plugin/dist`. Approval has
 shifted from approve-before-each-step to **decide-then-review-after**.
 
 ## The decision ledger + run record
