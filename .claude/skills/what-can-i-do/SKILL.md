@@ -25,6 +25,7 @@ everyone*).
    - **Build a first version of your app** — turn your plan into something you can click → runs `build-app`
    - **Build a mobile app** — turn your plan into an app you can open on your phone → runs `build-mobile`
    - **Build a browser extension** — turn your plan into a Chrome extension you can load and try → runs `build-plugin`
+   - **Make your app's data real** — already built an app? Add a real database + sign-in so it saves data (say "add a backend"). *(Runs `build-backend`; you do a quick 5-minute go-live at the end.)*
    - **Add something** — save a note, a file, or a link → runs `add-new-resource`
    - **Find something** — search what you've saved so far → searches the knowledge base
    - **See what's saved** — a quick overview of the project so far → reads `wiki/index.md`
