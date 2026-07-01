@@ -288,3 +288,34 @@ Mobile. Wired into `what-can-i-do`, `setup-project` (propose-only once a charter
 submission (a paid developer account), cross-browser packaging, real permissions/host access, and a
 background service worker remain later slices. Full design:
 `docs/superpowers/specs/2026-06-30-build-plugin-design.md`; how-to: `docs/BUILD-PLUGIN.md`.
+
+## Phase 14 addendum — The subagent fleet (`.claude/agents/`) (2026-07-01)
+
+Phase 14 gives the template a tuned fleet of six reusable custom subagents in `.claude/agents/` —
+**web-researcher**, **spec-reviewer**, **plan-reviewer**, **implementer**, **code-reviewer**, and
+**doc-writer** — so its grunt work (reading many files, web research, reviewing a diff, transcribing a
+plan task) runs in a **second Claude's own context window** and hands back a short summary, keeping the
+main chat clean. Each file follows the practices from the "Complete Guide to Claude Code Subagents":
+**one agent, one job** (if the description needs an "and also," it should be two); a **trigger-rule
+`description`** that says *when* to fire and names the signal phrases (with "use proactively" where it
+should self-invoke), not a vague label that misroutes; **fewest tools it needs, read-only by default** —
+the four review/research agents carry only `Read`/`Grep`/`Glob`(/`Bash` for read-only git/grep), so they
+*cannot* mutate the repo (enforced by the `tools:` field, not trusted), and only `implementer` and
+`doc-writer` hold `Write`/`Edit`; and the **model-mix** — **haiku** to scan/summarize/write docs cheaply,
+**sonnet** for the default build/review/research work, **opus** for the high-stakes reasoning of
+`spec-reviewer` and `code-reviewer` — the per-task cost dial the template had never used before. A new
+`docs/SUBAGENTS.md` policy documents the fleet, the conventions, the when-to-use gut check, and the
+orchestration patterns (sequential phase pipeline `spec-reviewer → plan-reviewer → implementer →
+code-reviewer`; fan-out for `roast`/`storm-research`; builder/validator), plus the composition rule that
+**agents cannot call agents** — the main conversation is always the conductor. Unlike the `build-*`
+runtime *outputs* (`app/`, `mobile/`, `plugin/`), **everything here ships**: the agents are reusable
+*capabilities* committed to the repo, so every clone of the template inherits the fleet automatically.
+Wiring is deliberately **light and additive**: `storm-research`'s five lenses (and its Phase 4b citation
+verifiers) and `roast`'s Researcher persona **may** now be dispatched as `web-researcher` for its Sonnet
++ web-restricted tooling — but each keeps its exact persona/lens prompt and "Return EXACTLY…" output
+contract; a lean `CLAUDE.md` Pointers bullet and the README/USING surfaces point at the doc. **Nothing is
+rewired and no skill's attended behavior is touched** — `maintenance-loop`, `improve-system`, the
+`build-*` skills, the sync skills, and `raw/` are untouched; the personas and output contracts are
+additive notes only. This fleet is the foundation the next slice stands on: **autopilot (Phase 15) is
+sequenced next and will delegate to these agents** rather than inventing its own. Full design:
+`docs/superpowers/specs/2026-07-01-subagent-fleet-design.md`; how-to: `docs/SUBAGENTS.md`.
