@@ -131,9 +131,9 @@ from scope & audience), the built `app/` (esp. `src/data/` fixtures → schema +
 - **Page rewire** → the minimal change: pages call `store.listX()`/`store.getX()` (async) instead of
   importing mock getters directly; `@tanstack/react-query` is turned on here (build-app defaults it off) for
   async fetch/cache, which adds a `QueryClientProvider` wrap in `src/main.tsx`.
-- **Dependencies** → add to `app/package.json` the packages `build-app` deliberately excludes
-  (`build-app/SKILL.md:128-130`): `@supabase/supabase-js` + `@tanstack/react-query` (runtime) and `vitest` +
-  `@playwright/test` (dev). No other stack drift.
+- **Dependencies** → add to `app/package.json`: `@supabase/supabase-js` + `@tanstack/react-query` (runtime)
+  and `vitest` + `@playwright/test` (dev). The first three are packages `build-app` deliberately excludes
+  (`build-app/SKILL.md:128-130`); `@playwright/test` is simply new. No other stack drift.
 - **Auth scaffolding** → Supabase email auth: sign-in/up page, session context, protected routes — **inert
   without keys** (the app still runs; auth simply not enforced) so the scaffold never breaks Tier 0.
 - **Env template** → `app/.env.example` with empty `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` slots +
