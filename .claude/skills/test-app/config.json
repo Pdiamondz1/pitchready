@@ -1,0 +1,6 @@
+{
+  "app_dir": "app",
+  "coverage_target": 70,
+  "include_e2e": true,
+  "max_specs": 12
+}
