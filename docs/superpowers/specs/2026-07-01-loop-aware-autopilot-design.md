@@ -55,14 +55,14 @@ One localized change to `autopilot` + one additive note to `advise-project`:
 ## The changes
 
 ### 1. New autopilot **Phase E — Post-build advise** (SKILL.md)
-After the build completes (Phase C) — and before the final hand-over — if `config.advise_after_build`
+As the final step — after the build (Phase C) and the Phase D hand-over — if `config.advise_after_build`
 (default `true`), run `advise-project` in a **post-build focus**: ground it on the just-built charter (especially `Later`/`Out`), the decision-ledger
 `(assumed — confirm later)` flags, the build record (`raw/builds/` + the run's `plan.md`/`run.md` +
 per-target outcomes), and the deferred tiers — to file ranked "what's next" ideas to `outputs/ideas-*.md`.
 It is **propose-only and hands-off** — nothing is applied, so there is **no confirm gate**. Log the pass to
-the run's `run.md`, and have the Phase D hand-over (the last thing autopilot says, written *after* this
-pass) point the user at the ideas file alongside the decision ledger ("here's what I'd do next — approve
-any you like").
+the run's `run.md`, then close with a "what's next" line pointing the user at the ideas file alongside the
+decision ledger ("here's what I'd do next — approve any you like") — so the user is always pointed at ideas
+that already exist.
 
 ### 2. `advise-project` additive `## Post-build invocation` note (SKILL.md)
 Add ONE new `## Post-build invocation` H2 — the same *additive per-skill note* pattern as the build skills'
