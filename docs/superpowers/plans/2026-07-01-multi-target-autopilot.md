@@ -69,7 +69,7 @@ with:
 - [ ] **Step 4: Verify DoD**
 ```bash
 node -e "const c=require('./.claude/skills/autopilot/config.json'); if(!Array.isArray(c.default_targets)) process.exit(1); if('default_target' in c) process.exit(2); console.log('CONFIG_OK')"
-grep -q "default_targets" .claude/skills/autopilot/SKILL.md && ! grep -q 'default_target`' .claude/skills/autopilot/SKILL.md && echo SKILL_CONFIG_OK
+grep -q '`default_targets` (default' .claude/skills/autopilot/SKILL.md && ! grep -q '^- `default_target` (default' .claude/skills/autopilot/SKILL.md && echo SKILL_CONFIG_OK
 grep -q "for each target selected in the grill" .claude/skills/autopilot/SKILL.md && echo BUILDCHAIN_OK
 ```
 Expect: CONFIG_OK SKILL_CONFIG_OK BUILDCHAIN_OK.
@@ -149,7 +149,7 @@ with:
 grep -q "multi-select — pick" .claude/skills/autopilot/SKILL.md && echo GRILL_MULTI_OK
 grep -q "a \*\*target set\*\* (one or more) is chosen" .claude/skills/autopilot/SKILL.md && echo EXIT_OK
 grep -q "keyed by its" .claude/skills/autopilot/SKILL.md && echo PLANKEY_OK
-grep -q "build\n> \*\*them\*\*" .claude/skills/autopilot/SKILL.md || grep -q "build" .claude/skills/autopilot/SKILL.md; grep -q '> \*\*them\*\* end-to-end' .claude/skills/autopilot/SKILL.md && echo CONFIRM_OK
+grep -q '> \*\*them\*\* end-to-end' .claude/skills/autopilot/SKILL.md && echo CONFIRM_OK
 ```
 Expect: GRILL_MULTI_OK EXIT_OK PLANKEY_OK CONFIRM_OK.
 
@@ -438,7 +438,7 @@ LINES=$(wc -l < CLAUDE.md); echo "CLAUDE.md: $LINES"; [ "$LINES" -lt 125 ] && ec
 Expect exactly: `.claude/skills/autopilot/SKILL.md`, `.claude/skills/autopilot/config.json`,
 `docs/AUTOPILOT.md`, `README.md`, `docs/USING-THIS-FOR-ANY-PROJECT.md`,
 `docs/superpowers/specs/2026-06-29-hma-project-foundation-design.md` + the two session spec/plan docs.
-Nothing else; CAP_OK (CLAUDE.md unchanged at 108).
+Nothing else; CAP_OK (CLAUDE.md unchanged, 109 < 125).
 
 - [ ] **Step 4:** No commit (verification only). Proceed to the final gates (tuned `code-reviewer` agent
   whole-branch review + Codex `codex review --base main`), then `finishing-a-development-branch`.
