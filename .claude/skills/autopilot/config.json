@@ -6,5 +6,6 @@
   "grill_round_cap": 3,
   "research_upfront": true,
   "stop_on_kill": true,
-  "auto_adopt_reshape": true
+  "auto_adopt_reshape": true,
+  "advise_after_build": true
 }

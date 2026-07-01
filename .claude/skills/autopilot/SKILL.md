@@ -40,6 +40,7 @@ Read `.claude/skills/autopilot/config.json` (all values default; never block on 
 - `research_upfront` (default `true`) — run `storm-research` upfront; web-gated / graceful-off.
 - `stop_on_kill` (default `true`) — a KILL verdict is the one stop (surfaced upfront, before the confirm).
 - `auto_adopt_reshape` (default `true`) — a non-KILL RESHAPE is auto-adopted (folded in, logged, no pause).
+- `advise_after_build` (default `true`) — run the Phase E post-build advise pass (propose-only) at the end of a run.
 
 ## Procedure
 
