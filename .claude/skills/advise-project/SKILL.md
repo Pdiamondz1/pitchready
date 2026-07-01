@@ -156,8 +156,11 @@ the charter's `Later`/`Out` deferred items → `scale`/`improve` ideas; the deci
 `(assumed — confirm later)` flags (`outputs/autopilot/<date>-<slug>/decisions.md`) → `maintain`/validate
 ideas; the deferred tiers (real data, deploy, more build targets) → next-step ideas; the build record
 (`raw/builds/` + the run's `plan.md`/`run.md`) → what exists now. The `raw/metrics/` usage feed will be
-empty for a fresh build — that's fine; skip it and ground on the charter/ledger/build-record. Write to
-`outputs/ideas-*.md` exactly as in your normal run, honoring every rule above — stable ids, the
-`max_ideas_per_tick` cap, `ideas-log.md` dedup, and the propose-only invariants (write only in `outputs/`,
-never apply, `improve-system` stays the single applier). This note is additive — your attended and
-maintenance-loop (unattended) behavior above is unchanged.
+empty for a fresh build — that's fine; skip it and ground on the charter/ledger/build-record. Run **only
+your generate-and-append steps** (gather → generate → dedup → score → write the queue → summarize) and
+**skip "Promote approved" (step 6) and "Age out & alert" (step 7)** — this post-build pass proposes what's
+next only, so it must not promote a pre-existing `- [x]` idea into a brief / `review-*.md` item or archive
+an old queue (that stays with the normal `maintenance-loop` tick). Write new ideas to `outputs/ideas-*.md`
+as usual — stable ids, the `max_ideas_per_tick` cap, `ideas-log.md` dedup, and the propose-only invariants
+(write only in `outputs/`, never apply, `improve-system` stays the single applier). This note is additive —
+your attended and maintenance-loop (unattended) behavior above is unchanged.
