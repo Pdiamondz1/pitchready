@@ -18,6 +18,7 @@ everyone*).
 
 1. **Show a short, plain menu** — 4–5 everyday actions, no skill names or jargon. Tailor the
    wording to the project's type if you know it. A good default:
+   - **Build my whole project for me** — describe it once, come back to a built app → runs `autopilot`
    - **Get clear on your project** — figure out its goal, who it's for, and what success looks like → runs `define-project`
    - **Pressure-test an idea** — get a brutal second opinion before you build → runs `roast`
    - **Make it look great** — set your project's design: style, colors, and feel → runs `define-design`
