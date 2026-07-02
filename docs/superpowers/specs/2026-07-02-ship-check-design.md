@@ -174,6 +174,8 @@ untouched — the same posture `deploy` takes.)
 - **`docs/PATH-TO-PRODUCTION.md`** — mark rung 5 **shipped (Phase 22)** (align its wording to the
   as-built skill, as rungs 1–4 were).
 - **`docs/SHIP-CHECK.md`** — a new user guide.
+- **`docs/USING-THIS-FOR-ANY-PROJECT.md`** — a "then ship-check it" paragraph after the rung-4 deploy
+  paragraph (the same additive walkthrough each prior rung added).
 - **`docs/superpowers/specs/2026-06-29-hma-project-foundation-design.md`** — a Phase 22 addendum.
 - **`outputs/ship-check/.gitkeep`** — follow the empty-dir convention.
 
