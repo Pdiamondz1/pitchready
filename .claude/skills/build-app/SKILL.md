@@ -105,7 +105,7 @@ app/
 ├── tsconfig.json / tsconfig.app.json / tsconfig.node.json   # copied from the aios shape
 ├── postcss.config.js     # tailwind + autoprefixer (identical to aios)
 ├── tailwind.config.ts    # copied from aios (resolves CSS vars; no hardcoded colors)
-├── .gitignore            # node_modules, dist
+├── .gitignore            # node_modules, dist, coverage, .env* (keep !.env.example) — future-proofs backend/deploy
 ├── README.md             # how to run + "themed front-end MVP, mock data" + pointer to the raw/builds record
 ├── public/               # optional favicon/emblem
 └── src/
@@ -132,7 +132,9 @@ and `@tanstack/react-query` (unless `include_react_query` is true). Scripts: `de
 
 **Theme it the same way `define-design` themes the console.** Write the 13 base tokens for `:root` and
 `.dark` into `app/src/index.css`, **re-derive and eyeball the contrast pairs** (`--*-foreground`,
-`--popover*`) so text stays legible, and set `--radius` + the shadow vars from *Typography & shape*.
+`--popover*`) so text stays legible — **verify the `--primary` / `--*-foreground` pairs clear WCAG AA
+(≥4.5:1 for normal text); darken a too-light token rather than ship a sub-AA CTA** — and set `--radius`
++ the shadow vars from *Typography & shape*.
 Copy `tailwind.config.ts` unchanged (it only reads the CSS vars). Default to the Inter/system font
 stack; only add a webfont `<link>` if the design names one. Honor "dark-first" for the `<html class>`
 (default dark, like `aios/`).
@@ -144,6 +146,10 @@ is clearly placeholder-powered; say so in `app/README.md`.
 **Routes & components.** `App.tsx` mirrors `aios/src/App.tsx` (a `<Route>` per screen under a shared
 `AppShell`). Reuse the shadcn-style `cva` primitives (button, card, input, badge…) so the look matches
 the foundation's quality bar. Copy only the primitives you actually use.
+
+**Accessible by default.** Give every icon-only control (nav links, icon buttons) an `aria-label`,
+associate inputs with a `<label htmlFor>`, and keep one `<h1>` per page — so generated apps clear the
+basics without a later `audit-app` pass catching avoidable misses.
 
 ### Phase 4 — Record it (provenance)
 

@@ -18,4 +18,6 @@ Format: `- YYYY-MM-DD — <skill> — <what changed> — <auto | applied>`
 
 ---
 
-_(no changes yet)_
+- 2026-07-02 — improve-system — applied rv-20260702-003: build-app scaffolds accessible-by-default markup (aria-labels, labels, one h1) — applied
+- 2026-07-02 — improve-system — applied rv-20260702-002: build-app verifies theme contrast clears WCAG AA (≥4.5:1) — applied
+- 2026-07-02 — improve-system — applied rv-20260702-001: build-app generated .gitignore covers .env* — applied
