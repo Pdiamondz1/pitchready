@@ -87,13 +87,13 @@ repo starts blank. Set them per project so it's discoverable. A good starting po
 
 **Description** (tailor the first clause to your project):
 
-> `<Your project> — built on a self-improving foundation: a file-first second brain (raw → AI-written wiki → approval queues), Claude Code skills, and an opt-in AIOS console with semantic search + an Anthropic agent.`
+> `<Your project> — built on a self-improving foundation: a file-first second brain (raw → AI-written wiki → approval queues) + Claude Code skills that vet, design, build, and ship it, with an opt-in AIOS console.`
 
 **Topics** (keep the ones that fit, add domain-specific ones):
 
 ```
-claude-code  ai-agents  knowledge-base  second-brain  rag  anthropic
-self-improving  automation  semantic-search  pkm
+claude-code  claude  ai-agents  agentic-ai  knowledge-base  second-brain
+rag  anthropic  self-improving  automation  starter-kit  pkm
 ```
 
 Set them in the repo's GitHub page (the ⚙ next to **About**), or from the CLI:
@@ -139,4 +139,6 @@ fight your specialization, so prefer the targeted `checkout` above.
 
 ---
 
-**The whole loop:** clone → `/setup-project` → `/add-new-resource` → (optional) console + schedule.
+**The whole loop:** clone → `/setup-project` → `/add-new-resource` → (optional) console + schedule. From
+there you can go further — **define → vet → design → build → take it to production**; see
+`docs/USING-THIS-FOR-ANY-PROJECT.md` and `docs/PATH-TO-PRODUCTION.md`.

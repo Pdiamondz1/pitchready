@@ -53,6 +53,33 @@ Everything below is built in from day one:
 
 ---
 
+## 👀 See it in action
+
+Mostly, you just *talk* to it. A first session tends to look like this:
+
+> **You —** "I want to build a small app to track my freelance invoices."
+> **It —** "Let's define it first — who's it for, and what would make it a success?" *(a few quick questions, then it writes your project charter)*
+>
+> **You —** "/roast"
+> **It —** "Convening the council… **Verdict: GO.** The cheapest 48-hour test is ___." *(saves the verdict)*
+>
+> **You —** "Design it, then build my app."
+> **It —** *captures your look-and-feel, then scaffolds a themed, working web app in `app/` you can preview in your browser*
+>
+> **You —** "Is it ready to ship?"
+> **It —** "Running ship-check… **NOT-YET** — 3 gaps: no tests, no privacy policy, still on mock data — and the exact skill that closes each."
+
+Type **"what can I do?"** any time for a friendly menu of everything it can do.
+
+<!--
+  📷 Screenshots / a demo GIF go here. Drop an image into docs/assets/ and uncomment, e.g.:
+  ![The AIOS console](docs/assets/console.png)
+  ![Building an app](docs/assets/build-demo.gif)
+  Good first shots: the aios/ console (cd aios && npm install && npm run dev), or a freshly built app running.
+-->
+
+---
+
 ## 📚 Documentation
 
 Every link below is clickable:
