@@ -7,7 +7,8 @@ plus a file-first AIOS web console (`aios/`) that surfaces it.
 These rules are load-bearing. Honor them in every session.
 
 **Maintaining this file:** Keep it lean — invariants and pointers only; elaboration goes in docs/skills.
-Condense *wording*, never a *rule*; raise the line cap before dropping a directive.
+Cap: **150 lines** (raise it further, or offload a section to a referenced `docs/*.md`, before dropping a
+directive); condense *wording*, never a *rule*.
 
 ## The three-folder knowledge system
 
