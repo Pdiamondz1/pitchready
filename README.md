@@ -63,6 +63,7 @@ Every link below is clickable:
 | [Audit your app](docs/AUDIT-APP.md) | Check it's safe, accessible, and fast — a prioritized findings report. |
 | [Deploy your app](docs/DEPLOY.md) | Scaffold hosting + CI + observability, then a go-live checklist. |
 | [Ship-check your app](docs/SHIP-CHECK.md) | One GO / NOT-YET readiness verdict naming what's left before launch. |
+| [Polish your app](docs/POLISH.md) | Real content, UX states, legal pages, docs, and optional payments — make it launch-ready. |
 | [Path to production](docs/PATH-TO-PRODUCTION.md) | The ordered map from prototype to a shippable product. |
 | [Extending](docs/EXTENDING.md) | Adding your own skills, sources, tools, and pages. |
 | [Subagents](docs/SUBAGENTS.md) | The tuned agent fleet that does the grunt work — and how to add your own. |
@@ -147,3 +148,4 @@ The technical reference — skip this if you just want to use it.
 - Phase 20 — `audit-app`: a propose-only security + accessibility + performance audit of the built `app/` → one prioritized findings report in `outputs/audits/` (mirrors `codex-review`) ✅
 - Phase 21 — `deploy` + `sync-metrics`: scaffold hosting (Vercel) + CI + graceful-off observability + a go-live checklist (you pull the trigger), and a graceful-off metrics connector that feeds `raw/metrics/` — closing the `advise-project` loop ✅
 - Phase 22 — `ship-check`: a propose-only GO / NOT-YET production-readiness gate over the built `app/` (build · data · tests · audit · deploy · content · legal · charter criteria) → one verdict in `outputs/ship-check/` naming the blocking gaps (the production analog of `roast`) ✅
+- Phase 23 — `polish`: a build-* pass over the built `app/` — real content, onboarding/empty/error/loading states, legal templates (privacy/terms/consent), user docs, and an opt-in graceful-off Stripe scaffold — closing rung 6, the final path-to-production rung ✅

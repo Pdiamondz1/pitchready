@@ -41,6 +41,8 @@ Nothing above assumes a domain. You make it *your* project by turning a few knob
 
 **Then get the go/no-go:** run **`ship-check`** — it runs the whole gauntlet across eight checks (built · real data · tested · safe · deployable · real content · legal · your charter goals) and returns one **GO / NOT-YET** verdict, naming the exact gaps left and the skill that closes each. It's **propose-only** (changes nothing) and the production analog of `roast`'s idea gate. This is the fifth rung of the path to production. See `docs/SHIP-CHECK.md`.
 
+**Then make it legitimate:** run **`polish`** — it turns your themed prototype into a launch-ready product: real content replacing the placeholders, onboarding + empty/error/loading states, legal pages (privacy policy, terms, cookie consent — as **templates a lawyer should review**, not legal advice), user docs, and an optional Stripe payments scaffold that **never touches your keys or charges anything** (you do the go-live). It's the sixth and final rung of the path to production. See `docs/POLISH.md`.
+
 **Under the hood:** the template ships a tuned fleet of specialist subagents (`.claude/agents/`) that does the grunt work — the right model per job, read-only by default — so building is cheaper, safer, and consistent. See `docs/SUBAGENTS.md`.
 
 **Fast path:** run the **`setup-project`** skill — it does moves 1–2 for you (interviews you,
