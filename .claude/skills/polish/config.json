@@ -1,0 +1,5 @@
+{
+  "app_dir": "app",
+  "areas": ["content", "states", "legal", "docs"],
+  "include_payments": false
+}
