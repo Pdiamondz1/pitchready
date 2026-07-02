@@ -43,6 +43,7 @@ Read `.claude/skills/autopilot/config.json` (all values default; never block on 
 - `advise_after_build` (default `true`) — run the Phase E post-build advise pass (propose-only) at the end of a run.
 - `wire_backend_after_build` (default `false`) — opt-in: after the web build, run `build-backend` (offline, graceful-off) to make the app backend-ready; the go-live step stays the user's. Off by default.
 - `test_after_build` (default `false`) — opt-in: after the web build (and any backend wire), run `test-app` (offline, via the `test-writer` agent) to generate a test suite mapped to the charter's success criteria; the run stays the user's. Off by default.
+- `audit_after_build` (default `false`) — opt-in: after the web build (and any backend wire / test pass), run `audit-app` (offline, reasoning-only) to produce a security/accessibility/performance findings report; propose-only, nothing installed or fixed. Off by default.
 
 ## Procedure
 
@@ -137,6 +138,14 @@ depends on it); then `build-<target>` runs **once per selected target**, and the
    tagged `layer: tests` + a `## Tests` section in `wiki/build.md` + one `applied` change-log line + the
    `outputs/tests/<date>-<slug>/TEST-PLAN.md` manifest (surface its path in the hand-over). **Default off** —
    a "build my whole project" user isn't surprised with extra tooling; one flag opts in.
+5. **`audit-app` (autonomous) — OPTIONAL, only if `config.audit_after_build` is true AND `web` is among the
+   selected targets** (it audits only the web `app/`; skipped + logged otherwise). Runs as a **tail of Phase
+   C** (after `build-<target>`, any `build-backend` wire, and any `test-app` pass, before the Phase D
+   hand-over) so the app is audited in whatever shape it ends in. It runs the security/accessibility/
+   performance lenses **offline** (reasoning only — do NOT run `npm audit` / Lighthouse / `npm install`),
+   writes `outputs/audits/<date>-<slug>/AUDIT.md` (propose-only — no app changes, no `raw/` / `change-log`),
+   and surfaces the report path + any finding at/above `caution_severity` (CRITICAL by default) to the
+   decision ledger + hand-over. **Default off** — opt-in, one flag.
 
 ### Phase D — Hand it over
 
@@ -155,7 +164,7 @@ The final step. After the build (Phase C) and the hand-over (Phase D), if `confi
 the charter's `Later`/`Out` deferred items (→ `scale`/`improve` ideas), the decision ledger's
 `(assumed — confirm later)` flags (→ `maintain`/validate ideas), the build record (`raw/builds/` + the
 run's `plan.md`/`run.md` + per-target outcomes → what exists now), and the deferred tiers (real data,
-deploy, more targets → next-step ideas). It runs **only the generate-and-append half** of advise-project
+testing, audit, deploy, more targets → next-step ideas). It runs **only the generate-and-append half** of advise-project
 (gather → score → write the ranked "what's next" list to `outputs/ideas-*.md`) and **skips its
 "Promote approved" and "Age out & alert" steps** — so a pre-existing `- [x]` approval or an old queue is
 never swept into a brief / `review-*.md` item or archived mid-run; that promotion stays with the normal
