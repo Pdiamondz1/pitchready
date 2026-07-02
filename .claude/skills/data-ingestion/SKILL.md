@@ -1,6 +1,6 @@
 ---
 name: data-ingestion
-description: Orchestrator. Runs the three sync skills back-to-back — sync-claude-sessions, sync-ecosystem-data, sync-curated-content — and logs a run record so future runs know what was already ingested (no gaps, no re-ingestion).
+description: Orchestrator. Runs the four sync skills back-to-back — sync-claude-sessions, sync-ecosystem-data, sync-curated-content, sync-metrics — and logs a run record so future runs know what was already ingested (no gaps, no re-ingestion).
 ---
 
 # data-ingestion
@@ -21,8 +21,8 @@ individually with zero arguments.
 
 ## Procedure
 
-1. **Run the three sync skills back-to-back, in order:** `sync-claude-sessions`,
-   `sync-ecosystem-data`, `sync-curated-content`. Each manages its own incremental cursor,
+1. **Run the four sync skills back-to-back, in order:** `sync-claude-sessions`,
+   `sync-ecosystem-data`, `sync-curated-content`, `sync-metrics`. Each manages its own incremental cursor,
    so re-running is safe and won't re-ingest.
 2. **If one fails, continue the others** and record the failure; do not let one bad source
    abort the whole run. Never re-ingest data a sub-skill has already cursored past.

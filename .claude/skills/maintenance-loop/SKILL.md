@@ -29,7 +29,7 @@ Run unattended — **do not ask the user questions.** If a step needs configurat
 missing, skip it and log "skipped (unconfigured)" rather than blocking on an interview.
 
 1. **Ingest.** Run `data-ingestion` (it runs `sync-claude-sessions`, `sync-ecosystem-data`,
-   `sync-curated-content` back-to-back, each incremental via its own cursor). Sources without
+   `sync-curated-content`, `sync-metrics` back-to-back, each incremental via its own cursor). Sources without
    a `config.json` entry are skipped and logged, not interviewed.
 2. **Improve.** Run `improve-system`. Its existing three-bucket logic does the safe thing on
    its own: it applies previously human-approved (`- [x]`) items and the low-risk

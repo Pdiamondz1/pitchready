@@ -44,6 +44,7 @@ a note rather than blocking.
 - **Ingested activity** — recent `raw/inputs/processed/` summaries and `raw/ecosystem/` data.
 - **Metrics feed** — `raw/metrics/*.json`: the latest snapshot **and the delta vs. the
   previous snapshot** (for trend direction). **Ignore files named `EXAMPLE*` and dotfiles.**
+  *(Produced by the `sync-metrics` skill once an analytics provider is configured; see `docs/METRICS-FEED.md`.)*
 - **Project identity** — `wiki/charter.md` when present (purpose/audience/success/scope/constraints); otherwise `projectType` + tagline from `aios/src/config/project.ts` / `aios/src/config/brand.ts`; also `wiki/design-system.md` when present (the design direction). Either anchors strategic reasoning to *this* project.
 - **Memory** — `outputs/ideas-log.md` + any open `outputs/ideas-*.md`, so it knows what it
   has already said.
@@ -136,7 +137,7 @@ existing item; only append new ones.**
 - **Never edits** `raw/` (immutable), `wiki/`, `.claude/skills/`, or the project's code /
   product.
 - **Never writes** `outputs/change-log.md` and **never auto-applies** anything. `improve-system`
-  stays the *single* applier and the *single* `change-log.md` writer; approval here produces a
+  stays the *single* applier of the self-improvement lanes; approval here produces a
   *proposal* (a brief or a review item), not a change.
 - **State:** read from / write to `outputs/runs/advise-project.json` (`last_run`, `tick`,
   last-seen metrics cursor), created on the first run.
@@ -154,7 +155,7 @@ When invoked by `autopilot` right after a build (its **Phase E** — a distinct 
 `## Autonomous invocation` notes on the build skills), focus your four lenses on the **just-built project**:
 the charter's `Later`/`Out` deferred items → `scale`/`improve` ideas; the decision ledger's
 `(assumed — confirm later)` flags (`outputs/autopilot/<date>-<slug>/decisions.md`) → `maintain`/validate
-ideas; the deferred tiers (real data → the `build-backend` skill, testing → the `test-app` skill, audit → the `audit-app` skill, deploy, more build targets) → next-step ideas; the build record
+ideas; the deferred tiers (real data → the `build-backend` skill, testing → the `test-app` skill, audit → the `audit-app` skill, deploy → the `deploy` skill, more build targets) → next-step ideas; the build record
 (`raw/builds/` + the run's `plan.md`/`run.md`) → what exists now. The `raw/metrics/` usage feed will be
 empty for a fresh build — that's fine; skip it and ground on the charter/ledger/build-record. Run **only
 your generate-and-append steps** (gather → generate → dedup → score → write the queue → summarize) and
