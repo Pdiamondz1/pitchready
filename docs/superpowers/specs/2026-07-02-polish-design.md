@@ -26,9 +26,11 @@ After a polish pass, a re-run of `ship-check` can flip `content`/`legal` to ✅.
 **Decisions (with the user):** one consolidated `polish` skill (the recommended shape — a cohesive "make it
 legitimate" pass, mirroring how `audit-app` consolidated its lenses); the **Stripe payments scaffold is
 included as an opt-in, default-off area**; the skill is **not in `autopilot`** (attended-only, like
-`deploy`/`ship-check`). Separately, at the user's request this phase **raises the CLAUDE.md line cap
-125 → 150** (a one-line edit to the file's own "Maintaining this file" policy — kept self-contained, no
-section offloaded to a sub-file) so the skills list has durable room for this and future phases.
+`deploy`/`ship-check`). Separately, at the user's request this phase **raised the CLAUDE.md line cap
+125 → 150** — **already applied as the first commit of this phase** (a one-line edit to the file's own
+"Maintaining this file" policy, kept self-contained, no section offloaded to a sub-file) so the skills list
+has durable room for this and future phases. So the CLAUDE.md wiring below is just the skill bullet + outputs
+pointer; the cap line is **verify-only** (already `150`).
 
 ## Shape — a `build-*` sibling (it modifies the app)
 
@@ -65,21 +67,31 @@ invocation argument):
    a qualified lawyer review it before you rely on it; it does not by itself make you GDPR/CCPA compliant."**
    It scaffolds **structure + a fill-in/verify-with-counsel checklist**; it **never claims the app IS
    compliant** (compliance is a legal determination the human + counsel make). → closes `ship-check`'s `legal`
-   gap (presence), while being honest that presence ≠ compliance.
+   gap (which checks the pages **exist**, not that the fill-ins are complete), while being honest that presence
+   ≠ compliance. *(Note the boundary with the `content` area: the legal templates' `[PLACEHOLDER]` fields are
+   the user's documented legal fill-ins and are expected/allowed; the `content` area's job is that the **main
+   product UI** carries real copy — so `content` closes on real UI copy while `legal` closes on presence, and
+   `ship-check`'s `content` scan targets lorem/dummy marketing copy in the app UI, not the legal pages'
+   deliberate fill-in fields.)*
 4. **`docs`** — generate real user-facing docs from the charter + what's built: a real `app/README.md`
    (replacing `build-app`'s placeholder note) + a short "how to use it" user guide.
 5. **`payments`** (opt-in; `include_payments`, default **false**) — a **graceful-off Stripe scaffold**
    mirroring `build-backend`'s `SupabaseStore` + `deploy`'s Sentry: `app/src/lib/payments.ts` + a
-   pricing/checkout UI that **dynamic-`import()`s `@stripe/stripe-js` only when
-   `import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY` is present**, and renders an inert **"payments not
-   configured"** state without it (the app never breaks). Env-template slots (publishable key client-side; the
-   **`STRIPE_SECRET_KEY` marked server-only, never in the client bundle**) with fill-in comments, never
-   values. A **`outputs/polish/<date>-<slug>/GO-LIVE.md`** keyed-go-live checklist (create a Stripe account,
-   add products/prices, paste the publishable key, put the secret + a checkout-session endpoint **server-side**
-   — pointing to `build-backend`'s Supabase edge function — test in Stripe test mode). **NEVER enters keys,
-   NEVER creates an account, NEVER charges** — financial transactions are a prohibited action; the human does
-   the keyed go-live. The scaffold does the **client half** honestly and **documents the server half** in the
-   checklist (a real Stripe charge needs a server for the secret key).
+   pricing/checkout UI with **three honest states so the app never breaks** — (a) **no publishable key** →
+   an inert *"payments not configured"* state (Stripe is never even `import()`ed); (b) **publishable key
+   present but no checkout endpoint configured yet** → a *"checkout isn't fully set up — finish the server
+   step in GO-LIVE.md"* state that **never calls a missing endpoint and never errors** (the analogue of
+   `build-backend`'s keys-present-but-schema-missing resilience — the Phase 18 Codex catch); (c) **publishable
+   key + a configured checkout endpoint** → it **dynamic-`import()`s `@stripe/stripe-js`** and runs the real
+   Stripe Checkout redirect. The client env template carries **only `VITE_STRIPE_PUBLISHABLE_KEY`** (in
+   `app/.env.example`, an empty slot + fill-in comment, never a value); the **`STRIPE_SECRET_KEY` is
+   documented ONLY in `GO-LIVE.md` as a server-side secret — never templated into any `app/.env*` file, never
+   in the client bundle.** The **`outputs/polish/<date>-<slug>/GO-LIVE.md`** keyed-go-live checklist (create a
+   Stripe account, add products/prices, paste the publishable key, put the secret + a checkout-session
+   endpoint in **a Supabase edge function you add** — server-side — test in Stripe test mode). **NEVER enters
+   keys, NEVER creates an account, NEVER charges** — financial transactions are a prohibited action; the human
+   does the keyed go-live. The scaffold does the **client half** honestly and **documents the server half** in
+   the checklist (a real Stripe charge needs a server for the secret key).
 
 The set is configurable via `config.areas` + `config.include_payments`; a named-area invocation argument runs
 just that area.
@@ -131,8 +143,9 @@ config.json stay **untouched**.
 
 ## Wiring (light / additive; the CLAUDE.md cap is now 150 — see Context — so the budget is comfortable)
 
-- **`CLAUDE.md`** — the cap-note edit (Context) + one skill bullet (after the `ship-check` bullet) + one
-  `outputs/polish/` pointer (after `outputs/ship-check/`). ~120 → ~123 (well under the 150 cap).
+- **`CLAUDE.md`** — one skill bullet (after the `ship-check` bullet) + one `outputs/polish/` pointer (after
+  `outputs/ship-check/`). *(The cap-note raise to 150 is already committed — verify-only, not a change to
+  make.)* ~120 → ~122 (well under the 150 cap).
 - **`.claude/skills/what-can-i-do/SKILL.md`** — one menu item.
 - **`README.md`** — a Phase 23 build-status row + a `[Polish your app](docs/POLISH.md)` guide-table row.
 - **`docs/PATH-TO-PRODUCTION.md`** — mark rung 6 **shipped (Phase 23)** (align wording to the as-built skill).
