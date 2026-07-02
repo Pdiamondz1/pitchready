@@ -8,8 +8,14 @@ by just talking; it quietly files them away, keeps a tidy index, and even tidies
 itself over time. Use it for almost anything — a business idea, a research project, a web or
 mobile app, a portfolio, or a growing collection of notes.
 
-> 💡 **You don't need to be a programmer, and you don't need to know GitHub.** A free app called
-> **Claude Code** does the technical parts for you. Start with **[Start here »](docs/START-HERE.md)**
+And when you're ready to build, it goes further than a notebook: it can carry an idea **all the
+way to a launch-ready product** — vetting it, designing it, building it, then making the data real
+and testing, auditing, deploying, and polishing it — one guided step at a time, always with you in
+control.
+
+> 💡 **You don't need to know how to code.** You install one free app — **Claude Code** — and talk to
+> it in plain English; it does the technical parts for you. There's a little first-time setup (installing
+> the app), and **[Start here »](docs/START-HERE.md)** walks you through every step.
 
 ---
 
@@ -19,7 +25,7 @@ Pick whichever fits you:
 
 | You are… | Go to | What it's like |
 |---|---|---|
-| **New to this, or new to GitHub** | **[Start here](docs/START-HERE.md)** | The simplest path. No terminal, no commands — you install one app and just talk to it. |
+| **New to this, or new to GitHub** | **[Start here](docs/START-HERE.md)** | The simplest path — install one app (Claude Code), and from there you mostly just talk to it in plain English; it handles the technical parts. |
 | **Comfortable and want every step** | [New project walkthrough](docs/NEW-PROJECT-WALKTHROUGH.md) | The full hands-on guide: copy it, set it up, run the dashboard, pick options. |
 
 Once you're set up, you can always type **"what can I do?"** and it'll show you a friendly menu.
@@ -42,6 +48,7 @@ Everything below is built in from day one:
 - 🎨 **Designed, not generic** — a guided design step (Google Stitch–aware) captures your look-and-feel so what you build looks intentional, not AI-default.
 - 🛠️ **Built for you** — when you're ready, say **"build my app"** (web), **"build my mobile app"** (phone), or **"build my browser extension"** (Chrome) and it scaffolds a working, on-brand first version in an `app/`, `mobile/`, or `plugin/` folder — mock data first, no coding (see [web](docs/BUILD-APP.md) · [mobile](docs/BUILD-MOBILE.md) · [extension](docs/BUILD-PLUGIN.md)).
 - 🚀 **Or do it all in one go** — say **"build my whole project"** and it grills you once, vets + researches the idea, confirms one plan, then builds it end-to-end hands-off — for **one platform or several** (web + phone + extension from a single run) — pausing only if the idea gets a "stop" verdict, then proposing what to build next (see [autopilot](docs/AUTOPILOT.md)).
+- 🏁 **All the way to launch-ready** — after building, take it to production the same guided way: make the data real with a database + sign-in, generate a real test suite, run a security/accessibility/performance audit, scaffold hosting + CI, get a **go / not-yet** readiness verdict, then a final polish pass (real content, legal-page templates, optional payments). It scaffolds everything offline; the few keyed "go-live" steps stay yours (see [path to production](docs/PATH-TO-PRODUCTION.md)).
 - 🤖 **Sharp under the hood** — the grunt work runs on a tuned fleet of specialist subagents that ships with the template (the right model per job, read-only by default), so it's cheaper, safer, and consistent (see [subagents](docs/SUBAGENTS.md)).
 
 ---
@@ -92,12 +99,14 @@ Three folders do the work (all clickable):
 ## Make it your project
 
 This is meant to become *your* thing — a web or mobile app, a workflow, a portfolio or data
-manager, a research notebook. The natural order is **define it → vet it → design it → build it**:
+manager, a research notebook. The natural order is **define it → vet it → design it → build it →
+take it to production**:
 
 1. **Define it** — run **[`define-project`](.claude/skills/define-project/SKILL.md)**, a short discovery interview that captures your goal, audience, and success in `wiki/charter.md` so the rest of the system has a north star.
 2. **Vet it** — want a gut-check before you build? Say **"/roast"** and **[`roast`](.claude/skills/roast/SKILL.md)** convenes a council that pressure-tests the idea and gives a clear **go / reshape / stop** verdict, with an optional fact-checked briefing — so you only build what's worth building.
 3. **Design it** — run **[`define-design`](.claude/skills/define-design/SKILL.md)** to capture how it should *look* — a design system in `wiki/design-system.md` so your UI isn't generic.
-4. **Build it** — when the plan and look are set, run **[`build-app`](.claude/skills/build-app/SKILL.md)** (or just say "build my app") and it scaffolds a working, themed first version of your web app into an `app/` folder, runnable with `npm run dev`. Prefer a phone app? Run **[`build-mobile`](.claude/skills/build-mobile/SKILL.md)** ("build my mobile app") for an Expo app in a `mobile/` folder you preview on your phone via a QR code. Prefer a browser extension? Run **[`build-plugin`](.claude/skills/build-plugin/SKILL.md)** ("build my browser extension") for a themed Manifest V3 extension in a `plugin/` folder you load into Chrome via Developer mode. All three are front-end MVPs with placeholder data — real data, accounts, and deployment come later. See [web](docs/BUILD-APP.md) · [mobile](docs/BUILD-MOBILE.md) · [extension](docs/BUILD-PLUGIN.md).
+4. **Build it** — when the plan and look are set, run **[`build-app`](.claude/skills/build-app/SKILL.md)** (or just say "build my app") and it scaffolds a working, themed first version of your web app into an `app/` folder, runnable with `npm run dev`. Prefer a phone app? Run **[`build-mobile`](.claude/skills/build-mobile/SKILL.md)** ("build my mobile app") for an Expo app in a `mobile/` folder you preview on your phone via a QR code. Prefer a browser extension? Run **[`build-plugin`](.claude/skills/build-plugin/SKILL.md)** ("build my browser extension") for a themed Manifest V3 extension in a `plugin/` folder you load into Chrome via Developer mode. All three are front-end MVPs with placeholder data — real data, accounts, and deployment come next (step 5). See [web](docs/BUILD-APP.md) · [mobile](docs/BUILD-MOBILE.md) · [extension](docs/BUILD-PLUGIN.md).
+5. **Take it to production** — when the first version works, walk the six-rung [path to production](docs/PATH-TO-PRODUCTION.md): real data + sign-in with **[`build-backend`](.claude/skills/build-backend/SKILL.md)**, a real test suite with **[`test-app`](.claude/skills/test-app/SKILL.md)**, a security/accessibility/performance audit with **[`audit-app`](.claude/skills/audit-app/SKILL.md)**, hosting + CI with **[`deploy`](.claude/skills/deploy/SKILL.md)**, a **go / not-yet** readiness gate with **[`ship-check`](.claude/skills/ship-check/SKILL.md)**, and a final **[`polish`](.claude/skills/polish/SKILL.md)** pass — real content, legal templates, optional payments. Everything scaffolds offline; the few keyed "go-live" steps stay yours.
 
 The easiest route is to let the **setup** step do it for you
 (it's part of [Start here](docs/START-HERE.md)). To go deeper, see
