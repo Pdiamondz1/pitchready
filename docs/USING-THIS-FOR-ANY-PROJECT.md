@@ -39,6 +39,8 @@ Nothing above assumes a domain. You make it *your* project by turning a few knob
 
 **Then ship it:** run **`deploy`** — it scaffolds hosting (Vercel), a CI check, an env template, and graceful-off error tracking + analytics for your `app/`, then hands you a short go-live checklist. It **never deploys or enters keys** — you pull the trigger. Its companion **`sync-metrics`** then feeds your real usage numbers into `raw/metrics/`, which is exactly what the project advisor reads to suggest what's next — closing the loop. This is the fourth rung of the path to production. See `docs/DEPLOY.md`.
 
+**Then get the go/no-go:** run **`ship-check`** — it runs the whole gauntlet across eight checks (built · real data · tested · safe · deployable · real content · legal · your charter goals) and returns one **GO / NOT-YET** verdict, naming the exact gaps left and the skill that closes each. It's **propose-only** (changes nothing) and the production analog of `roast`'s idea gate. This is the fifth rung of the path to production. See `docs/SHIP-CHECK.md`.
+
 **Under the hood:** the template ships a tuned fleet of specialist subagents (`.claude/agents/`) that does the grunt work — the right model per job, read-only by default — so building is cheaper, safer, and consistent. See `docs/SUBAGENTS.md`.
 
 **Fast path:** run the **`setup-project`** skill — it does moves 1–2 for you (interviews you,
