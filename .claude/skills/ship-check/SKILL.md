@@ -69,6 +69,9 @@ verdict; it changes nothing.
      *not ready, no app built* — and point the user to `build-app` (*"There's no app to ship-check yet — build
      one first with `build-app`, then come back."*). Do **not** run `build-app` yourself: propose-only means
      ship-check *routes* you to a rung, it never runs one for you. Stop gracefully.
+     *(If a `plugin/` or `mobile/` exists here instead, say so plainly: these production tiers cover the
+     web `app/` only today — mobile and browser-extension have their own later-phase tiers, so there's
+     nothing to ship-check for them yet — don't steer a plugin/mobile builder to build a web app.)*
    - Read the app: `package.json` (scripts → `build` / `test`; deps), `src/` (the `content` scan + `criteria`
      cross-reference), `src/data/store/` + `supabase/` (backend wiring → the `data` check), `vercel.json` +
      `.github/workflows/deploy-app.yml` + any `.env*` (→ the `deploy` check).

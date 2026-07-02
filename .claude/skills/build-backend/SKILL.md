@@ -41,6 +41,9 @@ Read `.claude/skills/build-backend/config.json` (all values default; never block
    - **Missing →** offer `build-app` first: *"A backend upgrades an app you've already built. Want me to
      build the app first (a quick, themed front-end), then wire the backend into it?"* On yes, run
      `build-app`, then continue. On no, stop gracefully (nothing to upgrade).
+     *(If a `plugin/` or `mobile/` exists here instead, say so plainly: these production tiers cover the
+     web `app/` only today — mobile and browser-extension have their own later-phase tiers, so there's
+     nothing to wire a backend for them yet — don't steer a plugin/mobile builder to build a web app.)*
    - Read the app's **`src/data/` fixtures** — the typed arrays + `getX()`/`listX()` accessors. **These are
      the source of truth for the data shapes** (the columns and the seed).
 2. **Charter — `wiki/charter.md` (recommended).** Read `## Scope` / `## Audience` for **which** entities

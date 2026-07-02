@@ -18,6 +18,8 @@ Format: `- YYYY-MM-DD — <skill> — <what changed> — <auto | applied>`
 
 ---
 
+- 2026-07-02 — improve-system — applied rv-20260702-008: build-mobile package.json lists expo-router peer deps + a typecheck script; Phase 5 honest about the web-preview path (create-expo-app alternative noted) — applied
+- 2026-07-02 — improve-system — applied rv-20260702-007: web-only production tiers (build-backend/test-app/audit-app/deploy/ship-check/polish) say so when a plugin/ or mobile/ exists instead of routing to build-app — applied
 - 2026-07-02 — improve-system — applied rv-20260702-006: build-app notes the copied Button has no asChild (Link-as-button uses buttonVariants) — applied
 - 2026-07-02 — improve-system — applied rv-20260702-005: polish payments flags marketplace payouts need Stripe Connect (single-seller Checkout out of scope) — applied
 - 2026-07-02 — improve-system — applied rv-20260702-004: build-backend owner-scopes private-per-user tables by default (owner_id + auth.uid()=owner_id RLS; public tables stay shared-read) — applied

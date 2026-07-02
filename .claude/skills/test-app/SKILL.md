@@ -43,6 +43,9 @@ Read `.claude/skills/test-app/config.json` (all values default; never block on a
    - **Missing →** offer `build-app` first: *"Testing proves out an app you've already built. Want me to
      build the app first (a quick, themed front-end), then test it?"* On yes, run `build-app`, then
      continue. On no, stop gracefully (nothing to test).
+     *(If a `plugin/` or `mobile/` exists here instead, say so plainly: these production tiers cover the
+     web `app/` only today — mobile and browser-extension have their own later-phase tiers, so there's
+     nothing to test for them yet — don't steer a plugin/mobile builder to build a web app.)*
    - Read the app: `src/pages/` + `src/App.tsx` (the **route table** → which pages to test), `src/data/`
      fixtures + `getX()`/`listX()` accessors (**unit targets** and the **known values** component tests
      assert on), `src/lib/utils.ts` (the `cn` helper), `src/components/`, and `src/data/store/` if

@@ -55,6 +55,9 @@ report; it changes nothing.
    Read `app_dir` from config first; everywhere below, "`app/`" means that configured directory.
    - **Missing →** offer `build-app` first: *"An audit checks an app you've already built. Want me to build
      the app first, then audit it?"* On yes, run `build-app`, then continue. On no, stop gracefully.
+     *(If a `plugin/` or `mobile/` exists here instead, say so plainly: these production tiers cover the
+     web `app/` only today — mobile and browser-extension have their own later-phase tiers, so there's
+     nothing to audit for them yet — don't steer a plugin/mobile builder to build a web app.)*
    - Read the app: `package.json` (deps → the dependency check; scripts), `src/` (JSX → the a11y lens; app
      code → injection/authz/XSS review), `src/index.css` (the design-system tokens → contrast), the Vite
      config, any `.env.example`; and `src/data/store/` + auth if `build-backend` ran (→ deeper authz/RLS

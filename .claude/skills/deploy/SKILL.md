@@ -44,6 +44,9 @@ Read `.claude/skills/deploy/config.json` (all values default; never block on abs
    - **Missing →** offer `build-app` first: *"Deploying puts an app you've already built online. Want me to
      build the app first, then set up hosting?"* On yes, run `build-app`, then continue. On no, stop
      gracefully.
+     *(If a `plugin/` or `mobile/` exists here instead, say so plainly: these production tiers cover the
+     web `app/` only today — mobile and browser-extension have their own later-phase tiers, so there's
+     nothing to deploy for them yet — don't steer a plugin/mobile builder to build a web app.)*
    - Read `app/package.json` (the `build` script + the `dist` output), and detect a **backend**
      (`app/src/data/store/` or `app/supabase/`) → the env template must include the Supabase vars.
 2. **Charter — `wiki/charter.md` (recommended).** Read the app name/one-liner (for the project name + a

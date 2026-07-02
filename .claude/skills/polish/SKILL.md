@@ -94,6 +94,9 @@ if the user names `payments`); a named-area invocation argument runs just that a
    - **Missing →** offer `build-app` first: *"Polishing makes an app you've already built launch-ready. Want
      me to build the app first, then polish it?"* On yes, run `build-app`, then continue. On no, stop
      gracefully.
+     *(If a `plugin/` or `mobile/` exists here instead, say so plainly: these production tiers cover the
+     web `app/` only today — mobile and browser-extension have their own later-phase tiers, so there's
+     nothing to polish for them yet — don't steer a plugin/mobile builder to build a web app.)*
    - Read the app: `src/` (the pages/components that get real copy + states), `package.json`, `src/data/`
      (mock fixtures → what the empty/loading states show), any `.env.example`.
 2. **North stars.** Read `wiki/charter.md` (brand/purpose/audience → the real copy; audience + data-collected
