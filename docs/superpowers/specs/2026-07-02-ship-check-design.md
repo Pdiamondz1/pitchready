@@ -50,35 +50,57 @@ light wiring and docs a new skill needs.
 Each check reads the artifact a prior rung produces and/or does a lightweight inline scan, then yields a
 **status** (✅ pass · ⚠️ advisory · ❌ blocking) and any **findings** tagged `CRITICAL > MAJOR > MINOR >
 INFO` (the `audit-app` / `codex-review` canon), each with a `file`/path pointer where applicable and **the
-exact skill or step that closes it**:
+exact skill or step that closes it**.
+
+A check's **status is a rollup of its findings against `block_severity`**: ❌ blocking if it has any finding
+at/above the threshold, ⚠️ advisory if only below it, ✅ pass if none — so the per-check status and the
+verdict can never disagree (the status is derived, not an independent judgment). **Default severity scales by
+charter relevance:** a gap is **MAJOR (blocking, at the default threshold)** when the rung it represents is
+required for *this* app's stated purpose/audience, and **MINOR (advisory)** when it isn't. Each check below
+pins its default:
 
 1. **`build`** (← `build-app`) — `app/` present with a real `build` script + `dist` output; not the empty
-   template shell. Absent → Phase 0 already routed to `build-app`.
+   template shell. Present → ✅. A missing/trivial build → **CRITICAL** (nothing to ship). *(Rare — Phase 0
+   already routes an absent `app/` to `build-app`.)*
 2. **`data`** (← `build-backend`) — is a real backend wired (`app/src/data/store/` +
    `app/supabase/migrations/` + `VITE_SUPABASE_*` env slots), or still mock-only? Mock-only → a finding
-   (graceful-off means it *runs*, but it isn't a real-data product) → run `build-backend`. Severity scaled to
-   whether the charter implies persistence/accounts.
+   (graceful-off means it *runs*, but it isn't a real-data product) → run `build-backend`. **Default: MAJOR**
+   if the charter implies persistence/accounts, else **MINOR/advisory** (a static/informational site needs no
+   backend).
 3. **`tests`** (← `test-app`) — a suite present (`app/` `test` script + `outputs/tests/*/TEST-PLAN.md`)? Read
    the manifest: how many charter criteria map to automated tests vs. flagged manual/metric. No suite → run
    `test-app`; suite present but never verified green → note + **offer to run it** (offer-don't-run).
-4. **`audit`** (← `audit-app`) — latest `outputs/audits/*/AUDIT.md` present? Read its `max_severity` + counts;
-   an open CRITICAL/MAJOR audit finding → blocking here too. No audit on record → run `audit-app`.
+   **Default: MAJOR** if no suite (shipping untested); **MINOR/advisory** if a suite exists but wasn't
+   verified green.
+4. **`audit`** (← `audit-app`) — latest `outputs/audits/*/AUDIT.md` present? Read its `max_severity` + counts.
+   **Default: inherit the audit's highest open severity** (an open CRITICAL/MAJOR audit finding is blocking
+   here too); **no audit on record → MAJOR** (safety unverified) → run `audit-app`.
 5. **`deploy`** (← `deploy`) — `app/vercel.json` + `.github/workflows/deploy-app.yml` + an env template
-   present? Missing → run `deploy`.
+   present? **Missing → MAJOR** (no hosting/CI config to go live with) → run `deploy`. Present → ✅.
 6. **`content`** (rung-6 prereq) — inline scan of `app/src/` for placeholder copy (lorem ipsum, `TODO` /
-   `FIXME`, "Example Corp", dummy text). Placeholder content → a real product isn't shippable.
+   `FIXME`, "Example Corp", dummy text). **Placeholder copy in shipped UI → MAJOR** (a real product isn't
+   shippable with lorem). Clean → ✅.
 7. **`legal`** (rung-6 prereq) — inline check for a privacy policy / terms / cookie consent (files or routes).
-   Absent → severity **scaled**: MAJOR if the app collects user data (backend/auth wired), advisory for a
-   pure static demo.
+   Absent → severity **scaled**: **MAJOR** if the app collects user data (backend/auth wired), **MINOR/advisory**
+   for a pure static demo.
 8. **`criteria`** (← `define-project`) — read `wiki/charter.md` `## Success & outcomes`; for each criterion,
-   cross-reference build/tests/audit to judge met / tested / still-open.
+   cross-reference build/tests/audit to judge met / tested / still-open. **Default:** a core criterion with no
+   corresponding built feature → **MAJOR**; a criterion that's built-but-unverified or measured post-launch →
+   **MINOR/advisory** (success metrics are often measured live, not ship-blockers).
 
 The set is configurable via `config.checks`; the default runs all eight.
 
+The net effect is the intuitive one: a freshly built Tier-0 app (mock data, no tests, no audit, no deploy
+config, possibly placeholder copy) accrues several MAJOR findings → **NOT-YET**, which is the correct verdict
+for a prototype; as each rung is completed the MAJORs clear and the verdict flips to **GO**.
+
 ## The verdict — GO / NOT-YET
 
-- A `config.block_severity` threshold (default **`"MAJOR"`**, mirroring `audit-app`'s `caution_severity`)
-  splits findings into **blocking** (at/above the threshold) and **advisory** (below it).
+- A `config.block_severity` threshold (default **`"MAJOR"`**) splits findings into **blocking** (at/above the
+  threshold) and **advisory** (below it). It borrows the *mechanism* of `audit-app`'s `caution_severity` (a
+  config-driven severity threshold) but differs in default and purpose: `caution_severity` defaults to
+  `CRITICAL` and merely *surfaces* findings prominently (audit-app has no gate), whereas `block_severity`
+  defaults to `MAJOR` and *gates* the verdict.
 - **NOT-YET** if any blocking finding exists; **GO** otherwise. Advisories are always listed (under either
   verdict — a GO can still carry known non-blocking gaps).
 - The report ranks the blocking gaps, names the closing skill/step for each, and calls out **the single most
@@ -87,8 +109,10 @@ The set is configurable via `config.checks`; the default runs all eight.
 ### `SHIP-CHECK.md` structure
 
 RAG frontmatter (`title`, `source_id: outputs:ship-check:<date>-<slug>`, `verdict: GO|NOT-YET`,
-`max_severity`, `counts: {blocking, advisory}`, `updated`) → **verdict header** (GO / NOT-YET + confidence +
-the call in one line) → a **readiness table** (each check → status + severity + one line) → **blocking gaps
+`max_severity`, `counts: {blocking, advisory}`, `updated`) → **verdict header** (GO / NOT-YET, a one-line
+call, and a plain **confidence** read — `low / medium / high`, a judgment call exactly as `roast`'s Judge
+gives it, with no scoring model and not a frontmatter field) → a **readiness table** (each check → status +
+severity + one line) → **blocking gaps
 ranked** (what's missing · why it blocks · the exact skill/step) → **advisories** → **the single most
 important next step** → a **"Confirm it live"** section listing the *offered, not run* deeper-check commands
 (the test suite / `npm audit` / `npm run build` + Lighthouse) with a plain statement of what only those runs
