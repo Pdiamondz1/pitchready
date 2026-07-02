@@ -78,7 +78,10 @@ backend (if backend-wired, the env template includes the Supabase vars). **Atten
    typecheck` → run the `test-app` suite **if present** (`npm --prefix app test`) → `npm --prefix app run
    build`. **Deploy itself is handled by Vercel's Git integration** (connect the repo once in the Vercel
    dashboard → auto-build/deploy on push), so **no deploy token ever lives in Actions** — the workflow only
-   proves the build is green. (This composes cleanly with `test-app` and `audit-app`.)
+   proves the build is green. (This composes cleanly with `test-app` and `audit-app`.) The `GO-LIVE.md`
+   notes plainly that this CI gate is **informational** — Vercel deploys on push independently of the Actions
+   result unless the user turns on "wait for CI" / required checks; the gate proves-green, it does not by
+   itself block a deploy (Vercel's own build still fails on a broken build — belt-and-suspenders).
 3. **Env template → `app/.env.production`** — the `VITE_*` vars (incl. `VITE_SUPABASE_URL` /
    `VITE_SUPABASE_ANON_KEY` if backend-wired, plus `VITE_SENTRY_DSN` if error-tracking) as empty slots with
    fill-in comments; ensure `app/.gitignore` covers `.env.production`. (Keys are never entered in chat.)
@@ -92,7 +95,9 @@ backend (if backend-wired, the env template includes the Supabase vars). **Atten
      **client half** of the metrics loop; `sync-metrics` is the server half that turns provider analytics
      into `raw/metrics/` snapshots.
    - Deps added to `app/package.json`: `@sentry/react` (only if `include_error_tracking`); the analytics
-     hook is dependency-free by default. Each added **only if not already present**.
+     hook is dependency-free by default. Each added **only if not already present**. A one-line comment in
+     `observability.ts` marks where a real analytics provider's SDK/script wires in — a deliberate no-op seam
+     at Tier 0 that makes the client-half ↔ `sync-metrics` loop legible.
 5. **Go-live checklist → `outputs/deploy/<date>-<slug>/GO-LIVE.md`** — the exact human steps: create a free
    Vercel account, connect the GitHub repo (set the **root directory to `app/`**), paste the env vars in the
    Vercel dashboard (Settings → Environment Variables), trigger the first deploy, verify the live URL, and
@@ -145,9 +150,15 @@ real snapshots once a user has a live app + analytics.
 
 Run-state: `outputs/runs/sync-metrics.json` (`last_run`, `last_captured_at`), created on first run.
 
-**Writes.** Only `raw/metrics/<date>-dau.json` (append-only — a **new dated file** each run, never
-overwriting, honoring `raw/` immutability; `EXAMPLE*` and dotfiles untouched) + its run-state. It **never
-enters or echoes a key** (read from env only), never writes `change-log.md`, never touches `wiki/` or code.
+**Writes.** `raw/metrics/<date>-dau.json` (honoring `raw/` immutability; `EXAMPLE*` and dotfiles untouched)
++ its run-state + **one `auto` `change-log.md` line** — exactly like its three sync siblings, each of which
+appends an attributed `auto` ingestion line (per `CLAUDE.md`'s change-log rule; `improve-system` remains the
+single *applier* of the self-improvement lanes, which is unaffected). **One snapshot per day (idempotent):**
+if today's `raw/metrics/<date>-dau.json` already exists (checked via the run-state cursor + the file), it
+**skips + logs** — the daily cadence `advise-project`'s two-most-recent trend-delta is built for; a forced
+re-pull writes a **disambiguating `<date>-dau-2.json`**, and it **never overwrites** an existing snapshot
+(honoring `raw/` append-only). It **never enters or echoes a key** (read from env only), never touches
+`wiki/` or code.
 
 **Closing the loop.** `sync-metrics` joins the **`data-ingestion`** orchestrator as a 4th sync source, so on
 each `maintenance-loop` tick it runs (before `improve-system` → `advise-project`) and fresh metrics land in
@@ -167,8 +178,10 @@ each `maintenance-loop` tick it runs (before `improve-system` → `advise-projec
   `data-ingestion`) to include `sync-metrics`; step 4 already says `advise-project` reads the `raw/metrics/`
   feed — now it has a producer.
 - **`advise-project/SKILL.md`** — its "Metrics feed" input line already reads `raw/metrics/*.json`; add a
-  short note that `sync-metrics` now produces it (additive) and add `deploy` to the post-build deferred-tier
-  next-step clause.
+  short note that `sync-metrics` now produces it (additive). Its post-build deferred-tier clause **already
+  contains the bare word "deploy"** — the edit **upgrades it in place** to a skill reference
+  (`deploy → the `deploy` skill`), matching its already-linked siblings (`build-backend`/`test-app`/
+  `audit-app`). This is an edit-in-place, **not** an addition.
 
 ### Not changed
 
@@ -183,7 +196,9 @@ skills are byte-for-byte unchanged (`sync-metrics` is added alongside them).
   `npm install`, never deploys/publishes, never enters a key or creates an account. Deploy/publish is a
   prohibited action — this is the permanent boundary, the same one `build-backend` draws at go-live.
 - **`sync-metrics` is graceful-off + key-safe.** Unconfigured ⇒ skip + log (template unaffected); keys read
-  from env only, never entered or echoed; writes only append-only `raw/metrics/` snapshots + run-state.
+  from env only, never entered or echoed; writes append-only `raw/metrics/` snapshots + run-state + one
+  `auto` `change-log.md` line (like its sync siblings — `improve-system` stays the single applier of the
+  self-improvement lanes, untouched).
 - **Loop stays safe.** Adding `sync-metrics` to `data-ingestion` is additive and graceful-off — the tick's
   behavior is unchanged when unconfigured; `improve-system` stays the single applier; `advise-project` stays
   propose-only.
