@@ -1,0 +1,5 @@
+{
+  "app_dir": "app",
+  "checks": ["build", "data", "tests", "audit", "deploy", "content", "legal", "criteria"],
+  "block_severity": "MAJOR"
+}
