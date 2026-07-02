@@ -159,19 +159,23 @@ part of the unattended `maintenance-loop`.
 
 Unlike `test-app` (which added `test-writer`), this phase adds **no** subagent. The three lenses run in the
 skill's own reasoning; where a focused deep-read helps, the skill **may** delegate a lens to the existing
-read-only `code-reviewer` or `Explore` agent, but adds none. The roadmap does not call for a fleet agent here,
+read-only `code-reviewer` fleet agent or the built-in `Explore` agent, but adds none. The roadmap does not call for a fleet agent here,
 and audits are read-only reasoning that the existing read-only fleet already covers. (`docs/SUBAGENTS.md` is
 therefore **not** modified.)
 
 ### Autopilot integration (opt-in, default OFF)
 
 Add an optional **audit phase** to `autopilot`, gated on config **`audit_after_build`** (default `false`),
-mirroring `test_after_build`. When enabled, after `build-<target>` (+ any `wire_backend_after_build` +
-`test_after_build`) and before the Phase D hand-over, `autopilot` runs `audit-app` **offline** (reasoning
-only — no tool runs, no install), writes the report, and adds the report path + any CRITICAL/MAJOR findings to
-the decision ledger and hand-over. Autopilot stays **Tier 0**, **user-initiated**, and **never in
-`maintenance-loop`**. Default off, consistent with the backend + test tails; the natural chained order is
-**build → (backend) → test → audit → advise**.
+mirroring `test_after_build`. When enabled — **and only if `web` is among the selected targets** (it audits
+the web `app/`; **skipped + logged otherwise**, exactly as the `test` / `backend` tails guard) — after
+`build-<target>` (+ any `wire_backend_after_build` + `test_after_build`) and before the Phase D hand-over,
+`autopilot` runs `audit-app` **offline** (reasoning only — no tool runs, no install), writes the report, and
+adds the report path + **any finding at/above `caution_severity` (CRITICAL by default)** to the decision
+ledger and hand-over. Autopilot stays **Tier 0**, **user-initiated**, and **never in `maintenance-loop`**.
+Default off, consistent with the backend + test tails; the natural chained order is
+**build → (backend) → test → audit → advise**. Also add "audit → `audit-app`" to `autopilot`'s **Phase E
+deferred-tiers list** (its own "what's next" enumeration), so it stays in sync with `advise-project`'s
+next-step clause.
 
 ### Not changed
 
@@ -199,12 +203,14 @@ phase is additive and off by default).
 - **Create (shipped):** `.claude/skills/audit-app/SKILL.md` + `config.json`; `docs/AUDIT-APP.md`;
   `outputs/audits/.gitkeep`; `docs/superpowers/specs/2026-07-01-audit-app-design.md` (this spec).
 - **Modify (shipped, light/additive):** `.claude/skills/autopilot/{SKILL.md,config.json}` (opt-in audit phase
-  + `audit_after_build:false`); `.claude/skills/what-can-i-do/SKILL.md` (menu item);
-  `.claude/skills/advise-project/SKILL.md` (extend the post-build deferred-tier clause to name `audit-app` —
-  additive); `CLAUDE.md` (skill bullet + `outputs/audits/` pointer, hold < 125 lines); `README.md`
-  (build-status Phase 20 line + guide row); `docs/PATH-TO-PRODUCTION.md` (mark rung 3 shipped);
-  `docs/USING-THIS-FOR-ANY-PROJECT.md` (an audit rung/clause); `docs/AUTOPILOT.md` (the optional audit-phase
-  note); `docs/superpowers/specs/2026-06-29-hma-project-foundation-design.md` (Phase 20 addendum).
+  as a **web-gated Phase C tail** + `audit_after_build:false` + name `audit-app` in the Phase E deferred-tiers
+  list); `.claude/skills/what-can-i-do/SKILL.md` (menu item); `.claude/skills/advise-project/SKILL.md` (extend
+  the post-build deferred-tier clause to name `audit-app` — additive); `CLAUDE.md` (skill bullet +
+  `outputs/audits/` pointer, hold < 125 lines); `README.md` (build-status Phase 20 line + guide row);
+  `docs/PATH-TO-PRODUCTION.md` (mark rung 3 shipped — **note the name resolution:** the roadmap's
+  `security-audit` + a11y/perf siblings → one `audit-app` skill with three lenses, matching how rungs 1–2 were
+  reconciled); `docs/USING-THIS-FOR-ANY-PROJECT.md` (an audit rung/clause); `docs/AUTOPILOT.md` (the optional
+  audit-phase note); `docs/superpowers/specs/2026-06-29-hma-project-foundation-design.md` (Phase 20 addendum).
 - **NOT modified:** `docs/SUBAGENTS.md` (no new agent); `codex-review` and the `build-*`/`test-app` SKILLs.
 - **Reuse (reference, do not modify):** `.claude/skills/codex-review/SKILL.md` (the propose-only /
   outputs-only / severity-normalization / graceful-off pattern this mirrors), `.claude/skills/test-app/SKILL.md`
