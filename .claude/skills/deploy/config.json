@@ -1,0 +1,7 @@
+{
+  "app_dir": "app",
+  "provider": "vercel",
+  "ci": "github-actions",
+  "include_error_tracking": true,
+  "include_analytics": true
+}
