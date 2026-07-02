@@ -56,8 +56,10 @@ A check's **status is a rollup of its findings against `block_severity`**: ❌ b
 at/above the threshold, ⚠️ advisory if only below it, ✅ pass if none — so the per-check status and the
 verdict can never disagree (the status is derived, not an independent judgment). **Default severity scales by
 charter relevance:** a gap is **MAJOR (blocking, at the default threshold)** when the rung it represents is
-required for *this* app's stated purpose/audience, and **MINOR (advisory)** when it isn't. Each check below
-pins its default:
+required for *this* app's stated purpose/audience, and **MINOR (advisory)** when it isn't. Some rungs —
+`build`, `tests`, `audit`, `deploy`, `content` — are treated as **universally ship-required** and pin a flat
+default; only `data`, `legal`, and `criteria` actually scale to the charter. Each check below pins its
+default:
 
 1. **`build`** (← `build-app`) — `app/` present with a real `build` script + `dist` output; not the empty
    template shell. Present → ✅. A missing/trivial build → **CRITICAL** (nothing to ship). *(Rare — Phase 0
