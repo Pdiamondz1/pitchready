@@ -7,7 +7,7 @@ and this page walks you through it.
 ## The one thing worth knowing
 
 The helpful "magic" in this template — the part that organizes your work and keeps improving
-itself — runs inside **Claude Code**, a free Anthropic app you install on your computer. It
+itself — runs inside **Claude Code**, an Anthropic app you install on your computer. It
 doesn't run inside the ChatGPT website or the regular Claude chat website. Those are great for
 *talking*, but they can't reach into your computer to set things up. Claude Code can — and you
 still just talk to it in plain English.
@@ -15,7 +15,8 @@ still just talk to it in plain English.
 ## Step 1 — Install Claude Code (one time, about 5 minutes)
 
 Download the **Claude Code desktop app** from Anthropic and sign in with your Claude account (you run it
-on your own Claude plan). It installs like any normal app — point and click.
+on your own Claude plan — a paid Claude subscription, like Claude Pro). It installs like any normal app —
+point and click.
 
 ## Step 2 — Tell it to start your project
 

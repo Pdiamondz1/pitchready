@@ -13,9 +13,10 @@ way to a launch-ready product** — vetting it, designing it, building it, then 
 and testing, auditing, deploying, and polishing it — one guided step at a time, always with you in
 control.
 
-> 💡 **You don't need to know how to code.** You install one free app — **Claude Code** — and talk to
-> it in plain English; it does the technical parts for you. There's a little first-time setup (installing
-> the app), and **[Start here »](docs/START-HERE.md)** walks you through every step.
+> 💡 **You don't need to know how to code.** You install one app — **Claude Code** — and use it with your
+> own Claude plan (a paid Claude subscription); then you just talk to it in plain English and it does the
+> technical parts for you. There's a little first-time setup, and **[Start here »](docs/START-HERE.md)** walks
+> you through every step.
 
 ---
 
