@@ -51,7 +51,8 @@ report; it changes nothing.
 
 ### Phase 0 — Pre-flight (require the app; read it; route, don't guess)
 
-1. **A built `app/` (required).** There is nothing to audit without it.
+1. **A built app (required) — at `config.app_dir` (default `app/`).** There is nothing to audit without it.
+   Read `app_dir` from config first; everywhere below, "`app/`" means that configured directory.
    - **Missing →** offer `build-app` first: *"An audit checks an app you've already built. Want me to build
      the app first, then audit it?"* On yes, run `build-app`, then continue. On no, stop gracefully.
    - Read the app: `package.json` (deps → the dependency check; scripts), `src/` (JSX → the a11y lens; app
@@ -61,8 +62,10 @@ report; it changes nothing.
 2. **Charter — `wiki/charter.md` (recommended).** Read `## Audience & users` (a broad/public audience raises
    the WCAG bar; an internal tool lowers it) and any data-sensitivity/compliance constraints. **Missing →**
    audit with default assumptions and flag it.
-3. **Config.** Read `config.dimensions` for which lenses to run; read `wiki/build.md` + the latest
-   `raw/builds/` record for what exists (and whether a backend is wired).
+3. **Config + scope.** **If the user named a lens in the invocation argument** (e.g. `security` /
+   `accessibility` / `performance`), run **only** that lens; otherwise run `config.dimensions` (all three by
+   default). Read `wiki/build.md` + the latest `raw/builds/` record for what exists (and whether a backend
+   is wired).
 
 ### Phase 1 — Run the enabled lenses (reasoning-first, offline)
 
