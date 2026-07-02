@@ -62,13 +62,13 @@ invocation argument):
    (no-data-yet), **error**, and **loading** states. Uses the existing mock/graceful data patterns; no backend
    needed.
 3. **`legal`** — scaffold a **privacy policy + terms of service + a cookie-consent banner** as **TEMPLATES**
-   (pages/routes + a consent component) with `[PLACEHOLDER]` fields (company, contact, jurisdiction, data
+   (pages/routes + a consent component) with `[FILL IN: …]` fields (company, contact, jurisdiction, data
    collected) **and a prominent, unremovable notice: "⚠️ This is a starting template, not legal advice — have
    a qualified lawyer review it before you rely on it; it does not by itself make you GDPR/CCPA compliant."**
    It scaffolds **structure + a fill-in/verify-with-counsel checklist**; it **never claims the app IS
    compliant** (compliance is a legal determination the human + counsel make). → closes `ship-check`'s `legal`
    gap (which checks the pages **exist**, not that the fill-ins are complete), while being honest that presence
-   ≠ compliance. *(Note the boundary with the `content` area: the legal templates' `[PLACEHOLDER]` fields are
+   ≠ compliance. *(Note the boundary with the `content` area: the legal templates' `[FILL IN: …]` fields are
    the user's documented legal fill-ins and are expected/allowed; the `content` area's job is that the **main
    product UI** carries real copy — so `content` closes on real UI copy while `legal` closes on presence, and
    `ship-check`'s `content` scan targets lorem/dummy marketing copy in the app UI, not the legal pages'
