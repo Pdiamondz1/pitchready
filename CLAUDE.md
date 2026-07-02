@@ -41,6 +41,7 @@ Condense *wording*, never a *rule*; raise the line cap before dropping a directi
   - `outputs/tests/` — `test-app` coverage/criteria manifests (`<date>-<slug>/TEST-PLAN.md`)
   - `outputs/audits/` — `audit-app` security/a11y/perf findings reports (`<date>-<slug>/AUDIT.md`)
   - `outputs/deploy/` — `deploy` go-live checklists (`<date>-<slug>/GO-LIVE.md`)
+  - `outputs/ship-check/` — `ship-check` GO / NOT-YET readiness verdicts (`<date>-<slug>/SHIP-CHECK.md`)
 
 ## Wiki page frontmatter (RAG-ready)
 
@@ -89,6 +90,7 @@ orchestrator's run log in `outputs/runs/data-ingestion.md`.
 - **`test-app`** — the "prove it works" tier: generates a real, runnable test suite (Vitest + Testing Library + Playwright + coverage) for the built `app/` and maps it to the charter's success criteria (each → an automated test or a flagged manual/metric note). Scaffolds offline; extends an existing setup; offers the run (unit tests on explicit yes, like `build-app`). Attended, Tier 0; never in the loop. See `docs/TEST-APP.md` and the roadmap `docs/PATH-TO-PRODUCTION.md`.
 - **`audit-app`** — the "prove it's safe" tier: reads the built `app/` and writes ONE prioritized security + accessibility + performance findings report to `outputs/audits/`. **Propose-only** (mirrors `codex-review`): never modifies the app, never auto-fixes, no confirm gate. Reasoning-first/offline; `npm audit`/Lighthouse offered, not run. Tier 0; never in the loop. See `docs/AUDIT-APP.md` and the roadmap `docs/PATH-TO-PRODUCTION.md`.
 - **`deploy`** — the "ship it" tier: scaffolds hosting (Vercel) + a CI quality-gate + an env template + graceful-off error tracking/analytics for the built `app/`, then hands you a go-live checklist. **Never deploys, publishes, or enters keys** — you pull the trigger. Attended; never in the loop; deliberately not in `autopilot`. See `docs/DEPLOY.md` and the roadmap `docs/PATH-TO-PRODUCTION.md`.
+- **`ship-check`** — the "go/no-go" gate: runs the whole production-readiness gauntlet on the built `app/` (build · data · tests · audit · deploy · content · legal · charter criteria) and returns ONE **GO / NOT-YET** verdict naming the blocking gaps + the skill that closes each. **Propose-only** (mirrors `audit-app`): writes only `outputs/ship-check/`, changes nothing, no confirm gate. The production analog of `roast`. On-demand; never in the loop; deliberately not in `autopilot`. See `docs/SHIP-CHECK.md` and the roadmap `docs/PATH-TO-PRODUCTION.md`.
 - **`autopilot`** — the capstone: describe your goal once → it grills you once, **vets + researches** it, shows one plan to confirm, then runs `define-project → roast → storm-research → define-design → build-*` **hands-off**, pausing only on a KILL verdict; logs every call to `outputs/autopilot/<date>-<slug>/`; delegates grunt work to the `.claude/agents/` fleet. **Attended-started, hands-off-executed — never in `maintenance-loop`.** Tier 0. See `docs/AUTOPILOT.md`.
 - **`what-can-i-do`** — show a friendly menu of everyday actions for anyone unsure what to do next.
 - **`add-new-resource`** — add a file into `raw/`, then index it in `wiki/`.

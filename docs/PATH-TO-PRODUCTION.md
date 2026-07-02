@@ -41,11 +41,13 @@ go-live. That boundary is deliberate and permanent.
    `maintenance-loop`) pulls real analytics into dated `raw/metrics/` snapshots, **closing the loop with
    `advise-project`** (which consumed metrics nothing produced since Phase 6). See `docs/DEPLOY.md`.
 
-5. **The go/no-go gate — `ship-check`.**
-   A production-readiness skill that runs the whole gauntlet — tests green? security clean? a11y/perf
-   thresholds met? deploy config present? legal present? real content? — and returns a **GO / NOT-YET**
-   verdict naming the exact blocking gaps. It's the production analog of `roast`'s idea gate. The arc
-   becomes **define → vet → design → build → test → audit → ship → advise**.
+5. **The go/no-go gate — `ship-check`** *(shipped, Phase 22).*
+   A production-readiness skill that runs the whole gauntlet across eight checks — a real app? real data?
+   tests present? audit clean? deploy config present? real content? legal present? charter criteria met? —
+   and returns a **GO / NOT-YET** verdict naming the exact blocking gaps and the skill that closes each.
+   **Propose-only** (mirrors `audit-app`): it writes only a report and changes nothing. It's the production
+   analog of `roast`'s idea gate. The arc becomes **define → vet → design → build → test → audit → ship →
+   advise**. See `docs/SHIP-CHECK.md`.
 
 6. **Make it legitimate — polish & compliance.**
    Real content/copy/assets (no more placeholder text), onboarding, empty/error/loading states;
