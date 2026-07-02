@@ -61,9 +61,11 @@ required for *this* app's stated purpose/audience, and **MINOR (advisory)** when
 default; only `data`, `legal`, and `criteria` actually scale to the charter. Each check below pins its
 default:
 
-1. **`build`** (← `build-app`) — `app/` present with a real `build` script + `dist` output; not the empty
-   template shell. Present → ✅. A missing/trivial build → **CRITICAL** (nothing to ship). *(Rare — Phase 0
-   already routes an absent `app/` to `build-app`.)*
+1. **`build`** (← `build-app`) — `app/package.json` declares a real `build` script and `app/src/` is a real
+   app (not the empty template shell). A `dist/` output is a **generated** artifact (not committed; this skill
+   never builds) — its absence is expected and **not** a finding; a clean production build is the offered
+   `npm run build`. Present → ✅. No `build` script / empty shell → **CRITICAL** (nothing to ship). *(Rare —
+   Phase 0 routes an absent `app/` to `build-app`.)*
 2. **`data`** (← `build-backend`) — is a real backend wired (`app/src/data/store/` +
    `app/supabase/migrations/` + `VITE_SUPABASE_*` env slots), or still mock-only? Mock-only → a finding
    (graceful-off means it *runs*, but it isn't a real-data product) → run `build-backend`. **Default: MAJOR**
@@ -122,8 +124,9 @@ can confirm (e.g. that the tests are actually green).
 
 ## Runtime (mirrors `audit-app` Phase 0–4; no interview, no confirm gate)
 
-- **Phase 0 — Pre-flight.** Read `config.app_dir`; require a built `app/` (missing → offer `build-app`, then
-  continue on yes or stop gracefully on no); read `wiki/charter.md` (recommended — sets the audience bar for
+- **Phase 0 — Pre-flight.** Read `config.app_dir`; require a built `app/` (missing → **route, don't run:**
+  report the trivial *not ready — no app built* verdict and point the user to `build-app`; ship-check never
+  runs a rung for you); read `wiki/charter.md` (recommended — sets the audience bar for
   `legal` and supplies `criteria`; infer + flag `(assumed)` if absent). Honor a named-check invocation
   argument (run only that check) else `config.checks`.
 - **Phase 1 — Run the gauntlet.** For each enabled check, read the relevant artifact + inline-scan → findings

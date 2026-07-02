@@ -98,8 +98,10 @@ verdict; it changes nothing.
 
 1. **A built app (required) — at `config.app_dir` (default `app/`).** There is nothing to ship-check without
    it. Read `app_dir` from config first; everywhere below, "`app/`" means that configured directory.
-   - **Missing →** offer `build-app` first: *"A ship-check gates an app you've already built. Want me to build
-     the app first, then check it?"* On yes, run `build-app`, then continue. On no, stop gracefully.
+   - **Missing →** there is nothing to ship-check yet. **Route, don't run:** report the trivial verdict —
+     *not ready, no app built* — and point the user to `build-app` (*"There's no app to ship-check yet — build
+     one first with `build-app`, then come back."*). Do **not** run `build-app` yourself: propose-only means
+     ship-check *routes* you to a rung, it never runs one for you. Stop gracefully.
    - Read the app: `package.json` (scripts → `build` / `test`; deps), `src/` (the `content` scan + `criteria`
      cross-reference), `src/data/store/` + `supabase/` (backend wiring → the `data` check), `vercel.json` +
      `.github/workflows/deploy-app.yml` + any `.env*` (→ the `deploy` check).
@@ -118,9 +120,11 @@ For each enabled check, read the artifact + inline-scan → findings (severity-t
 `block_severity`**: ❌ if it has any finding at/above the threshold, ⚠️ if only below, ✅ if none — so a
 check's status and the verdict can never disagree.
 
-- **`build`** (← `build-app`) — `app/package.json` has a real `build` script + a `dist` output and the app
-  isn't the empty template shell. Pass → ✅. Missing/trivial build → **CRITICAL** (nothing to ship). *(Rare —
-  Phase 0 routes an absent `app/` to `build-app`.)*
+- **`build`** (← `build-app`) — `app/package.json` declares a real `build` script and `app/src/` is a real app
+  (not the empty template shell). A `dist/` output is a **generated** artifact — not committed, and this skill
+  never builds — so its absence is **expected and not a finding**; confirming a clean production build is the
+  offered `npm run build` (offer-don't-run). Pass → ✅. No `build` script / empty shell → **CRITICAL** (nothing
+  to ship). *(Rare — Phase 0 routes an absent `app/` to `build-app`.)*
 - **`data`** (← `build-backend`) — is a real backend wired (`src/data/store/` + `supabase/migrations/` +
   `VITE_SUPABASE_*` slots), or mock-only? Mock-only → close with `build-backend`. **MAJOR** if the charter
   implies persistence/accounts; **MINOR/advisory** for a static/informational site. *(Graceful-off means a
