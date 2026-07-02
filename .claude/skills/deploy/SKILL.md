@@ -146,7 +146,7 @@ overwriting**. Each re-run writes a **new** `raw/builds/` record. Never clobber 
 
 ## Rules & guardrails
 
-- **never deploys, publishes, enters keys, or creates accounts.** Scaffold + checklist only; you pull the
+- **Never deploys, publishes, enters keys, or creates accounts.** Scaffold + checklist only; you pull the
   trigger. Deploying/publishing is a permanent human-only boundary.
 - **Graceful-off observability = no broken app.** Error tracking + analytics are inert without keys.
 - **Attended-only — never in `maintenance-loop`; never in `autopilot`.** Shipping is a deliberate decision.
