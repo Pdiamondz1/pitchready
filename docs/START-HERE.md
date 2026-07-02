@@ -1,7 +1,8 @@
 # Start here
 
-The simplest way to begin a new project. You talk; Claude Code handles the technical parts.
-No terminal, no commands — the only thing you install is one app.
+The simplest way to begin a new project. You install one app — **Claude Code** — then mostly just talk
+to it in plain English, and it handles the technical parts for you. There's a little first-time setup,
+and this page walks you through it.
 
 ## The one thing worth knowing
 
@@ -13,8 +14,8 @@ still just talk to it in plain English.
 
 ## Step 1 — Install Claude Code (one time, about 5 minutes)
 
-Download the **Claude Code desktop app** from Anthropic and sign in with your Claude account.
-It installs like any normal app — point and click.
+Download the **Claude Code desktop app** from Anthropic and sign in with your Claude account (you run it
+on your own Claude plan). It installs like any normal app — point and click.
 
 ## Step 2 — Tell it to start your project
 
