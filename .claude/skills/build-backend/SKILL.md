@@ -58,12 +58,24 @@ arrays/objects→jsonb; an `id` field → primary key), and **foreign keys** fro
 (or inferred `<entity>_id` fields in the fixtures). Cap at `config.max_entities`; if the app has more,
 wire the **core** entities and list the rest under `Later (not in this pass)`.
 
-**RLS (row-level security) — the default is shared-read / authenticated-write.** Enable RLS on every table
-with: `SELECT` allowed to everyone (so the mock-derived **seed rows stay visible** — no empty screens after
-go-live), and `INSERT`/`UPDATE`/`DELETE` allowed only to authenticated users (so it is never anon-writable).
-*(Owner-scoped private RLS — `auth.uid() = owner_id` — is a later refinement for data with genuine per-user
-ownership; v1 defaults to shared-read so seed-from-mock is coherent. Note it in the go-live checklist as an
-option.)*
+**Classify each entity — public/reference vs private/per-user.** Before choosing RLS, decide who each
+table is *for*, using the charter's audience + per-user ownership intent + what the fixture means:
+- **Public/reference** — everyone reads the same rows (catalogs, listings, public profiles, published
+  reviews). These keep the shared-read default below.
+- **Private/per-user** — a row belongs to one user and others must not read it (bookings, orders,
+  messages, a person's own items). The Tier-0 fixtures carry **no owner id**, so for each private entity
+  **add an `owner_id uuid references auth.users (id)` column** (it won't be in the fixture — you add it)
+  and set it from `auth.uid()` on insert. When unsure, treat a table as **private** and confirm at the
+  gate — over-scoping is safe; over-sharing leaks data.
+
+**RLS (row-level security) — scoped by the classification above.** Enable RLS on every table, then:
+- **Public/reference tables → shared-read / authenticated-write:** `SELECT` for everyone (so the
+  mock-derived **seed rows stay visible** — no empty screens after go-live), `INSERT`/`UPDATE`/`DELETE`
+  for authenticated users only (so it is never anon-writable).
+- **Private/per-user tables → owner-scoped:** `SELECT`/`INSERT`/`UPDATE`/`DELETE` only where
+  `auth.uid() = owner_id`, and **no public-read policy** (private data must never be anon-readable).
+Default a table to **private** whenever the charter implies per-user ownership; only genuinely shared
+reference data gets public read.
 
 ### Phase 2 — Confirm once, then wire
 
@@ -71,7 +83,8 @@ Show the plan in **one message** and ask **one** question. Include:
 - the entity/table list — one line each (columns + relationships),
 - what will be generated: the migration, the graceful-off data layer, sign-in, `.env.example`, tests, and
   the go-live checklist,
-- the **RLS default** (shared-read / authenticated-write) in plain words,
+- the **RLS plan** in plain words — which tables are public (shared-read) and which are private/owner-scoped
+  (e.g. *"anyone can see listings; only you can see your own bookings"*),
 - the key promise: **it stays graceful-off** — *"your app keeps working on its sample data with no keys; it
   switches to the real database automatically the moment you add your two keys,"*
 - that nothing here needs a key and nothing is installed or deployed.
@@ -85,10 +98,13 @@ for the one step that's yours (create the database, paste two keys, run the migr
 Build **in-session, in order** — all offline, no network, no keys:
 
 1. **Migration → `app/supabase/migrations/0001_init.sql`.** For each entity: `create table`, columns typed
-   from the fixtures, primary/foreign keys, `alter table … enable row level security`, and the two RLS
-   policies (public `SELECT`; authenticated `INSERT`/`UPDATE`/`DELETE`). Then **seed** each table with
-   `insert` rows **derived directly from the `src/data/` mock arrays** (the fixtures become the seed — zero
-   data invented).
+   from the fixtures (**plus an `owner_id uuid references auth.users (id)` column for private/per-user
+   tables**), primary/foreign keys, `alter table … enable row level security`, and its RLS policies **per
+   the classification** — public tables get public `SELECT` + authenticated write; **private tables get
+   owner-scoped `auth.uid() = owner_id` policies and no public read**. Then **seed** each **public** table
+   with `insert` rows **derived directly from the `src/data/` mock arrays** (the fixtures become the seed —
+   zero data invented); **private tables seed without `owner_id` or skip seeding** (owner-scoped reads would
+   hide seed rows from every real user anyway).
 2. **Graceful-off data layer → `app/src/data/store/`** (mirrors `aios/server/kb/store.ts`):
    - `types.ts` — a `DataStore` interface (`listX()` / `getX(id)` / `createX()` / `updateX()` / `deleteX()`
      per entity, all `Promise`-returning).
@@ -160,8 +176,9 @@ ask for or enter a key. The checklist says exactly:
 >
 > *Until you add your keys (step 3), the app keeps running on its sample data — nothing is broken. Running
 > the migration before the keys means your tables already exist the moment the app switches to the real
-> database, so there is no broken in-between.* *(Optional: for private per-user data, switch the shared-read
-> policy to owner-scoped RLS — see the note in the build record.)*
+> database, so there is no broken in-between.* *(Private per-user tables are owner-scoped — each signed-in
+> user sees only their own rows, so those lists start empty until they create data; public/reference tables
+> show the seeded sample rows.)*
 
 Close: *"Your app is now backend-ready. Everything's scaffolded — the only thing left is yours: create the
 database and paste two keys, following `outputs/backend/<date>-<slug>/GO-LIVE.md`. Want me to walk you

@@ -79,6 +79,12 @@ if the user names `payments`); a named-area invocation argument runs just that a
   (server-side), and test in Stripe test mode. **NEVER enter a key, NEVER create an account, NEVER charge** —
   financial transactions are a permanent human-only boundary; you do the keyed go-live. The scaffold does the
   **client half** honestly and **documents the server half** in the checklist.
+  **If the charter describes a two-sided marketplace or any multi-party payout** (money moving *between
+  users* — a buyer pays and a seller/pro gets paid, minus a platform cut), say so plainly: this
+  single-seller Checkout scaffold covers charging users for the **platform's own** product (e.g. a
+  subscription), **not** marketplace payouts. Those need **Stripe Connect** (destination charges /
+  transfers + connected-account onboarding + KYC), which is **out of scope** here — flag it as
+  required-and-not-scaffolded in `GO-LIVE.md` and build only the single-seller half honestly.
 
 ## Procedure (mirrors `build-app` Phase 0–5; one confirm gate)
 

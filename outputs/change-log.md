@@ -18,6 +18,9 @@ Format: `- YYYY-MM-DD — <skill> — <what changed> — <auto | applied>`
 
 ---
 
+- 2026-07-02 — improve-system — applied rv-20260702-006: build-app notes the copied Button has no asChild (Link-as-button uses buttonVariants) — applied
+- 2026-07-02 — improve-system — applied rv-20260702-005: polish payments flags marketplace payouts need Stripe Connect (single-seller Checkout out of scope) — applied
+- 2026-07-02 — improve-system — applied rv-20260702-004: build-backend owner-scopes private-per-user tables by default (owner_id + auth.uid()=owner_id RLS; public tables stay shared-read) — applied
 - 2026-07-02 — improve-system — applied rv-20260702-003: build-app scaffolds accessible-by-default markup (aria-labels, labels, one h1) — applied
 - 2026-07-02 — improve-system — applied rv-20260702-002: build-app verifies theme contrast clears WCAG AA (≥4.5:1) — applied
 - 2026-07-02 — improve-system — applied rv-20260702-001: build-app generated .gitignore covers .env* — applied

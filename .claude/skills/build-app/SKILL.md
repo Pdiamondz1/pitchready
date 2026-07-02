@@ -145,7 +145,10 @@ is clearly placeholder-powered; say so in `app/README.md`.
 
 **Routes & components.** `App.tsx` mirrors `aios/src/App.tsx` (a `<Route>` per screen under a shared
 `AppShell`). Reuse the shadcn-style `cva` primitives (button, card, input, badge…) so the look matches
-the foundation's quality bar. Copy only the primitives you actually use.
+the foundation's quality bar. Copy only the primitives you actually use. The copied `Button` (from
+`aios/`) has **no `asChild`/Slot** prop — to render a router `<Link>` styled as a button, apply
+`buttonVariants()` to the `<Link>` (`className={cn(buttonVariants({ variant }), …)}`) rather than
+wrapping it in `<Button>`.
 
 **Accessible by default.** Give every icon-only control (nav links, icon buttons) an `aria-label`,
 associate inputs with a `<label htmlFor>`, and keep one `<h1>` per page — so generated apps clear the
