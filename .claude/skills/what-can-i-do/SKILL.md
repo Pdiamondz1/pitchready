@@ -29,6 +29,7 @@ everyone*).
    - **Test my app** — already built an app? Generate a real test suite (unit + browser tests) mapped to your success criteria (say "test my app"). *(Runs `test-app`; nothing installs — it hands you one command to run them.)*
    - **Audit my app** — already built an app? Check it's safe, accessible, and fast — a prioritized findings report (say "audit my app"). *(Runs `audit-app`; propose-only — it changes nothing, just tells you what to fix.)*
    - **Deploy my app** — already built an app? Set up hosting + CI so you can put it live (say "deploy my app"). *(Runs `deploy`; it scaffolds everything and hands you a short go-live checklist — you pull the trigger.)*
+   - **Is my app ready to ship?** — built and thinking about launch? Get one GO / NOT-YET readiness verdict with the exact gaps left to close (say "is my app ready to ship?"). *(Runs `ship-check`; propose-only — it changes nothing, just tells you what's left.)*
    - **Add something** — save a note, a file, or a link → runs `add-new-resource`
    - **Find something** — search what you've saved so far → searches the knowledge base
    - **See what's saved** — a quick overview of the project so far → reads `wiki/index.md`
