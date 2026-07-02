@@ -1,5 +1,5 @@
 {
   "provider": "",
-  "metrics": ["dau", "wau", "mau", "d1_retention", "d7_retention", "signups", "errors"],
+  "metrics": ["dau", "wau", "mau", "d1_retention", "d7_retention", "signups", "errors", "feature_usage"],
   "lookback": "1d"
 }

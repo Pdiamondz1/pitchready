@@ -78,8 +78,11 @@ Build **in-session, in order** — all offline, no network, no keys, nothing dep
    `netlify.toml` + `_redirects` / Cloudflare / GitHub-Pages `404.html` equivalents are a later option; v1
    ships Vercel.)*
 2. **CI quality-gate → `.github/workflows/deploy-app.yml`** (at the **repo root** — GitHub Actions requires
-   it there). On push/PR: checkout → `npm --prefix app ci` → `npm --prefix app run typecheck` → **run the
-   `test-app` suite if present** (`npm --prefix app test`) → `npm --prefix app run build`. **No deploy token
+   it there). On push/PR: checkout → `npm --prefix app install` → `npm --prefix app run typecheck` → **run the
+   `test-app` suite if present** (`npm --prefix app test`) → `npm --prefix app run build`. *(Use `install`,
+   not `npm ci`: this scaffold never runs install, so the app may have no `package-lock.json` yet — or, once
+   `@sentry/react` is added below, an out-of-sync one — and `npm ci` errors on both; `install` resolves from
+   `package.json` and regenerates the lockfile.)* **No deploy token
    and no deploy step** — Vercel's Git integration deploys on push; this workflow only **proves the build is
    green**. (Composes with `test-app` + `audit-app`.)
 3. **Env template → `app/.env.production`** with the empty `VITE_*` slots + fill-in comments (never in chat):
