@@ -107,16 +107,19 @@ routes dir is **`mobile/app/`**, distinct from the repo-root web `app/` (no coll
 ```
 mobile/
 ├── package.json          # own; "main":"expo-router/entry" (REQUIRED — no index.html entry); pinned Expo
-│                         #   SDK (config.expo_sdk): expo, react, react-native, expo-router, nativewind,
-│                         #   react-native-safe-area-context, react-native-reanimated,
-│                         #   react-native-screens, expo-constants, expo-linking, expo-status-bar
-│                         #   (the expo-router PEER deps — REQUIRED; `npx expo install` does NOT auto-add
-│                         #   them, so a hand-written package.json must list them or the app won't run),
-│                         #   class-variance-authority, clsx, tailwind-merge; dev: typescript,
-│                         #   tailwindcss@^3.4, babel-preset-expo, @types/*. Scripts: start (expo start),
-│                         #   android, ios, web (expo start --web), typecheck (tsc --noEmit).
+│                         #   SDK (config.expo_sdk): expo, react, react-native, expo-router,
+│                         #   nativewind (pin with ~ to the SDK-matched line, NOT ^ — see "Pin the stack"),
+│                         #   react-native-safe-area-context, react-native-screens, expo-constants,
+│                         #   expo-linking, expo-status-bar (the expo-router PEER deps — REQUIRED;
+│                         #   `npx expo install` does NOT auto-add them, so a hand-written package.json
+│                         #   must list them or the app won't run), class-variance-authority, clsx,
+│                         #   tailwind-merge; dev: typescript, tailwindcss@^3.4, babel-preset-expo,
+│                         #   @types/*. Scripts: start (expo start), android, ios, web (expo start --web),
+│                         #   typecheck (tsc --noEmit). PLUS an `overrides` block pinning react-native +
+│                         #   the metro family to the SDK versions (reproducibility — see "Pin the stack").
+│                         #   Add react-native-reanimated ONLY if a screen animates — not by default.
 ├── app.json              # Expo config: name/slug from charter; expo-router plugin; icon/splash placeholders
-├── babel.config.js       # babel-preset-expo + nativewind/babel (add react-native-reanimated/plugin LAST if the SDK preset doesn't include it)
+├── babel.config.js       # babel-preset-expo (jsxImportSource: nativewind) + nativewind/babel (babel-preset-expo auto-injects reanimated's plugin only if reanimated is installed — so add reanimated only when a screen animates)
 ├── metro.config.js       # withNativeWind(config, { input: './global.css' })
 ├── tailwind.config.js    # presets:[nativewind/preset]; content globs; colors → hsl(var(--token)/<alpha-value>); --radius
 ├── global.css            # the 13 HSL tokens (:root + dark) FROM wiki/design-system.md — mirrors app/src/index.css
@@ -137,15 +140,28 @@ mobile/
     └── data/             # typed mock fixtures + getX()/listX() accessors — no fetch, no env, offline
 ```
 
-**Pin the stack from the Expo SDK.** There is no Expo project in the repo to mirror, so pin the stable
-Expo SDK named in `config.expo_sdk` (confirm the current stable SDK at build time) and let
-**`npx expo install`** reconcile native-dep versions at install time — the idiomatic RN approach (pin
-the SDK; don't hand-pin React Native). Hand-write `package.json` with the SDK-pinned versions, plus
-`"main": "expo-router/entry"` — and **include expo-router's peer deps** (`react-native-screens`,
-`expo-constants`, `expo-linking`, `expo-status-bar`), without which the app won't run. *(A hand-written
-minimal `package.json` is the fragile part here — a robust alternative is to bootstrap with
-`npx create-expo-app` (which ships a complete, consistent, runnable project) and then apply the theme +
-screens, rather than hand-authoring `package.json` + configs from a minimal list.)*
+**Get the stack from the Expo SDK — prefer `create-expo-app` over a hand-written manifest.** There is
+no Expo project in the repo to mirror, and a hand-written minimal `package.json` is the load-bearing
+fragility: a fresh `npm install` (no committed lockfile) silently resolves *transitive* versions that
+break the Metro bundler — e.g. a NativeWind caret floating into a line whose css-interop needs an
+uninstalled `react-native-worklets/plugin`, or css-interop pulling a *second* `react-native` that
+hoists a newer `metro` over the SDK's (breaking `@expo/cli`'s `TerminalReporter` import). So the
+**recommended default scaffold path is `npx create-expo-app` with the pinned SDK** — it ships a
+complete, version-consistent project *with a lockfile* that bundles cleanly (web preview included) —
+then apply the theme + screens on top.
+
+*Hand-authoring `package.json` + configs is a supported fallback, but it MUST be made reproducible or
+it won't bundle.* Pin the stable Expo SDK named in `config.expo_sdk` (confirm the current stable SDK at
+build time), add `"main": "expo-router/entry"`, **include expo-router's peer deps**
+(`react-native-screens`, `expo-constants`, `expo-linking`, `expo-status-bar`, without which the app
+won't run) — and additionally: **(a)** pin `nativewind` to the SDK-matched line with a **tilde, never a
+caret** (`~`, so it can't float into a newer line that pulls `react-native-worklets`); **(b)** omit
+`react-native-reanimated` unless a screen actually animates (`babel-preset-expo` auto-injects its
+plugin only when the package is present, so listing it by default just adds surface); and **(c)** add
+an npm **`overrides`** block pinning `react-native` **and** the metro family (`metro`, `metro-config`,
+`metro-resolver`, `metro-runtime`) to the pinned SDK's versions, so transitive resolution can't install
+a second react-native or hoist an incompatible metro. Let **`npx expo install`** reconcile the
+remaining native-dep versions (pin the SDK; don't otherwise hand-pin React Native).
 
 **Theme it exactly like the web app.** Write the same 13 base tokens (`:root` and dark) into
 `mobile/global.css` — identical names/format to `app/src/index.css` (space-separated HSL triplets, no
@@ -204,9 +220,12 @@ plain-words preview path:
 > scan it; your app loads in a few seconds. No Mac or app-store setup needed. Want me to start it for
 > you?"*
 
-**Expo Go on a phone is the preview.** A browser fallback via `npm run web` is possible but needs the
-web deps installed first (`npx expo install react-native-web react-dom expo-asset`) and isn't
-guaranteed to bundle — do **not** offer `npm run web` as a works-out-of-the-box one-command path.
+**Expo Go on a phone is the primary preview; the browser preview also works when the stack is
+reproducible.** With the `create-expo-app` default (or the hand-written path's `~`-pinned NativeWind +
+the `overrides` block), `npm run web` — after `npx expo install react-native-web react-dom expo-asset`
+— does bundle (verified: `npx expo export --platform web` builds a clean SPA). If you took the
+hand-written path *without* those pins, the web (and sometimes the native) bundle can fail on
+transitive version drift — fix the pins rather than offering a broken preview.
 
 If they say yes, run the commands with `mobile/` as the working directory. Optionally offer
 `npm --prefix mobile run typecheck` to check it over; offer to fix any type errors on the spot. If

@@ -18,6 +18,7 @@ Format: `- YYYY-MM-DD — <skill> — <what changed> — <auto | applied>`
 
 ---
 
+- 2026-07-02 — improve-system — applied rv-20260702-009: build-mobile makes the scaffold reproducible so the Metro/web bundle builds — create-expo-app is now the recommended default scaffold; hand-authored package.json must tilde-pin nativewind, drop default reanimated, and add an overrides block pinning react-native + the metro family; Phase 5 web-preview note updated — applied
 - 2026-07-02 — improve-system — applied rv-20260702-008: build-mobile package.json lists expo-router peer deps + a typecheck script; Phase 5 honest about the web-preview path (create-expo-app alternative noted) — applied
 - 2026-07-02 — improve-system — applied rv-20260702-007: web-only production tiers (build-backend/test-app/audit-app/deploy/ship-check/polish) say so when a plugin/ or mobile/ exists instead of routing to build-app — applied
 - 2026-07-02 — improve-system — applied rv-20260702-006: build-app notes the copied Button has no asChild (Link-as-button uses buttonVariants) — applied
