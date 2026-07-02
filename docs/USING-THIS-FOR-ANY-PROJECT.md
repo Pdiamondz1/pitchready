@@ -37,6 +37,8 @@ Nothing above assumes a domain. You make it *your* project by turning a few knob
 
 **Then prove it's safe:** run **`audit-app`** — it reads your `app/` and writes one prioritized report on security, accessibility (WCAG), and performance: what to fix, most serious first, with how to fix it. It's **propose-only** (changes nothing), reasons fully offline, and offers the deeper `npm audit` / Lighthouse checks without running them. This is the third rung of the path to production. See `docs/AUDIT-APP.md`.
 
+**Then ship it:** run **`deploy`** — it scaffolds hosting (Vercel), a CI check, an env template, and graceful-off error tracking + analytics for your `app/`, then hands you a short go-live checklist. It **never deploys or enters keys** — you pull the trigger. Its companion **`sync-metrics`** then feeds your real usage numbers into `raw/metrics/`, which is exactly what the project advisor reads to suggest what's next — closing the loop. This is the fourth rung of the path to production. See `docs/DEPLOY.md`.
+
 **Under the hood:** the template ships a tuned fleet of specialist subagents (`.claude/agents/`) that does the grunt work — the right model per job, read-only by default — so building is cheaper, safer, and consistent. See `docs/SUBAGENTS.md`.
 
 **Fast path:** run the **`setup-project`** skill — it does moves 1–2 for you (interviews you,

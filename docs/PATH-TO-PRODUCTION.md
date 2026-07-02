@@ -34,11 +34,12 @@ go-live. That boundary is deliberate and permanent.
    siblings resolved to one skill with three lenses, matching how rungs 1–2 were reconciled.)* See
    `docs/AUDIT-APP.md`.
 
-4. **Ship it — deploy & operate.**
-   A `deploy` skill: a hosting target + CI/CD + env/secrets management as **scaffold + guided checklist**
-   (you pull the go-live trigger), plus **observability** — error tracking, logging, and real analytics that
-   *feed* `raw/metrics/`, closing the loop with `advise-project` (which today consumes metrics nothing
-   produces).
+4. **Ship it — deploy & operate — `deploy` + `sync-metrics`** *(shipped, Phase 21).*
+   A `deploy` skill scaffolds a hosting target (Vercel) + a CI quality-gate + env/secrets management +
+   graceful-off observability as **scaffold + guided checklist** — it never deploys, publishes, or enters
+   keys; **you pull the go-live trigger**. A companion `sync-metrics` skill (graceful-off, riding the
+   `maintenance-loop`) pulls real analytics into dated `raw/metrics/` snapshots, **closing the loop with
+   `advise-project`** (which consumed metrics nothing produced since Phase 6). See `docs/DEPLOY.md`.
 
 5. **The go/no-go gate — `ship-check`.**
    A production-readiness skill that runs the whole gauntlet — tests green? security clean? a11y/perf

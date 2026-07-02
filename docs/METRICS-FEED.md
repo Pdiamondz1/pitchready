@@ -21,7 +21,10 @@ The feed is deliberately vendor-neutral. Any of these works:
 - A Zapier, Make, or n8n step that writes a file
 - A manual paste from your analytics dashboard
 
-No connector is bundled; you own the wiring.
+A connector now ships: the **`sync-metrics`** skill. Point it at your analytics provider in
+`.claude/skills/sync-metrics/config.json` and it writes these dated snapshots for you on the
+`maintenance-loop` tick (skipping quietly until configured). The vendor-neutral manual paths above still
+work — you own the wiring, or let `sync-metrics` own it.
 
 ## What files are ignored
 
