@@ -49,10 +49,13 @@ go-live. That boundary is deliberate and permanent.
    analog of `roast`'s idea gate. The arc becomes **define → vet → design → build → test → audit → ship →
    advise**. See `docs/SHIP-CHECK.md`.
 
-6. **Make it legitimate — polish & compliance.**
-   Real content/copy/assets (no more placeholder text), onboarding, empty/error/loading states;
-   legal/privacy (privacy policy, terms, cookie consent, GDPR/CCPA); optional payments (a Stripe scaffold);
-   and user docs.
+6. **Make it legitimate — polish & compliance — `polish`** *(shipped, Phase 23 — the final rung).*
+   A `polish` skill modifies the built `app/` across areas — real content/copy (assets flagged), onboarding +
+   empty/error/loading states, **legal templates** (privacy policy, terms, cookie consent — *not legal
+   advice*; presence, not a compliance claim), user docs, and an **opt-in graceful-off Stripe payments
+   scaffold** (never enters keys or charges — you own the keyed go-live). A `build-*` sibling (attended, one
+   confirm gate, `layer: polish` provenance) that closes the `content`/`legal` gaps `ship-check` flags. See
+   `docs/POLISH.md`.
 
 ## The rule that never changes
 
