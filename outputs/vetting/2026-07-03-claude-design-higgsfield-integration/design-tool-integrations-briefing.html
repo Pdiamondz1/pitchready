@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Storm Research: Wiring AI Design Tools into a Dev Template</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;500;600&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --blue: #2563eb; --blue-dark: #1e3a8a; --ink: #16203a; --muted: #5b6677; --line: #e4e9f2;
+    --bg-soft: #f6f8fc; --green: #15803d; --green-bg: #e9f6ee; --amber: #b45309; --amber-bg: #fdf3e7;
+    --slate: #475569; --slate-bg: #eef1f6; --red: #b91c1c; --red-bg: #fdecec;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Roboto', system-ui, sans-serif; color: var(--ink); background: #eef1f6; line-height: 1.62; font-weight: 400; -webkit-font-smoothing: antialiased; }
+  .page { max-width: 900px; margin: 0 auto; background: #fff; padding: 64px 72px 80px; box-shadow: 0 1px 40px rgba(22,32,58,0.08); }
+  .eyebrow { font-family: 'Roboto Mono', monospace; font-size: 12px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--blue); margin-bottom: 14px; }
+  h1 { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 40px; line-height: 1.12; letter-spacing: -0.02em; color: var(--ink); margin-bottom: 18px; }
+  .lede { font-size: 17px; color: var(--muted); max-width: 640px; }
+  .meta-row { display: flex; flex-wrap: wrap; gap: 10px 22px; margin-top: 26px; padding-top: 22px; border-top: 2px solid var(--line); font-family: 'Roboto Mono', monospace; font-size: 12px; color: var(--muted); }
+  .meta-row b { color: var(--ink); font-weight: 600; }
+  .verify-banner { margin-top: 22px; background: var(--green-bg); border: 1px solid #bfe3cc; border-radius: 8px; padding: 13px 18px; font-size: 13px; color: #14532d; display: flex; gap: 10px; align-items: baseline; }
+  .verify-banner b { font-weight: 700; }
+  .verify-banner .tag { font-family: 'Roboto Mono', monospace; font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; background: var(--green); color: #fff; padding: 3px 8px; border-radius: 4px; flex-shrink: 0; }
+  .howto { margin-top: 18px; border: 1px solid var(--line); border-radius: 8px; padding: 18px 22px; background: var(--bg-soft); }
+  .howto h4 { font-family: 'Roboto Mono', monospace; font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+  .howto ul { list-style: none; }
+  .howto li { font-size: 13.5px; color: #2b3950; margin-bottom: 7px; padding-left: 16px; position: relative; }
+  .howto li::before { content: "›"; position: absolute; left: 0; color: var(--blue); font-weight: 700; }
+  .section { margin-top: 56px; }
+  .section-num { font-family: 'Roboto Mono', monospace; font-size: 13px; font-weight: 600; color: var(--blue); letter-spacing: 0.05em; }
+  h2 { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 25px; letter-spacing: -0.01em; color: var(--ink); margin: 6px 0 18px; line-height: 1.2; }
+  h2 .bar { display: inline-block; width: 38px; height: 4px; background: var(--blue); border-radius: 2px; vertical-align: middle; margin-right: 14px; }
+  p { margin-bottom: 14px; }
+  p.body-lg { font-size: 16.5px; }
+  .ceo { background: var(--bg-soft); border-left: 5px solid var(--blue); padding: 26px 30px; border-radius: 4px; font-size: 16.5px; }
+  .ceo strong { font-weight: 700; color: var(--blue-dark); }
+  .finding { border: 1px solid var(--line); border-radius: 10px; padding: 24px 26px; margin-bottom: 18px; position: relative; }
+  .finding-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; margin-bottom: 12px; }
+  .finding-title { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 18px; line-height: 1.3; color: var(--ink); flex: 1; }
+  .finding-rank { font-family: 'Roboto Mono', monospace; font-weight: 600; font-size: 13px; color: #fff; background: var(--ink); width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .finding p { font-size: 15px; color: #283449; margin-bottom: 14px; }
+  .rel-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
+  .rel { display: inline-flex; align-items: center; gap: 9px; font-family: 'Roboto Mono', monospace; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 5px 12px; border-radius: 20px; }
+  .rel.high { background: #e7f0fe; color: var(--blue); }
+  .rel.medhigh { background: var(--green-bg); color: var(--green); }
+  .rel.medium { background: var(--amber-bg); color: var(--amber); }
+  .rel.low { background: var(--red-bg); color: var(--red); }
+  .score { font-family: 'Roboto Mono', monospace; font-size: 13px; font-weight: 600; color: var(--ink); }
+  .score b { font-size: 17px; }
+  .score span { color: var(--muted); font-weight: 400; }
+  .chips { display: flex; flex-direction: column; gap: 8px; margin-top: 6px; }
+  .chip-row { display: flex; align-items: baseline; gap: 9px; flex-wrap: wrap; font-size: 13.5px; }
+  .chip-label { font-family: 'Roboto Mono', monospace; font-size: 10.5px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; padding: 3px 8px; border-radius: 4px; white-space: nowrap; }
+  .chip-label.sup { background: var(--green-bg); color: var(--green); }
+  .chip-label.chal { background: var(--red-bg); color: var(--red); }
+  .chip-label.fix { background: var(--amber-bg); color: var(--amber); }
+  .chip-row span.who { color: #2b3950; }
+  .chip-row span.who b { font-weight: 600; }
+  .contested { border: 1px dashed var(--amber); background: #fffaf2; border-radius: 10px; padding: 22px 26px; margin-bottom: 18px; }
+  .contested .tag { font-family: 'Roboto Mono', monospace; font-size: 10.5px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--amber); }
+  .contested h4 { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 16px; color: var(--ink); margin: 6px 0 10px; }
+  .contested p { font-size: 14px; color: #4a3a22; margin-bottom: 0; }
+  .connection { background: linear-gradient(135deg, #16203a 0%, #1e3a8a 100%); color: #eaf0fb; border-radius: 12px; padding: 34px 38px; }
+  .connection h2 { color: #fff; }
+  .connection h2 .bar { background: #6ea8ff; }
+  .connection .section-num { color: #9ec1ff; }
+  .connection p { color: #d3def3; font-size: 16px; }
+  .connection .punch { font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 18px; color: #fff; line-height: 1.4; margin-top: 18px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,0.18); }
+  .assume { border: 1px solid var(--line); border-left: 5px solid var(--amber); border-radius: 6px; padding: 24px 28px; background: #fffdf9; }
+  .assume h3 { font-family: 'Montserrat', sans-serif; font-size: 17px; font-weight: 700; color: var(--ink); margin-bottom: 10px; }
+  .assume p { font-size: 15px; color: #3a3320; }
+  .assume p:last-child { margin-bottom: 0; }
+  .action-item { display: flex; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+  .action-item:last-child { border-bottom: none; }
+  .action-mark { font-family: 'Roboto Mono', monospace; font-weight: 600; font-size: 13px; color: var(--blue); flex-shrink: 0; width: 34px; }
+  .action-item .do { font-weight: 600; color: var(--ink); }
+  .action-item p { font-size: 14.5px; margin-bottom: 0; color: #2b3950; }
+  .frontier { border: 2px dashed var(--blue); border-radius: 12px; padding: 30px 34px; background: var(--bg-soft); }
+  .frontier .q { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 22px; line-height: 1.32; color: var(--blue-dark); margin-bottom: 16px; }
+  .frontier p { font-size: 15px; color: #2b3950; }
+  .oncam { margin-top: 18px; }
+  .oncam-col { border-radius: 10px; padding: 20px 24px; margin-bottom: 14px; }
+  .oncam-col.safe { background: var(--green-bg); border: 1px solid #bfe3cc; }
+  .oncam-col.caveat { background: var(--amber-bg); border: 1px solid #f0d9b5; }
+  .oncam-col.avoid { background: var(--red-bg); border: 1px solid #f3c9c9; }
+  .oncam-col h4 { font-family: 'Roboto Mono', monospace; font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 12px; }
+  .oncam-col.safe h4 { color: var(--green); }
+  .oncam-col.caveat h4 { color: var(--amber); }
+  .oncam-col.avoid h4 { color: var(--red); }
+  .oncam-col ul { list-style: none; }
+  .oncam-col li { font-size: 14px; color: #233; margin-bottom: 8px; padding-left: 16px; position: relative; line-height: 1.5; }
+  .oncam-col li::before { content: "•"; position: absolute; left: 0; font-weight: 700; }
+  .oncam-col.safe li::before { color: var(--green); }
+  .oncam-col.caveat li::before { color: var(--amber); }
+  .oncam-col.avoid li::before { color: var(--red); }
+  .refs { margin-top: 56px; padding-top: 26px; border-top: 2px solid var(--line); }
+  .refs h3 { font-family: 'Roboto Mono', monospace; font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; }
+  .refs ul { list-style: none; }
+  .refs li { font-size: 12.5px; color: var(--muted); margin-bottom: 11px; padding-left: 16px; position: relative; line-height: 1.5; }
+  .refs li::before { content: "›"; position: absolute; left: 0; color: var(--blue); font-weight: 700; }
+  .refs a { color: #34507e; text-decoration: none; }
+  .refs a:hover { text-decoration: underline; }
+  .refs .vstat { font-family: 'Roboto Mono', monospace; font-size: 10px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; padding: 2px 6px; border-radius: 3px; margin-right: 6px; }
+  .vstat.ok { background: var(--green-bg); color: var(--green); }
+  .vstat.part { background: var(--amber-bg); color: var(--amber); }
+  .vstat.weak { background: var(--red-bg); color: var(--red); }
+  .footer { margin-top: 40px; font-family: 'Roboto Mono', monospace; font-size: 11px; color: #9aa6b8; text-align: center; }
+  @media (max-width: 640px) { .page { padding: 40px 24px 56px; } h1 { font-size: 30px; } }
+  @media print { body { background: #fff; } .page { box-shadow: none; max-width: 100%; padding: 0; } .connection, .oncam-col { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <div class="eyebrow">Storm Research &middot; v2 (verified)</div>
+    <h1>Wiring AI Design Tools into a Dev Template: Claude Design, Higgsfield &amp; the Format-vs-Vendor Bet</h1>
+    <p class="lede">A five-lens synthesis — practitioner, academic, skeptic, economist, historian — on whether Anthropic's Claude Design and Higgsfield can be wired into a Claude Code template's design step, and whether naming tools at all is durable. Every claim checked against its primary source.</p>
+    <div class="meta-row">
+      <span><b>Date</b> &nbsp;2026-07-03</span>
+      <span><b>Method</b> &nbsp;5 author-built expert lenses + contradiction map</span>
+      <span><b>Audience</b> &nbsp;A template maintainer deciding whether/how to wire these into define-design</span>
+    </div>
+    <div class="verify-banner">
+      <span class="tag">Verified</span>
+      <span>All 16 sources independently checked against primary sources on 2026-07-03, in 5 clusters. <b>Result: 0 fabricated, 5 corrected, 4 demoted.</b> Confidence scores reflect post-verification evidence quality. Notably, the pass <b>overturned one roast-stage claim</b> ("Higgsfield has no first-party API" &rarr; it does).</span>
+    </div>
+    <div class="howto">
+      <h4>How to read this</h4>
+      <ul>
+        <li><b>The panel was author-constructed.</b> All five lenses share one framing, so where they agree, treat it as a strong hypothesis, not independent proof.</li>
+        <li><b>Confidence is scored 1-10</b> on evidence quality: official first-party docs &gt; reputable press &gt; single analyst report &gt; single-blog tally &gt; unsourced claim.</li>
+        <li><b>Capability fact and strategy read are flagged separately.</b> A high score means the capability claim is solid, not that the build recommendation is certain.</li>
+      </ul>
+    </div>
+  </header>
+
+  <!-- ============ 01 CEO SUMMARY ============ -->
+  <section class="section">
+    <div class="section-num">01</div>
+    <h2><span class="bar"></span>The 60-Second Summary</h2>
+    <div class="ceo">
+      <p style="margin-bottom:0;">Of the three tools, only <b>Google Stitch</b> — the incumbent the template already uses — exposes an inbound, headless-drivable surface that emits a <em>portable</em> design-system file (its open-sourced <code>DESIGN.md</code>), and even that ships from an explicitly <em>unsupported Google Labs</em> project. <b>Claude Design</b> (launched April 17, 2026, Pro-plan and up) is confirmed interactive-only: its "MCP connectors" are <em>outbound export destinations</em> (Canva/PDF/PPTX/HTML), its Claude&nbsp;Code handoff is a manual "you can pass" action, and it <em>consumes</em> a design system by reading your codebase rather than <em>emitting</em> one — so a skill cannot drive it at all today. <b>Higgsfield</b> does have a real first-party API + MCP (correcting a widely-repeated claim), but it outputs only raster image/video — no tokens, type, or palette — making it an <em>asset</em> generator, not a design-system tool; it was also the source video's paid affiliate (a creator program paying up to $2,500/video). <strong>The durable integration in this space is a format, not a vendor: every named AI-design tool churns — Galileo AI was acqui-hired into Google Stitch within ~12 months, Create React App was sunset, and the W3C Design Tokens spec went stable in Oct 2025 precisely to kill vendor lock-in.</strong> The template's own <code>wiki/design-system.md</code> is already that portable target; the honest move is to make it a vendor-neutral contract and treat every tool — Stitch included — as an optional, keyed writer into it.</p>
+    </div>
+  </section>
+
+  <!-- ============ 02 KEY FINDINGS ============ -->
+  <section class="section">
+    <div class="section-num">02</div>
+    <h2><span class="bar"></span>Five Key Findings, Ranked by Reliability</h2>
+
+    <div class="finding">
+      <div class="finding-head">
+        <div class="finding-title">Claude Design cannot be driven headlessly, and it emits no portable design-system file — so a skill cannot "integrate" it as automation.</div>
+        <div class="finding-rank">1</div>
+      </div>
+      <div class="rel-row">
+        <div class="rel high">Reliability: High</div>
+        <div class="score"><b>9</b><span>/10</span></div>
+      </div>
+      <p>Verified 5/5 against Anthropic's own launch page and TechCrunch: the product is "Claude Design" (not "2.0"), launched April 17, 2026 for Pro/Max/Team/Enterprise. Its connectors are <em>outbound export-only</em> (Canva, PDF, PPTX, HTML); the page itself defers inbound integration — "over the coming weeks, we'll make it easier to build integrations." The Claude&nbsp;Code handoff is a manual UI action ("you can pass"), and onboarding has Claude <em>"build a design system by reading your codebase and design files"</em> — i.e. it <b>consumes</b>, and never emits a portable token file. <b>Correction:</b> the roast stage's "June" launch date is wrong — it is April 17, 2026.</p>
+      <div class="chips">
+        <div class="chip-row"><span class="chip-label sup">Supported by</span><span class="who">All 5 lenses; Anthropic news page + TechCrunch (April 17, 2026)</span></div>
+        <div class="chip-row"><span class="chip-label chal">Challenged by</span><span class="who">No one</span></div>
+        <div class="chip-row"><span class="chip-label fix">Corrected</span><span class="who">Launch date June&rarr;April 17, 2026; "Claude Design 2.0" is a creator label, not a product name</span></div>
+      </div>
+    </div>
+
+    <div class="finding">
+      <div class="finding-head">
+        <div class="finding-title">The durable pattern is format-over-vendor: name the portable contract, not the tool.</div>
+        <div class="finding-rank">2</div>
+      </div>
+      <div class="rel-row">
+        <div class="rel high">Reliability: High</div>
+        <div class="score"><b>9</b><span>/10</span></div>
+      </div>
+      <p>Confirmed via three primary-source cases: <b>Galileo AI</b> — the leading standalone AI UI generator — was acqui-hired by Google and folded into Stitch (May 2025), so any template hardcoding "Galileo AI" pointed at a dead product within ~12 months; <b>Create React App</b> was officially sunset (react.dev, Feb 14, 2025); and the <b>W3C Design Tokens</b> Community Group shipped its first <em>stable</em> spec (2025.10, Oct 28, 2025) explicitly to reduce vendor lock-in via a neutral token JSON. The winners abstract behind a format/contract; the named integrations die "unmaintained" — often dead-on-arrival in forks. <b>Corrections:</b> react.dev does <em>not</em> name Babel/webpack as the flaw (drop that framing); the "196 tools died" aggregate is demoted (see sidebar).</p>
+      <div class="chips">
+        <div class="chip-row"><span class="chip-label sup">Supported by</span><span class="who"><b>Historian</b> (Galileo, CRA, W3C tokens), <b>Academic</b>, <b>Practitioner</b> ("name the format, not the tool")</span></div>
+        <div class="chip-row"><span class="chip-label chal">Challenged by</span><span class="who">No one — even the bull case reframes to "the abstraction is the moat"</span></div>
+        <div class="chip-row"><span class="chip-label fix">Corrected</span><span class="who">CRA reasons: maintainer abandonment + missing prod features, not "Babel/webpack" by name</span></div>
+      </div>
+    </div>
+
+    <div class="finding">
+      <div class="finding-head">
+        <div class="finding-title">Higgsfield is an asset generator, not a design-system tool — it has a first-party API, but outputs only raster image/video.</div>
+        <div class="finding-rank">3</div>
+      </div>
+      <div class="rel-row">
+        <div class="rel medhigh">Reliability: Medium-High</div>
+        <div class="score"><b>8</b><span>/10</span></div>
+      </div>
+      <p><b>Correction:</b> the roast stage claimed Higgsfield has "no first-party API, only resellers" — that is <em>false</em>. It has an official portal (<code>cloud.higgsfield.ai</code>), an official Python SDK (<code>higgsfield-ai/higgsfield-client</code>), and a first-party MCP server (<code>mcp.higgsfield.ai/mcp</code>); Segmind/Pixazo sit on top. But its output is confirmed <em>raster only</em> — images (≤4K) and video (≤15s) — with no color tokens, typography, or spacing. So it cannot populate a design <em>system</em>; it belongs (if anywhere) to a later, keyed, opt-in "assets" role, and it collides with the design system's current "no stock photography" voice.</p>
+      <div class="chips">
+        <div class="chip-row"><span class="chip-label sup">Supported by</span><span class="who"><b>Practitioner</b>, <b>Academic</b> (SDK + MCP), <b>Skeptic</b> (mp4 output), <b>Economist</b></span></div>
+        <div class="chip-row"><span class="chip-label chal">Challenged by</span><span class="who">Roast stage (claimed no first-party API) — overturned by verification</span></div>
+        <div class="chip-row"><span class="chip-label fix">Corrected</span><span class="who">First-party API/MCP DOES exist; Pixazo prices per 5-sec segment, not per video</span></div>
+      </div>
+    </div>
+
+    <div class="finding">
+      <div class="finding-head">
+        <div class="finding-title">Google Stitch is the only real inbound design-system tool — but it's an unsupported Google Labs project, so even the incumbent is churn-exposed.</div>
+        <div class="finding-rank">4</div>
+      </div>
+      <div class="rel-row">
+        <div class="rel medhigh">Reliability: Medium-High</div>
+        <div class="score"><b>7</b><span>/10</span></div>
+      </div>
+      <p>Confirmed: the <code>google-labs-code/stitch-skills</code> + <code>stitch-sdk</code> repos expose real MCP tools (<code>generate-design</code>, <code>react-components</code>, <code>manage-design-system</code>, <code>extract-design-md</code>) and an open-sourced portable <code>DESIGN.md</code> spec Google explicitly framed to work "across any single tool or platform." <b>Correction:</b> it is <em>not</em> "officially supported" — both repos carry the verbatim disclaimer "This is not an officially supported Google product" (Apache-2.0), and a third-party <code>@_davideast/stitch-mcp</code> package also exists. It's keyed (no zero-config path), free today. This validates the template's <em>existing</em> Stitch integration — as an optional, keyed accelerator, exactly how it's already framed — but says: document it honestly and pin it.</p>
+      <div class="chips">
+        <div class="chip-row"><span class="chip-label sup">Supported by</span><span class="who"><b>Practitioner</b>, <b>Academic</b>, <b>Skeptic</b> ("Stitch already solves the actual problem")</span></div>
+        <div class="chip-row"><span class="chip-label chal">Challenged by</span><span class="who">Academic tempers "official" &rarr; it's Google Labs, no stability SLA</span></div>
+        <div class="chip-row"><span class="chip-label fix">Corrected</span><span class="who">"official Google" &rarr; Google Labs unsupported; free quota ~12,450 credits/mo (Stitch 2.0), not 350/550</span></div>
+      </div>
+    </div>
+
+    <div class="finding">
+      <div class="finding-head">
+        <div class="finding-title">The economics cut against wiring paid, keyed tools into a Tier-0 (no-keys) template.</div>
+        <div class="finding-rank">5</div>
+      </div>
+      <div class="rel-row">
+        <div class="rel medium">Reliability: Medium</div>
+        <div class="score"><b>6</b><span>/10</span></div>
+      </div>
+      <p>Claude Design is Pro-gated ($20/mo monthly, $17/mo annual — confirmed on Anthropic's pricing). Higgsfield is subscription/credit-based ($15–$129/mo) and runs a creator "Earn" program paying up to $2,500/video — so its ubiquity in tutorial videos is <em>paid content</em>, not organic developer signal (it was this video's affiliate). For a template whose core promise is "works offline, no keys," any hard dependency on a keyed endpoint breaks the value proposition and does the vendor's distribution for free. <b>Demoted:</b> Higgsfield's "$400M ARR (May 2026)" is single-source (Sacra); the verified funding facts are $1.3B valuation and ~$138M raised ($80M Accel-led Series A extension, Jan 2026).</p>
+      <div class="chips">
+        <div class="chip-row"><span class="chip-label sup">Supported by</span><span class="who"><b>Economist</b>, <b>Buyer</b> (onboarding-bloat), <b>Skeptic</b> (affiliate incentive)</span></div>
+        <div class="chip-row"><span class="chip-label chal">Challenged by</span><span class="who">Expansionist (a keyed "assets" tier could be a Tier-1 upsell) — but that's a different, later job</span></div>
+        <div class="chip-row"><span class="chip-label fix">Corrected</span><span class="who">$400M ARR demoted to single-source; $200M (Jan) &rarr; ~$500M (Jun) disclosed elsewhere</span></div>
+      </div>
+    </div>
+
+    <div class="contested">
+      <div class="tag">Contested / demoted signals &middot; monitor, do not assert</div>
+      <h4>Four figures that did not survive primary-source checking</h4>
+      <p><b>Higgsfield "$400M ARR" (conf 3/10):</b> single-source (Sacra, partly paywalled); company said $200M in Jan, ~$500M by late June — treat $400M as interpolation. &nbsp;<b>"196 AI tools died / 95 shut / 101 acquired" (conf 2/10):</b> a single directory's self-count (tooldirectory.ai), no methodology — illustrative only. &nbsp;<b>Stitch "90-day token expiry" (conf 2/10):</b> no primary source found. &nbsp;<b>Stitch "paid plans in Q4 2026" (conf 2/10):</b> analyst/blog expectation, not from Google. Do not state these as fact.</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 HIDDEN CONNECTION ============ -->
+  <section class="section">
+    <div class="connection">
+      <div class="section-num">03</div>
+      <h2><span class="bar"></span>The Hidden Connection</h2>
+      <p>The pitch says "add two powerful tools." The evidence says one can't be driven and the other makes the wrong artifact. Those look like two separate disappointments.</p>
+      <p>They're the same finding seen twice: <em>generation was never the bottleneck — portability was.</em> The tool that "wins" here (Stitch) wins only because it <em>also</em> emits a portable file (<code>DESIGN.md</code>); Claude Design fails not because it's weak but because it keeps its output <em>inside</em> a walled canvas; Higgsfield fails because its output isn't a design system at all. Every case is decided by the same axis: does it produce a portable, distillable artifact the template already knows how to read?</p>
+      <p class="punch">The template's <code>wiki/design-system.md</code> is the actual asset. Every design tool is only as valuable as its ability to write into that format — so build the socket, not the plug.</p>
+    </div>
+  </section>
+
+  <!-- ============ 03b MISSING 6TH LENS ============ -->
+  <section class="section">
+    <div class="assume">
+      <h3>The assumption this briefing rests on (and the missing 6th lens)</h3>
+      <p>All five lenses argued about <em>which tool</em> to wire in and <em>how</em>. None asked the <b>user-value question</b>: for a solo dev scaffolding a Tier-0 app, is AI <em>generation</em> of a look-and-feel even the felt gap — or does the existing interview already produce a good-enough <code>design-system.md</code>, making every one of these tools a nice-to-have?</p>
+      <p>If the interview is the real product (the Buyer strongly implied it is — "I want tokens and a Tailwind config, not a moodboard"), then the priority inverts: the durable work is <b>hardening the format and the offline interview</b>, and "tool integrations" are a distant, optional layer. That single omission could flip this from "which tools to add" to "add none; sharpen the contract."</p>
+    </div>
+  </section>
+
+  <!-- ============ 04 ACTIONABLE INSIGHT ============ -->
+  <section class="section">
+    <div class="section-num">04</div>
+    <h2><span class="bar"></span>What To Actually Do Differently</h2>
+    <p class="body-lg" style="color:var(--muted);">For the template maintainer wiring the design step — specific moves, not principles:</p>
+    <div class="action-item">
+      <div class="action-mark">01</div>
+      <div><span class="do">Generalize the Stitch wiring into a vendor-neutral "design-tool" role.</span><p>One paragraph in <code>define-design</code> + a doc table: the contract is "any tool that can populate <code>wiki/design-system.md</code> via Generate&rarr;Export&rarr;Distill." Vendors become swappable examples, not hardcoded steps — the pattern that survived every churn cycle (Finding 2).</p></div>
+    </div>
+    <div class="action-item">
+      <div class="action-mark">02</div>
+      <div><span class="do">Add Claude Design as a documented MANUAL option, honestly framed.</span><p>Interactive claude.ai (Pro+), outbound-only, no automation: "use it to explore a look, then describe or paste the result back into the interview." Zero new prompts on the keyless default path (respects the Buyer's onboarding-bloat objection). Never claim it can be driven — it can't (Finding 1).</p></div>
+    </div>
+    <div class="action-item">
+      <div class="action-mark">03</div>
+      <div><span class="do">Do NOT wire Higgsfield into <code>define-design</code>.</span><p>It's raster-only (Finding 3) — wrong artifact for a design system. If assets ever matter, capture a generic, off-by-default "asset-generation tool" role in a later imagery tier, and reconcile the "no stock photography" voice first. Naming it now imports a paid, affiliate-driven dependency for ~zero indie uptake.</p></div>
+    </div>
+    <div class="action-item">
+      <div class="action-mark">04</div>
+      <div><span class="do">Make the format speak a standard: align <code>design-system.md</code> with W3C Design Tokens and/or Stitch's <code>DESIGN.md</code>.</span><p>The W3C tokens spec went stable (2025.10) to be the neutral interchange (Finding 2). Speaking a standard — not a vendor dialect — is what makes the socket durable and lets any tool plug in.</p></div>
+    </div>
+    <div class="action-item">
+      <div class="action-mark">05</div>
+      <div><span class="do">Keep the existing Stitch MCP, but re-document it honestly and pin it.</span><p>It's a Google Labs project with no stability SLA and a third-party package alongside it (Finding 4). Note it can break, pin the package, and keep it strictly optional/keyed — exactly the graceful-off posture the template already uses.</p></div>
+    </div>
+    <div class="action-item">
+      <div class="action-mark">06</div>
+      <div><span class="do">Add a one-line honesty note to the skill and docs.</span><p>"These external tools change monthly; we integrate the format, not the vendor." It's the methodology-as-moat framing, and it inoculates future maintainers against re-litigating the next "just dropped 2.0" video.</p></div>
+    </div>
+  </section>
+
+  <!-- ============ 04b CLAIM SAFETY GUIDE ============ -->
+  <section class="section">
+    <div class="section-num">04b</div>
+    <h2><span class="bar"></span>What's Safe to Assert</h2>
+    <div class="oncam">
+      <div class="oncam-col safe">
+        <h4>✓ Safe — verified against primary source</h4>
+        <ul>
+          <li>Claude Design (launched April 17, 2026, Pro+) is interactive-only; its connectors are outbound export; it consumes, not emits, a design system.</li>
+          <li>Higgsfield has a first-party API + MCP, but outputs raster image/video only — no design tokens.</li>
+          <li>Google Stitch's MCP + <code>DESIGN.md</code> are real but ship from an "not officially supported" Google Labs project (Apache-2.0), keyed, free today.</li>
+          <li>W3C Design Tokens stable spec 2025.10 (Oct 28, 2025); Galileo AI &rarr; Google Stitch (May 2025); CRA sunset (Feb 14, 2025).</li>
+          <li>Higgsfield: $1.3B valuation, ~$138M raised; creator "Earn" pays up to $2,500/video. Claude Design needs a $20/mo Pro plan.</li>
+        </ul>
+      </div>
+      <div class="oncam-col caveat">
+        <h4>⚠ Say with a caveat</h4>
+        <ul>
+          <li>Higgsfield pricing tiers ($15/$39/$129) — the pricing page wasn't machine-readable; figures are from secondary sources.</li>
+          <li>Stitch free quota (~12,450 credits/mo, Stitch 2.0) — best-sourced number is third-party, not a Google doc.</li>
+          <li>"Stitch has an official MCP" — say <em>Google Labs, unsupported</em>, not "official Google product."</li>
+        </ul>
+      </div>
+      <div class="oncam-col avoid">
+        <h4>✕ Don't assert</h4>
+        <ul>
+          <li>Higgsfield "$400M ARR" (single-source); "$1B ARR by end-2026" (company-stated goal).</li>
+          <li>"196 AI tools died / 95 shut / 101 acquired" — a single directory's self-count.</li>
+          <li>Stitch "90-day token expiry" and "paid plans in Q4 2026" — no primary source.</li>
+          <li>"Claude Design 2.0" (not a product name); "react.dev blamed Babel/webpack" (not in the post).</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 05 FRONTIER QUESTION ============ -->
+  <section class="section">
+    <div class="section-num">05</div>
+    <h2><span class="bar"></span>The Frontier Question</h2>
+    <div class="frontier">
+      <div class="q">Will Anthropic ship an <em>inbound</em> programmatic/MCP surface for Claude Design — turning its "over the coming weeks" promise into a real API a skill can drive?</div>
+      <p>It matters because Claude Design is the one tool ecosystem-aligned with this template (same Anthropic account, same MCP world). If an inbound surface + a portable export land, Claude Design becomes a genuinely native, automatable design-system provider — and the vendor-neutral adapter recommended here is exactly what lets you add it in an afternoon instead of re-architecting. No lens could answer this (the capability doesn't exist yet), which is why building the <em>socket</em> now is the hedge that pays off no matter which way Anthropic goes.</p>
+    </div>
+  </section>
+
+  <!-- ============ REFERENCES ============ -->
+  <div class="refs">
+    <h3>Evidence base &middot; verification status</h3>
+    <ul>
+      <li><span class="vstat ok">Confirmed</span> Anthropic — Introducing Claude Design (April 17, 2026): interactive, Pro/Max/Team/Enterprise, outbound export only, "coming weeks" integration deferral, consumes design system by reading codebase. <a href="https://www.anthropic.com/news/claude-design-anthropic-labs">anthropic.com</a></li>
+      <li><span class="vstat ok">Confirmed</span> TechCrunch — Anthropic launches Claude Design (April 17, 2026): corroborates name, date, plans. <a href="https://techcrunch.com/2026/04/17/anthropic-launches-claude-design-a-new-product-for-creating-quick-visuals/">techcrunch.com</a></li>
+      <li><span class="vstat ok">Confirmed</span> Anthropic pricing — Claude Pro $20/mo ($17/mo annual). <a href="https://claude.com/pricing">claude.com/pricing</a></li>
+      <li><span class="vstat ok">Confirmed</span> Higgsfield — official MCP server (30+ models, image/video). <a href="https://higgsfield.ai/mcp">higgsfield.ai/mcp</a></li>
+      <li><span class="vstat ok">Confirmed</span> Higgsfield — official Python SDK, targets cloud.higgsfield.ai. <a href="https://github.com/higgsfield-ai/higgsfield-client">github.com/higgsfield-ai</a></li>
+      <li><span class="vstat ok">Confirmed</span> Higgsfield — creator "Earn" program, up to $2,500 lifetime/video. <a href="https://higgsfield.ai/earn">higgsfield.ai/earn</a></li>
+      <li><span class="vstat part">Corrected</span> Higgsfield pricing $15/$39/$129/mo — page not machine-readable; secondary sources. <a href="https://higgsfield.ai/pricing">higgsfield.ai/pricing</a></li>
+      <li><span class="vstat ok">Confirmed</span> Higgsfield $1.3B valuation, $130M Series A / ~$138M total raised (Accel, Jan 2026). <a href="https://techcrunch.com/2026/01/15/ai-video-startup-higgsfield-founded-by-ex-snap-exec-lands-1-3b-valuation/">techcrunch.com</a></li>
+      <li><span class="vstat weak">Demoted</span> Higgsfield "$400M ARR (May 2026)" — single-source (Sacra), partly paywalled; $200M (Jan) / ~$500M (Jun) elsewhere. <a href="https://sacra.com/c/higgsfield/">sacra.com</a></li>
+      <li><span class="vstat ok">Confirmed</span> Google Labs — <code>stitch-skills</code> + <code>stitch-sdk</code>: MCP tools + "not an officially supported Google product" disclaimer (Apache-2.0). <a href="https://github.com/google-labs-code/stitch-sdk">github.com/google-labs-code</a></li>
+      <li><span class="vstat ok">Confirmed</span> Google Labs — open-sourced <code>DESIGN.md</code> spec, "across any single tool or platform"; v0.3.0 (June 15, 2026). <a href="https://github.com/google-labs-code/design.md">github.com/google-labs-code/design.md</a></li>
+      <li><span class="vstat part">Corrected</span> Stitch free quota — ~12,450 credits/mo (400 design + 15 redesign/day, Stitch 2.0); 350/550 figures unsupported. <a href="https://www.banani.co/blog/google-stitch-pricing-and-credits">banani.co</a></li>
+      <li><span class="vstat part">Corrected</span> React — Sunsetting Create React App (Feb 14, 2025): maintainer abandonment + missing prod features; Babel/webpack not named. <a href="https://react.dev/blog/2025/02/14/sunsetting-create-react-app">react.dev</a></li>
+      <li><span class="vstat ok">Confirmed</span> Google acquires Galileo AI &rarr; Google Stitch (May 2025). <a href="https://www.crunchbase.com/acquisition/google-acquires-galileo-ai--fd007aa9">crunchbase.com</a></li>
+      <li><span class="vstat ok">Confirmed</span> W3C Design Tokens — first stable spec 2025.10 (Oct 28, 2025), vendor-neutrality an explicit goal. <a href="https://www.w3.org/community/design-tokens/2025/10/28/design-tokens-specification-reaches-first-stable-version/">w3.org</a></li>
+      <li><span class="vstat weak">Demoted</span> "196 AI tools died / 95 shut / 101 acquired" — single-directory self-count, no methodology; illustrative only. <a href="https://tooldirectory.ai/blog/ai-tools-that-died-or-got-acquired-in-2025-2026">tooldirectory.ai</a></li>
+    </ul>
+  </div>
+
+  <div class="footer">Storm Research v2 &middot; 16/16 sources independently verified against primary sources, 2026-07-03 &middot; 0 fabricated, 5 corrected, 4 demoted &middot; Reliability = evidence quality, not author confidence</div>
+
+</div>
+</body>
+</html>
