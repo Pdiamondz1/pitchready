@@ -44,19 +44,26 @@ function deny(why) {
   process.exit(2);
 }
 
+// Match a git subcommand while tolerating global options between `git` and the subcommand
+// (e.g. `git -c user.email=bot push`, `git -C path merge`, `git --git-dir=x push`).
+const gitSub = (sub) => new RegExp(String.raw`\bgit\b(?:\s+-\S+(?:\s+[^-\s]\S*)?)*\s+` + sub);
+
 // git push: allow ONLY a push of the tick's own maintain-app/* feature branch. Everything else —
 // a bare `git push`, `git push origin`, `git push origin HEAD` (all of which push the current branch,
 // which could be the default), any main/master target, any colon refspec (e.g. src:production, which can
-// remap to a non-main default branch), and --all/--mirror — is blocked, so no push
-// can ever reach the default branch regardless of which branch is checked out.
-if (/\bgit\s+push\b/.test(cmd)) {
-  const ownBranch = /\bgit\s+push\b[^\n|&;]*\bmaintain-app\/[\w.\-\/]+/.test(cmd);
-  const risky = /\b(?:main|master)\b/.test(cmd) || /--(?:all|mirror)\b/.test(cmd) || /\bgit\s+push\b[^\n|&;]*:/.test(cmd);
+// remap to a non-main default branch), and --all/--mirror — is blocked, so no push can ever reach the
+// default branch regardless of which branch is checked out.
+if (gitSub(String.raw`push\b`).test(cmd)) {
+  const ownBranch = gitSub(String.raw`push\b[^\n|&;]*\bmaintain-app\/[\w.\-\/]+`).test(cmd);
+  const risky =
+    /\b(?:main|master)\b/.test(cmd) ||
+    /--(?:all|mirror)\b/.test(cmd) ||
+    gitSub(String.raw`push\b[^\n|&;]*:`).test(cmd);
   if (!ownBranch || risky) deny('git push to anything other than a maintain-app/* feature branch');
 }
 
 const BLOCKED = [
-  [/\bgit\s+merge(?![-\w])/, 'git merge'],
+  [gitSub(String.raw`merge(?![-\w])`), 'git merge'],
   [/\bgh\s+pr\s+merge\b/, 'gh pr merge'],
   [/\b(?:vercel|netlify)\b[^\n]*(?:\bdeploy\b|--prod\b)/, 'deploy'],
   [/\b(?:npm|pnpm|yarn)\s+publish\b/, 'publish'],
