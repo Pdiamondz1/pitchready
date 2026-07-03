@@ -52,6 +52,7 @@ const BLOCKED = [
   [gitSub(String.raw`merge(?![-\w])`), 'git merge'],
   [/\bgh\s+pr\s+merge\b/, 'gh pr merge'],
   [/\b(?:vercel|netlify)\b[^\n]*(?:\bdeploy\b|--prod\b)/, 'deploy'],
+  [/\b(?:npm|pnpm|yarn)\s+(?:run\s+)?deploy\b/, 'deploy script'],
   [/\b(?:npm|pnpm|yarn)\s+publish\b/, 'publish'],
   [/\bgh\s+release\s+create\b/, 'gh release create'],
   [/\bgh\s+secret\s+set\b/, 'writing a repo secret'],
@@ -80,7 +81,8 @@ function segmentBlock(seg) {
 
 // A single Bash invocation can chain commands (`a && b`, `a; b`, `a | b`, newlines); check each
 // segment independently so a legitimate maintain-app/* push can't smuggle a second bare/default push.
-for (const seg of cmd.split(/&&|\|\||[;\n|]/)) {
+for (const raw of cmd.split(/&&|\|\||[;\n|]/)) {
+  const seg = raw.replace(/(^|\s)#.*$/, '$1'); // drop trailing bash comments (can't hide a ref behind #)
   const why = segmentBlock(seg);
   if (why) deny(why);
 }
