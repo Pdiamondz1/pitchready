@@ -93,12 +93,12 @@ as the `web-researcher` agent. **Graceful-off:** if web is unavailable, skip wit
 
 Write the confirmed intent to `outputs/autopilot/<date>-<slug>/plan.md` (built from the intake + charter +
 verdict + research + design direction + target set), and show it in **one** message: the app name + one-liner,
-the charter summary (purpose/audience/success/scope), **the GO verdict + cheapest test**, **the key
+the charter summary (purpose/audience/success/scope), **the verdict (GO or adopted RESHAPE) + cheapest test**, **the key
 research findings**, the design direction, **the target set + what each target will build (keyed by its
 folder `app/`/`mobile/`/`plugin/` so each builder finds its own slice)**, and the
 `(assumed — confirm later)` list. Ask **one** question:
 
-> *"This is the plan — already vetted (**GO**) and researched. After you say go, I'll design it and build
+> *"This is the plan — already vetted (**GO**, or an adopted **RESHAPE**) and researched. After you say go, I'll design it and build
 > **them** end-to-end **without stopping**. Every judgment call I make gets logged for you to review after.
 > Go? (yes / tweak something)"*
 
@@ -108,7 +108,7 @@ gate**; begin the hands-off build.
 ### Phase C — Hands-off build (silent; after the gate)
 
 Run `config.build_chain` in order, driving each sub-skill in autonomous mode, logging each step to
-`run.md`. **No vetting stop (already GO).** `define-design` runs once (a failure there halts — everything
+`run.md`. **No vetting stop (already cleared — GO or an adopted RESHAPE).** `define-design` runs once (a failure there halts — everything
 depends on it); then `build-<target>` runs **once per selected target**, and the targets are
 **independent** — a per-target build failure is logged and the run **continues to the next target**
 (graceful + resumable):
@@ -116,10 +116,10 @@ depends on it); then `build-<target>` runs **once per selected target**, and the
    synthesize from those alone (no Stitch paste-back wait; console-theming stays opt-in attended, skip
    it) → `wiki/design-system.md` + `raw/design/<date>-<slug>/`.
 2. **`build-<target>` (autonomous) — once per selected target** (`web`→`build-app`, `mobile`→`build-mobile`,
-   `plugin`→`build-plugin`) — read `plan.md` + `wiki/charter.md` + `wiki/design-system.md` + the GO verdict;
+   `plugin`→`build-plugin`) — read `plan.md` + `wiki/charter.md` + `wiki/design-system.md` + the verdict (GO or adopted RESHAPE);
    **skip the Phase 2 confirm gate** (your gate covered it); the RESHAPE pivot is already folded; scaffold
    that target's `app/`|`mobile/`|`plugin/` folder **offline** (do NOT run `npm install`) → its
-   `raw/builds/<date>-<slug>.md` (target-tagged; the builder's own `-N` same-day rule keeps each target's record distinct) + its section of the shared `wiki/build.md` + its own
+   `raw/builds/<date>-<slug>-<target>.md` (**pass each builder the canonical run slug + a per-target suffix — `-web` / `-mobile` / `-plugin` — so every record is self-describing, collision-free, and its filename matches the run slug the ledger links to; do *not* rely on the `-N` same-day counter to tell the targets apart**) + its section of the shared `wiki/build.md` + its own
    `applied` change-log line. Record each target's outcome (built / failed / skipped) in `run.md` +
    `decisions.md`; a failed target does not stop the others.
 3. **`build-backend` (autonomous) — OPTIONAL, only if `config.wire_backend_after_build` is true AND `web`

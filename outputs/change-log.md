@@ -18,6 +18,8 @@ Format: `- YYYY-MM-DD — <skill> — <what changed> — <auto | applied>`
 
 ---
 
+- 2026-07-02 — improve-system — applied rv-20260702-011: autopilot passes each builder a canonical run slug + per-target record suffix (raw/builds/<date>-<slug>-web|mobile|plugin.md) so multi-target build records are self-describing and match the ledger — not the -N re-run counter; build-app/mobile/plugin autonomous notes honor it (build-app also tags its record target: web) — applied
+- 2026-07-02 — improve-system — applied rv-20260702-010: autopilot Phase B/C wording no longer hardcodes "GO" — it also names the auto-adopted RESHAPE path its own Phase A produces (plan bullet, confirm-gate prompt, Phase C header, build-<target> input) — applied
 - 2026-07-02 — improve-system — applied rv-20260702-009: build-mobile makes the scaffold reproducible so the Metro/web bundle builds — create-expo-app is now the recommended default scaffold; hand-authored package.json must tilde-pin nativewind, drop default reanimated, and add an overrides block pinning react-native + the metro family; Phase 5 web-preview note updated — applied
 - 2026-07-02 — improve-system — applied rv-20260702-008: build-mobile package.json lists expo-router peer deps + a typecheck script; Phase 5 honest about the web-preview path (create-expo-app alternative noted) — applied
 - 2026-07-02 — improve-system — applied rv-20260702-007: web-only production tiers (build-backend/test-app/audit-app/deploy/ship-check/polish) say so when a plugin/ or mobile/ exists instead of routing to build-app — applied

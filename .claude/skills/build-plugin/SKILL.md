@@ -323,5 +323,8 @@ pivot is already folded into the charter; record any KILL override `autopilot` p
 attended mode does. Scaffold **offline** and do **not** run `npm install` (the preview command stays a
 post-run offer `autopilot` makes at the end). Flag any `(assumed — confirm later)` choice to `autopilot`
 for its decision ledger, and write your `raw/builds/` record + `wiki/build.md` + `change-log.md` line as
-usual. This note is additive — your attended behavior above is unchanged; `autopilot` is user-initiated
+usual — but when `autopilot` hands you a canonical run slug + a target-suffixed record name
+(`raw/builds/<date>-<slug>-plugin.md`), use it verbatim for the `raw/builds/` filename so the record is
+self-describing and its name matches the slug the ledger links to — don't fall back to the `-N` same-day
+counter to disambiguate the target. This note is additive — your attended behavior above is unchanged; `autopilot` is user-initiated
 and never part of the unattended `maintenance-loop` (that rule is untouched).
