@@ -144,7 +144,9 @@ out so the config describes only what exists).
 **Theme it the same way `define-design` themes the console.** Write the 13 base tokens for `:root` and
 `.dark` into `app/src/index.css`, **re-derive and eyeball the contrast pairs** (`--*-foreground`,
 `--popover*`) so text stays legible — **verify the `--primary` / `--*-foreground` pairs clear WCAG AA
-(≥4.5:1 for normal text); darken a too-light token rather than ship a sub-AA CTA** — and set `--radius`
+(≥4.5:1 for normal text). To fix a sub-AA pair, **first flip the foreground to dark ink** (keep the brand
+hue) and only darken the *token itself* if no foreground choice clears AA — so a saturated brand color
+(e.g. a cyan CTA) stays on-brand instead of muddying into a darker, off-palette token** — and set `--radius`
 + the shadow vars from *Typography & shape*.
 Copy `tailwind.config.ts` from `aios/` — it resolves the CSS vars **and loads plugins**, so **drop the
 `@tailwindcss/typography` import and its `plugins` entry unless the design uses prose** (keep that plugin

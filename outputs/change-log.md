@@ -6,6 +6,7 @@ updated: 2026-06-29
 
 # Change Log
 
+- 2026-07-03 — improve-system — applied rv-20260703-007: build-app contrast-remedy guidance prefers flipping the --*-foreground to dark ink (keep the brand hue) over darkening a saturated brand token; only darken when no foreground clears AA (build-app SKILL.md) — applied
 - 2026-07-03 — improve-system — applied rv-20260703-004: build-mcp store.mjs bridge honest about the TS-import gap — Tier-0 default is a self-contained JS mirror of app/src/data fixtures (a plain .mjs can't import the app's TS/@-aliased data layer), with a drift note + tsx/getActiveStore zero-drift alternatives; Phase 1 notes list-only entities need a synthesized getX (build-mcp SKILL.md) — applied
 - 2026-07-03 — improve-system — applied rv-20260703-005: build-app drops @tailwindcss/typography from the copied tailwind.config.ts unless the design uses prose (else the excluded dep breaks the build) (build-app SKILL.md) — applied
 - 2026-07-03 — improve-system — applied rv-20260703-006: build-app strips console-only baggage from the copied tsconfig.app.json (vitest/globals type + server include) and vite.config.ts so a from-the-aios-shape scaffold typechecks clean (build-app SKILL.md) — applied

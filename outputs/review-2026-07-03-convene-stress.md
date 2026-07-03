@@ -28,12 +28,10 @@ Do not renumber existing ids.
 
 - [x] `rv-20260703-006` — `build-app`: copying the aios `tsconfig.app.json` shape leaks console-only baggage beyond fileApi/react-query  ·  target: `.claude/skills/build-app/SKILL.md` (Phase 3 — the "copied from the aios shape" scaffold notes)  ·  detail: The skill flags the **fileApi middleware** + **react-query** as aios-console-only, but `aios/tsconfig.app.json` also carries **`"types": ["vitest/globals", "node"]`** and **`"include": ["src", "server"]`**. Copied literally into a vitest-free, server-less `build-app` app, the `vitest/globals` type reference (its dep is excluded) + the missing `server/` dir make **`tsc` fail**. Fix: add a one-line "strip these too" note to Phase 3 — when copying the aios `tsconfig.app.json`, **drop `vitest/globals` from `types`** (keep `node`) and **drop `"server"` from `include`** (that's the aios fileApi backend). Why: closes the last copy-paste typecheck failures a literal scaffold hits; complements rv-005 so a from-the-aios-shape scaffold builds clean without hand-editing.
 
+- [x] `rv-20260703-007` — `build-app`: contrast-remedy guidance should prefer flipping the foreground to dark ink over darkening a saturated brand token  ·  target: `.claude/skills/build-app/SKILL.md` (Phase 3 theming step, the WCAG-AA sentence from rv-002)  ·  detail: The AA step said *"darken a too-light token rather than ship a sub-AA CTA."* For a **saturated brand** token (e.g. a cyan accent CTA) darkening the token fights the design intent and yields an off-palette, muddy color — the cleaner fix is to keep the hue and swap the text color. Reworded: *to fix a sub-AA pair, **first flip the `--*-foreground` to dark ink (keep the brand hue), and only darken the token itself if no foreground choice clears AA.***  Why: keeps a saturated brand color on-brand while still clearing AA — the exact bind this drive's cyan CTA hit (the builder correctly chose dark ink; the skill only mentioned darkening). Filed + shipped at the user's explicit request after the drive (originally held back as lower-confidence / partly provoked by a self-contradictory design system, but the principle is sound independent of the input).
+
 ---
 
-*Also observed (not filed — lower confidence / partly input-provoked): `build-app`'s WCAG step says
-"darken a too-light token," which fights a **saturated brand** token (a cyan CTA); the cleaner move is
-to **flip the foreground to dark ink** and keep the hue. Worth a one-line refinement to the existing
-contrast guidance if a future drive reproduces it independently of a self-contradictory design system.*
-
 *Source: sandbox drive (throwaway); the app's discovery output + the `mcp/` server were built, run, and
-operated live. Memory: `build-mcp-app-stress-2026-07-03`.*
+operated live. rv-004/005/006 shipped at `cceddfe`; rv-007 filed + shipped on follow-up request.
+Memory: `build-mcp-app-stress-2026-07-03`.*
