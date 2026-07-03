@@ -48,20 +48,6 @@ function deny(why) {
 // (e.g. `git -c user.email=bot push`, `git -C path merge`, `git --git-dir=x push`).
 const gitSub = (sub) => new RegExp(String.raw`\bgit\b(?:\s+-\S+(?:\s+[^-\s]\S*)?)*\s+` + sub);
 
-// git push: allow ONLY a push of the tick's own maintain-app/* feature branch. Everything else —
-// a bare `git push`, `git push origin`, `git push origin HEAD` (all of which push the current branch,
-// which could be the default), any main/master target, any colon refspec (e.g. src:production, which can
-// remap to a non-main default branch), and --all/--mirror — is blocked, so no push can ever reach the
-// default branch regardless of which branch is checked out.
-if (gitSub(String.raw`push\b`).test(cmd)) {
-  const ownBranch = gitSub(String.raw`push\b[^\n|&;]*\bmaintain-app\/[\w.\-\/]+`).test(cmd);
-  const risky =
-    /\b(?:main|master)\b/.test(cmd) ||
-    /--(?:all|mirror)\b/.test(cmd) ||
-    gitSub(String.raw`push\b[^\n|&;]*:`).test(cmd);
-  if (!ownBranch || risky) deny('git push to anything other than a maintain-app/* feature branch');
-}
-
 const BLOCKED = [
   [gitSub(String.raw`merge(?![-\w])`), 'git merge'],
   [/\bgh\s+pr\s+merge\b/, 'gh pr merge'],
@@ -69,10 +55,33 @@ const BLOCKED = [
   [/\b(?:npm|pnpm|yarn)\s+publish\b/, 'publish'],
   [/\bgh\s+release\s+create\b/, 'gh release create'],
   [/\bgh\s+secret\s+set\b/, 'writing a repo secret'],
-  [/(?:>|>>|tee)\s*[^\n|&;]*\.env(?:\b|$)/, 'writing a .env / key file'],
+  [/(?:>|>>|tee)\s*[^\n]*\.env(?:\b|$)/, 'writing a .env / key file'],
 ];
 
-for (const [re, why] of BLOCKED) {
-  if (re.test(cmd)) deny(why);
+// Why one command segment is refused during a tick (null = allowed).
+function segmentBlock(seg) {
+  // git push: allow ONLY a push of the tick's own maintain-app/* feature branch. Everything else —
+  // a bare `git push`, `git push origin`, `git push origin HEAD` (all of which push the current branch,
+  // which could be the default), any main/master target, any colon refspec (e.g. src:production), and
+  // --all/--mirror — is refused, so no push can reach the default branch.
+  if (gitSub(String.raw`push\b`).test(seg)) {
+    const ownBranch = gitSub(String.raw`push\b.*\bmaintain-app\/[\w.\-\/]+`).test(seg);
+    const risky =
+      /\b(?:main|master)\b/.test(seg) ||
+      /--(?:all|mirror)\b/.test(seg) ||
+      gitSub(String.raw`push\b.*:`).test(seg);
+    if (!ownBranch || risky) return 'git push to anything other than a maintain-app/* feature branch';
+  }
+  for (const [re, why] of BLOCKED) {
+    if (re.test(seg)) return why;
+  }
+  return null;
+}
+
+// A single Bash invocation can chain commands (`a && b`, `a; b`, `a | b`, newlines); check each
+// segment independently so a legitimate maintain-app/* push can't smuggle a second bare/default push.
+for (const seg of cmd.split(/&&|\|\||[;\n|]/)) {
+  const why = segmentBlock(seg);
+  if (why) deny(why);
 }
 process.exit(0);
