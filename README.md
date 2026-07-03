@@ -1,22 +1,26 @@
 # Project Foundation
 
-**A starter kit you copy to begin any new project — with a built-in "second brain" that
-remembers and organizes everything you feed it, and a helper you talk to in plain English.**
+**A starter kit you copy to begin any project — a plain-English "second brain" that organizes
+everything you feed it, and can carry an idea all the way to a launch-ready product.**
 
-Think of it as an empty, *smart* notebook for a new project. You add notes, files, and links
-by just talking; it quietly files them away, keeps a tidy index, and even tidies and improves
-itself over time. Use it for almost anything — a business idea, a research project, a web or
-mobile app, a portfolio, or a growing collection of notes.
+Think of it as an empty, *smart* notebook. You add notes, files, and links by just talking; it
+files them away, keeps a tidy index, and improves itself over time. Use it for almost anything —
+a business idea, a research project, a web or mobile app, a portfolio, or a growing set of notes.
 
-And when you're ready to build, it goes further than a notebook: it can carry an idea **all the
-way to a launch-ready product** — vetting it, designing it, building it, then making the data real
-and testing, auditing, deploying, and polishing it — one guided step at a time, always with you in
-control.
+When you're ready to build, it goes past a notebook: it vets your idea, designs it, builds it
+(web, phone, or browser extension), then makes the data real and tests, audits, deploys, and
+polishes it — one guided step at a time, always with you in control.
 
 > 💡 **You don't need to know how to code.** You install one app — **Claude Code** — and use it with your
 > own Claude plan (a paid Claude subscription); then you just talk to it in plain English and it does the
 > technical parts for you. There's a little first-time setup, and **[Start here »](docs/START-HERE.md)** walks
 > you through every step.
+
+> ✅ **Dogfooded end-to-end.** The whole idea→launch chain — vetting, design, all three build targets
+> (web · phone · extension), backend, tests, audit, deploy, ship-check, and polish — has been driven
+> repeatedly through `autopilot` on varied sample projects (a two-sided marketplace, a fintech "get paid"
+> tool, an adaptive study planner with a real scheduling engine, and more), each one built, run, and
+> operated in a browser to surface the rough edges before you hit them.
 
 ---
 
@@ -72,12 +76,15 @@ Mostly, you just *talk* to it. A first session tends to look like this:
 
 Type **"what can I do?"** any time for a friendly menu of everything it can do.
 
-<!--
-  📷 Screenshots / a demo GIF go here. Drop an image into docs/assets/ and uncomment, e.g.:
-  ![The AIOS console](docs/assets/console.png)
-  ![Building an app](docs/assets/build-demo.gif)
-  Good first shots: the aios/ console (cd aios && npm install && npm run dev), or a freshly built app running.
--->
+And there's a **console** — a file-first window onto your knowledge base and its self-improvement
+queues (`cd aios && npm install && npm run dev`):
+
+![The AIOS console — the Overview operating deck: raw assets, wiki pages, open reviews, and the applied change-log](docs/assets/console-overview.png)
+
+Nothing structural changes without your say-so. Proposed edits wait in a **Review queue** until you
+check the box — then, and only then, the system applies them:
+
+![The Review queue — NEEDS SIGN-OFF items you approve with a checkbox before the system applies them](docs/assets/console-review.png)
 
 ---
 
