@@ -1,5 +1,31 @@
 {
   "default_archetype": "",
   "theme_console": true,
-  "mcp_enabled": false
+  "mcp_enabled": false,
+  "providers": [
+    {
+      "name": "Stitch",
+      "kind": "look",
+      "access": "mcp",
+      "keyed": true,
+      "default": true,
+      "status_note": "Google Labs — 'not officially supported'; pin the package. Free tier; drive via the existing mcp_enabled + STITCH_API_KEY (aios/.env). Emits a portable design export (DESIGN.md-style)."
+    },
+    {
+      "name": "Claude Design",
+      "kind": "look",
+      "access": "manual",
+      "keyed": false,
+      "default": false,
+      "status_note": "Interactive claude.ai (Pro/Max/Team/Enterprise). Outbound-export only; CONSUMES a design system, does not emit one; NOT automatable. Use it to explore a look, then describe/paste the result back into the interview."
+    },
+    {
+      "name": "Bring your own",
+      "kind": "look",
+      "access": "manual",
+      "keyed": false,
+      "default": false,
+      "status_note": "Any tool (Figma export, a hand-authored file, the next tool). Its output is distilled into wiki/design-system.md the same way — the format is the contract, not the vendor."
+    }
+  ]
 }
