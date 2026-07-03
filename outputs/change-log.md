@@ -6,6 +6,9 @@ updated: 2026-06-29
 
 # Change Log
 
+- 2026-07-03 — storm-research — wrote briefing outputs/vetting/2026-07-03-agent-accessibility/agent-accessibility-briefing.html — auto
+- 2026-07-03 — roast — wrote roast verdict outputs/vetting/2026-07-03-agent-accessibility/roast-verdict.md — auto
+
 Append-only ledger of changes the system has applied. Written **by skills only** (the AIOS
 GUI never writes here). Newest entries at the top.
 

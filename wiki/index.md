@@ -17,8 +17,8 @@ that index them.
 
 ## By area
 
-_(none yet)_
+- **Idea vetting** — [vetting.md](vetting.md): `roast` verdicts + `storm-research` briefings.
 
 ## Recent additions
 
-_(none yet)_
+- 2026-07-03 — [Idea Vetting Index](vetting.md): roast RESHAPE on adding an agent-accessibility capability to the template.

@@ -1,0 +1,14 @@
+{
+  "name": "kept-mcp-spike",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "description": "48-hour spike: read-only MCP server over a template-shaped DataStore",
+  "scripts": {
+    "server": "node src/mcp/server.mjs",
+    "probe": "node src/client/probe.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.0"
+  }
+}
