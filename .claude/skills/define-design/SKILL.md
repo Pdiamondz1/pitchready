@@ -1,6 +1,6 @@
 ---
 name: define-design
-description: Design-discovery interview that grills the user — one question at a time, with proposed style options and a recommended default whenever they're unsure — into a portable design system at wiki/design-system.md, the look-and-feel north star Claude reads before building any UI. Google Stitch–aware (manual paste-back by default, optional Stitch MCP, graceful-off with no key). Re-runnable for a restyle/pivot, and offers to theme the AIOS console from the result. Zero-argument safe: run with no arguments and it opens the interview.
+description: Design-discovery interview that grills the user — one question at a time, with proposed style options and a recommended default whenever they're unsure — into a portable design system at wiki/design-system.md, the look-and-feel north star Claude reads before building any UI; design-tool-provider aware (Stitch manual or optional MCP, Claude Design manual, or bring-your-own — providers are optional accelerators, the interview alone suffices); re-runnable for a restyle/pivot, offers to theme the AIOS console, and zero-argument safe.
 ---
 
 # define-design
@@ -16,10 +16,10 @@ It is **propose-don't-just-ask**: the moment an answer is thin or "I don't know,
 offers 2–4 concrete style options plus a recommended default — inferred from the charter and
 prior answers — so the user is always picking/approving, never staring at a blank canvas.
 
-It is **Google Stitch–aware but not Stitch-dependent**: by default it emits a ready-to-paste
-Stitch prompt and distills whatever the user generates, but it produces a usable system from
-the interview alone if they skip Stitch entirely. An optional Stitch MCP can automate
-generation when configured; absent the key it falls back cleanly to the manual path.
+It produces a **usable system from the interview alone** — optionally an external **design-tool
+provider** (Stitch is the first example; Claude Design or bring-your-own also work) accelerates
+it and the result is distilled the same way. Providers are optional accelerators, not
+dependencies; the interview is always sufficient on its own.
 
 ## When to use
 
@@ -50,6 +50,11 @@ missing file or key):
   `true` **and** put `STITCH_API_KEY` (a Google AI / Gemini key) in `aios/.env` to let Claude drive the
   Stitch MCP directly — and even then it **gracefully falls back to the manual path** if the key or MCP is
   absent at runtime.
+- **`providers`** — optional, descriptive array of registered design-tool providers (see
+  `config.json`). Each entry records a provider's `id`, `label`, `mode` (`manual` or `mcp`), and
+  `notes`. **Stitch's actual on/off control remains `mcp_enabled` + `STITCH_API_KEY`
+  (backward-compatible)**; this array is informational and lets the skill surface alternative
+  providers when asked.
 
 ## Procedure
 
@@ -114,23 +119,38 @@ targets, and any must-keep brand marks. This is often quick; "no constraints" is
   is still vague after the cap, record the recommended default as an assumption flagged
   `(assumed — confirm later)` and move on. **Never trap the user in a loop.**
 
-### Phase 2 — Stitch step (tiered, graceful-off)
+### Phase 2 — Optional: use a design-tool provider
 
-**Default (no keys) — the manual paste-back path.** Assemble a **ready-to-paste Stitch prompt**
-from the interview. Direct the user to `stitch.withgoogle.com`, have them generate and iterate on
-the design there, then drop the export (Stitch's `design.md` plus any screenshots) into the dated
-`raw/design/` folder for this run. **If the user skips
-Stitch entirely, synthesize the system from the interview alone** — Stitch is an accelerator,
-not a dependency.
+> *External design tools change monthly; we integrate the format (`wiki/design-system.md`), not the vendor.*
 
-**Optional climb (MCP).** If `mcp_enabled` is true *and* `STITCH_API_KEY` (a Google AI / Gemini key) is
-present in `aios/.env` *and* the user opts in, generate or pull designs directly through the MCP and save
-the result into the same `raw/design/` folder. If the key or MCP is absent, or the user
-declines, **fall back cleanly to the manual path** — note the skip, never block.
+The **default provider is Stitch** — emit its step with **no added question** on the default/keyless
+path (identical sequence to today). Surface the registry/alternatives **only** when the user
+explicitly asks for a different tool or declines the Stitch step. The interview-only path is
+reached by declining the accelerator entirely.
 
-**`STITCH_API_KEY` (the Stitch/Google AI key) is never collected in chat.** It lives only in `aios/.env`
-(an empty slot the user fills). Do not ask for it, read it back, or write it anywhere. See
-`docs/DESIGN-SYSTEM.md` for setup and the privacy note.
+**Stitch (default provider, `manual` or `mcp`):**
+- *Manual (default, no key):* Assemble a **ready-to-paste Stitch prompt** from the interview.
+  Direct the user to `stitch.withgoogle.com`, have them generate and iterate, then drop the
+  export (`design.md` plus any screenshots) into the dated `raw/design/` folder. If the user
+  skips Stitch entirely, synthesize the system from the interview alone — Stitch is an
+  accelerator, not a dependency.
+- *MCP (optional):* If `mcp_enabled` is `true` *and* `STITCH_API_KEY` (a Google AI / Gemini key)
+  is present in `aios/.env` *and* the user opts in, drive Stitch directly and save the result
+  to `raw/design/`. If the key or MCP is absent or the user declines, fall back to manual —
+  note the skip, never block.
+
+**`STITCH_API_KEY` is never collected in chat.** It lives only in `aios/.env`. Do not ask for it,
+read it back, or write it anywhere. See `docs/DESIGN-SYSTEM.md` for setup and the privacy note.
+
+**Claude Design (manual only, if the user asks):** Claude Design is interactive claude.ai (Pro+)
+— you explore a look there and translate it back into the interview; it can't be driven by this
+skill and doesn't emit a design-system file. Instructions: open claude.ai, explore the look,
+describe what you found, and hand the description back — the interview distills it the same way
+as a Stitch export.
+
+**Bring-your-own provider (manual, if the user asks):** Emit its instructions from the `providers`
+registry, or ask the user what tool they're using and guide them to describe/export the result
+into `raw/design/`.
 
 ### Phase 3 — Draft-confirm gate
 
@@ -262,14 +282,14 @@ for :root and .dark.>
 ## Accessibility & targets
 <Contrast targets, dark-first?, web/mobile/both, must-keep brand marks.>
 
-## Stitch prompt
-<The ready-to-paste prompt that regenerates/iterates this system in Google Stitch.>
+## Regeneration prompt
+<The ready-to-paste prompt that regenerates/iterates this system in your chosen design tool, e.g. Stitch.>
 
 ## Open questions / assumptions
 <Anything flagged "assumed — confirm later".>
 
 ---
-*Source: raw/design/<YYYY-MM-DD>-<slug>/ (Google Stitch export + discovery interview).*
+*Source: raw/design/<YYYY-MM-DD>-<slug>/ (design-tool export / discovery interview).*
 ```
 
 ---
@@ -289,9 +309,11 @@ for :root and .dark.>
 - **`improve-system` is untouched.** It remains the single applier / single `change-log.md`
   writer for the self-improvement lanes; `define-design`'s own attended change-log lines mirror
   how `define-project` and `setup-project` log their own attended writes.
-- **Privacy.** Using Google Stitch or the Stitch MCP **sends your prompt — and any uploaded
-  screenshots — to Google.** It is opt-in and runs on the user's own authorized key. State this
-  before the user generates anything; full note in `docs/DESIGN-SYSTEM.md`.
+- **Privacy (per-provider).** Using Stitch or the Stitch MCP **sends your prompt — and any
+  uploaded screenshots — to Google** on your key. It is opt-in and runs on the user's own
+  authorized key. State this before the user generates anything; full note in
+  `docs/DESIGN-SYSTEM.md`. Using **Claude Design** is interactive claude.ai on a paid plan;
+  you paste back descriptions — nothing is sent by the skill on your behalf.
 
 ---
 
