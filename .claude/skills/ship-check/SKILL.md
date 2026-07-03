@@ -141,7 +141,8 @@ content/legal). **Offer** the deeper confirmations and — exactly as `audit-app
 — run one only on an **explicit yes** (e.g. `cd app && npm install && npm test`), **never** the Lighthouse
 browser download unprompted. Close plainly: *"Ship-check: **<GO / NOT-YET>**. <N blocking gaps / all clear>.
 The one thing to do next: <…>. Nothing's changed — this is a readiness read. Want me to start on any gap, or
-run the test suite to confirm it's green?"*
+run the test suite to confirm it's green?"* On a **GO**, name the after-ship step too: **`maintain-app`** keeps
+the shipped app healthy on a schedule (see `docs/MAINTAIN-APP.md`).
 
 ## Re-running
 
