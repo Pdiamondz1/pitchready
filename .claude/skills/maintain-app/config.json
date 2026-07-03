@@ -1,0 +1,10 @@
+{
+  "app_dir": "app",
+  "cadence": "weekly",
+  "signals": ["deps", "tests", "audit"],
+  "safe_pr_classes": ["lint", "format", "mechanical-a11y", "dead-code", "doc-drift"],
+  "safe_pr_min_precision": 0.9,
+  "dependency_cooldown_days": 7,
+  "max_safe_prs_per_tick": 3,
+  "caution_severity": "CRITICAL"
+}
