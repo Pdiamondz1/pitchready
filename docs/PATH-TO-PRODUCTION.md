@@ -84,6 +84,10 @@ follow `build-app` (mock, Tier-0) and gains a real backend once `build-backend` 
   - **Agent write tools** — a later opt-in, confirmation-gated tier; v1 is read-only so an agent can never
     take an irreversible action.
 
+## Assets / imagery (a later, separate tier)
+
+Asset/imagery generation (e.g. Higgsfield — raster image/video; note it does have a first-party API/MCP, but it outputs no design tokens/type/palette, so it is not a design system) is a later, keyed, opt-in 'assets' tier, separate from `define-design`; when built it must reconcile the design system's 'no stock photography' voice. Vetted + deferred 2026-07-03 (`outputs/vetting/2026-07-03-claude-design-higgsfield-integration/`).
+
 ## The rule that never changes
 
 The template never enters your API keys, never charges your card, and never publishes or deploys on your
