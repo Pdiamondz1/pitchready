@@ -106,6 +106,7 @@ Every link below is clickable:
 | [Deploy your app](docs/DEPLOY.md) | Scaffold hosting + CI + observability, then a go-live checklist. |
 | [Ship-check your app](docs/SHIP-CHECK.md) | One GO / NOT-YET readiness verdict naming what's left before launch. |
 | [Polish your app](docs/POLISH.md) | Real content, UX states, legal pages, docs, and optional payments — make it launch-ready. |
+| [Keep your app healthy](docs/MAINTAIN-APP.md) | Scheduled, report-first maintenance for a shipped app — safe fixes only, you pull the trigger. |
 | [Path to production](docs/PATH-TO-PRODUCTION.md) | The ordered map from prototype to a shippable product. |
 | [Extending](docs/EXTENDING.md) | Adding your own skills, sources, tools, and pages. |
 | [Subagents](docs/SUBAGENTS.md) | The tuned agent fleet that does the grunt work — and how to add your own. |
@@ -193,3 +194,4 @@ The technical reference — skip this if you just want to use it.
 - Phase 21 — `deploy` + `sync-metrics`: scaffold hosting (Vercel) + CI + graceful-off observability + a go-live checklist (you pull the trigger), and a graceful-off metrics connector that feeds `raw/metrics/` — closing the `advise-project` loop ✅
 - Phase 22 — `ship-check`: a propose-only GO / NOT-YET production-readiness gate over the built `app/` (build · data · tests · audit · deploy · content · legal · charter criteria) → one verdict in `outputs/ship-check/` naming the blocking gaps (the production analog of `roast`) ✅
 - Phase 23 — `polish`: a build-* pass over the built `app/` — real content, onboarding/empty/error/loading states, legal templates (privacy/terms/consent), user docs, and an opt-in graceful-off Stripe scaffold — closing rung 6, the final path-to-production rung ✅
+- Phase 24 — `maintain-app`: a report-first scheduled "operate & maintain" loop (path-to-production rung 7) for a shipped `app/` — re-runs the quality signals into one health report in `outputs/maintenance/`, delegates dependency patching to Dependabot (7-day cooldown), opens gated SAFE-PRs only, and a real sentinel-scoped guard hook makes merge/deploy/publish/keys impossible for the loop (roast RESHAPE + verified storm) ✅

@@ -71,3 +71,13 @@ one environment, so it wouldn't travel. Instead the repo ships the portable `mai
 tick and this doc, and `setup-project` offers to register the Routine in *your* environment
 on an explicit yes. That keeps the clone generic and puts you in control of the one
 side-effectful, account-bound step.
+
+## A second, separate schedule: `maintain-app`
+
+Once you've shipped an app, **`maintain-app`** (path-to-production rung 7) runs on **its own schedule**,
+distinct from the knowledge-base `maintenance-loop` above. Its setup offers to register a *separate* weekly
+Routine (prompt: *"Run the maintain-app skill for one scheduled tick."*) for the offline **sandbox** tier, and
+scaffolds a keyed **GitHub Actions** workflow for the real, laptop-independent home (inert until you add the
+`ANTHROPIC_API_KEY` secret). Keep the two schedules separate: `maintenance-loop` maintains the *knowledge
+base*; `maintain-app` maintains the *shipped app* (report-first, propose-only, never merging or deploying).
+See `docs/MAINTAIN-APP.md`.

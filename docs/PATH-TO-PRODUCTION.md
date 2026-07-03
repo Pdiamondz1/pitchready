@@ -49,13 +49,25 @@ go-live. That boundary is deliberate and permanent.
    analog of `roast`'s idea gate. The arc becomes **define → vet → design → build → test → audit → ship →
    advise**. See `docs/SHIP-CHECK.md`.
 
-6. **Make it legitimate — polish & compliance — `polish`** *(shipped, Phase 23 — the final rung).*
+6. **Make it legitimate — polish & compliance — `polish`** *(shipped, Phase 23 — the final build rung).*
    A `polish` skill modifies the built `app/` across areas — real content/copy (assets flagged), onboarding +
    empty/error/loading states, **legal templates** (privacy policy, terms, cookie consent — *not legal
    advice*; presence, not a compliance claim), user docs, and an **opt-in graceful-off Stripe payments
    scaffold** (never enters keys or charges — you own the keyed go-live). A `build-*` sibling (attended, one
    confirm gate, `layer: polish` provenance) that closes the `content`/`legal` gaps `ship-check` flags. See
    `docs/POLISH.md`.
+
+7. **Operate & maintain — `maintain-app`** *(shipped, Phase 24).*
+   A **report-first** scheduled loop that keeps a shipped `app/` healthy: it re-runs the quality signals
+   (`npm audit` / `test-app` / `audit-app`) into **one plain-language health report**, **delegates**
+   dependency/CVE patching to Dependabot/Renovate behind a **~7-day cooldown** (surfaced, never auto-bumped),
+   and opens a gated **SAFE-PR** only for a narrow reversible fix class (never a dependency bump) — the PR is
+   the exception, not the deliverable. It **never merges, deploys, publishes, or enters keys** — a real
+   sentinel-scoped `PreToolUse` guard hook enforces that boundary. Hybrid scaffold (a local Routine sandbox +
+   a keyed CI workflow that ships inert). Attended setup, one confirm gate; it runs on **its own schedule —
+   never inside `maintenance-loop`, and deliberately not in `autopilot`** (like `deploy`/`polish`/`build-mcp`).
+   Vetted 2026-07-03 (`roast` RESHAPE + a citation-verified `storm-research` —
+   `outputs/vetting/2026-07-03-maintain-app/`). See `docs/MAINTAIN-APP.md`.
 
 ## Agent-accessibility — making built apps usable by AI (a parallel track)
 
