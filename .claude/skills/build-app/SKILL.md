@@ -133,13 +133,23 @@ and `@tailwindcss/typography` only if the design uses prose. **Exclude** the KB-
 and `@tanstack/react-query` (unless `include_react_query` is true). Scripts: `dev`, `build`, `preview`,
 `typecheck` only.
 
+**Strip the console-only baggage from the copied config files** (so a from-the-aios-shape scaffold
+typechecks clean without hand-editing): in `tsconfig.app.json` drop `"vitest/globals"` from `types`
+(keep `"node"`) and drop `"server"` from `include`; in `vite.config.ts` keep only plain Vite +
+`@vitejs/plugin-react` + the `@` alias (no `fileApi` middleware, no `vitest/config`, no markdown vendor
+chunks). These mirror the deps you just excluded — otherwise `tsc` fails on the missing `vitest/globals`
+types; dropping the stray `"server"` include is hygiene (harmless while `src` still matches, but leave it
+out so the config describes only what exists).
+
 **Theme it the same way `define-design` themes the console.** Write the 13 base tokens for `:root` and
 `.dark` into `app/src/index.css`, **re-derive and eyeball the contrast pairs** (`--*-foreground`,
 `--popover*`) so text stays legible — **verify the `--primary` / `--*-foreground` pairs clear WCAG AA
 (≥4.5:1 for normal text); darken a too-light token rather than ship a sub-AA CTA** — and set `--radius`
 + the shadow vars from *Typography & shape*.
-Copy `tailwind.config.ts` unchanged (it only reads the CSS vars). Default to the Inter/system font
-stack; only add a webfont `<link>` if the design names one. Honor "dark-first" for the `<html class>`
+Copy `tailwind.config.ts` from `aios/` — it resolves the CSS vars **and loads plugins**, so **drop the
+`@tailwindcss/typography` import and its `plugins` entry unless the design uses prose** (keep that plugin
+only if you also keep the dep; otherwise the excluded dep breaks the build). Default to the Inter/system
+font stack; only add a webfont `<link>` if the design names one. Honor "dark-first" for the `<html class>`
 (default dark, like `aios/`).
 
 **Mock data, not a backend.** Put a typed fixture module per entity in `src/data/` (plain arrays +

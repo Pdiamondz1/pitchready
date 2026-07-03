@@ -69,6 +69,9 @@ e.g. "use to compute outstanding balance"). This catalog is the only app-specifi
 - **Read-only tools only:** `list_<plural>` and `get_<entity>` per entity, plus `get_<singleton>` for any
   settings/summary record. **Never** emit create/update/delete (regardless of what write methods the
   `DataStore` exposes) — `include_writes` stays false in v1.
+- **List-only entities:** the generic adapter registers **both** `list_` and `get_` per entity, so an
+  entity the app only *lists* (a `listX` with no `getX` — e.g. sponsors) needs a **synthesized `getX`**
+  (find-by-id) added to the `store.mjs` bridge. The bridge may expose read methods the UI never needed.
 - **The tool descriptions are the craft** ("MCP issue 4: UX"): draft each from the charter + field names so
   an agent can pick the right tool unaided, and **flag the drafted descriptions for a quick human review** at
   the gate — this is the one part that isn't pure codegen.
@@ -101,7 +104,7 @@ mcp/
 ├── src/
 │   ├── adapter.mjs       # the GENERIC DataStore->MCP compiler pass (copied from this skill's assets/)
 │   ├── catalog.mjs       # the per-app entity descriptor derived in Phase 1 (the only app-specific file)
-│   ├── store.mjs         # a thin read-only bridge to app/src/data/ (or app/src/data/store/ getActiveStore())
+│   ├── store.mjs         # read-only bridge: a self-contained JS mirror of app/src/data fixtures (a plain .mjs can't import the app's TS); a real backend points it at getActiveStore()
 │   ├── server.mjs        # ~10 lines: import store+catalog, mount read-only tools, connect stdio transport
 │   └── probe.mjs         # a tiny MCP client that lists tools + runs one read to prove it works
 ```
@@ -110,10 +113,17 @@ mcp/
    — it reflects the catalog into `list_`/`get_` tools with `readOnlyHint` annotations and has **no code path
    that registers a write tool** (read-only is structural, not a promise).
 2. **Generate `catalog.mjs`** from Phase 1 (entities + singletons + the reviewed descriptions).
-3. **Generate `store.mjs`** — a read-only bridge that imports the app's existing read accessors. For a
-   mock/Tier-0 app it wraps `app/src/data/` getters; where `build-backend` ran, it can call
-   `getActiveStore()` (which stays on `MockStore` with no keys — the same graceful-off switch). It exposes
-   only the read methods the catalog names.
+3. **Generate `store.mjs`** — a read-only bridge exposing only the read methods the catalog names.
+   **Tier-0 default = a self-contained JS mirror**, not a live import: a generated `mcp/` is plain-Node
+   ESM (`.mjs`) and **cannot `import` the app's `app/src/data/*.ts`** (TypeScript + `@/` path aliases +
+   extensionless imports) without a build step or a TS loader — so `store.mjs` mirrors the app's fixtures
+   as plain JS plus the same `listX()/getX(id)` methods (this is exactly what the proven spike does,
+   `spike-mcp/src/datastore/store.mjs`). Note the one trade-off in the file's header comment: the mirror
+   can **drift** from `app/src/data/` if the app's data changes — re-run `build-mcp` to refresh it.
+   *(Zero-drift alternatives, both optional: run the server under a TS runtime like `tsx` so it can import
+   the app's accessors directly; or — the real endgame — where `build-backend` ran, point `store.mjs` at
+   `getActiveStore()` (stays on `MockStore` with no keys — the same graceful-off switch), which has no
+   drift because it reads the app's live data layer.)*
 4. **Wire `server.mjs`** — `McpServer` + the adapter + `StdioServerTransport`. Stdio = local, keyless.
 5. **`package.json`** — `@modelcontextprotocol/sdk` + `zod`; scripts `mcp` and `probe`. **`.gitignore`**
    node_modules.
