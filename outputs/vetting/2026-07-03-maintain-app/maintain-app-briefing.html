@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Storm Research: Autonomous "Operate &amp; Maintain" for Shipped Apps</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;500;600&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --blue: #2563eb; --blue-dark: #1e3a8a; --ink: #16203a; --muted: #5b6677; --line: #e4e9f2;
+    --bg-soft: #f6f8fc; --green: #15803d; --green-bg: #e9f6ee; --amber: #b45309; --amber-bg: #fdf3e7;
+    --slate: #475569; --slate-bg: #eef1f6; --red: #b91c1c; --red-bg: #fdecec;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Roboto', system-ui, sans-serif; color: var(--ink); background: #eef1f6; line-height: 1.62; font-weight: 400; -webkit-font-smoothing: antialiased; }
+  .page { max-width: 900px; margin: 0 auto; background: #fff; padding: 64px 72px 80px; box-shadow: 0 1px 40px rgba(22,32,58,0.08); }
+  .eyebrow { font-family: 'Roboto Mono', monospace; font-size: 12px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--blue); margin-bottom: 14px; }
+  h1 { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 40px; line-height: 1.12; letter-spacing: -0.02em; color: var(--ink); margin-bottom: 18px; }
+  .lede { font-size: 17px; color: var(--muted); max-width: 640px; }
+  .meta-row { display: flex; flex-wrap: wrap; gap: 10px 22px; margin-top: 26px; padding-top: 22px; border-top: 2px solid var(--line); font-family: 'Roboto Mono', monospace; font-size: 12px; color: var(--muted); }
+  .meta-row b { color: var(--ink); font-weight: 600; }
+  .verify-banner { margin-top: 22px; background: var(--green-bg); border: 1px solid #bfe3cc; border-radius: 8px; padding: 13px 18px; font-size: 13px; color: #14532d; display: flex; gap: 10px; align-items: baseline; }
+  .verify-banner b { font-weight: 700; }
+  .verify-banner .tag { font-family: 'Roboto Mono', monospace; font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; background: var(--green); color: #fff; padding: 3px 8px; border-radius: 4px; flex-shrink: 0; }
+  .howto { margin-top: 18px; border: 1px solid var(--line); border-radius: 8px; padding: 18px 22px; background: var(--bg-soft); }
+  .howto h4 { font-family: 'Roboto Mono', monospace; font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+  .howto ul { list-style: none; }
+  .howto li { font-size: 13.5px; color: #2b3950; margin-bottom: 7px; padding-left: 16px; position: relative; }
+  .howto li::before { content: "›"; position: absolute; left: 0; color: var(--blue); font-weight: 700; }
+  .section { margin-top: 56px; }
+  .section-num { font-family: 'Roboto Mono', monospace; font-size: 13px; font-weight: 600; color: var(--blue); letter-spacing: 0.05em; }
+  h2 { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 25px; letter-spacing: -0.01em; color: var(--ink); margin: 6px 0 18px; line-height: 1.2; }
+  h2 .bar { display: inline-block; width: 38px; height: 4px; background: var(--blue); border-radius: 2px; vertical-align: middle; margin-right: 14px; }
+  p { margin-bottom: 14px; }
+  p.body-lg { font-size: 16.5px; }
+  .ceo { background: var(--bg-soft); border-left: 5px solid var(--blue); padding: 26px 30px; border-radius: 4px; font-size: 16.5px; }
+  .ceo strong { font-weight: 700; color: var(--blue-dark); }
+  .finding { border: 1px solid var(--line); border-radius: 10px; padding: 24px 26px; margin-bottom: 18px; position: relative; }
+  .finding-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; margin-bottom: 12px; }
+  .finding-title { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 18px; line-height: 1.3; color: var(--ink); flex: 1; }
+  .finding-rank { font-family: 'Roboto Mono', monospace; font-weight: 600; font-size: 13px; color: #fff; background: var(--ink); width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .finding p { font-size: 15px; color: #283449; margin-bottom: 14px; }
+  .rel-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
+  .rel { display: inline-flex; align-items: center; gap: 9px; font-family: 'Roboto Mono', monospace; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 5px 12px; border-radius: 20px; }
+  .rel.high { background: #e7f0fe; color: var(--blue); }
+  .rel.medhigh { background: var(--green-bg); color: var(--green); }
+  .rel.medium { background: var(--amber-bg); color: var(--amber); }
+  .rel.low { background: var(--red-bg); color: var(--red); }
+  .score { font-family: 'Roboto Mono', monospace; font-size: 13px; font-weight: 600; color: var(--ink); }
+  .score b { font-size: 17px; }
+  .score span { color: var(--muted); font-weight: 400; }
+  .chips { display: flex; flex-direction: column; gap: 8px; margin-top: 6px; }
+  .chip-row { display: flex; align-items: baseline; gap: 9px; flex-wrap: wrap; font-size: 13.5px; }
+  .chip-label { font-family: 'Roboto Mono', monospace; font-size: 10.5px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; padding: 3px 8px; border-radius: 4px; white-space: nowrap; }
+  .chip-label.sup { background: var(--green-bg); color: var(--green); }
+  .chip-label.chal { background: var(--red-bg); color: var(--red); }
+  .chip-label.fix { background: var(--amber-bg); color: var(--amber); }
+  .chip-row span.who { color: #2b3950; }
+  .chip-row span.who b { font-weight: 600; }
+  .contested { border: 1px dashed var(--amber); background: #fffaf2; border-radius: 10px; padding: 22px 26px; margin-bottom: 18px; }
+  .contested .tag { font-family: 'Roboto Mono', monospace; font-size: 10.5px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--amber); }
+  .contested h4 { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 16px; color: var(--ink); margin: 6px 0 10px; }
+  .contested p { font-size: 14px; color: #4a3a22; margin-bottom: 0; }
+  .connection { background: linear-gradient(135deg, #16203a 0%, #1e3a8a 100%); color: #eaf0fb; border-radius: 12px; padding: 34px 38px; }
+  .connection h2 { color: #fff; }
+  .connection h2 .bar { background: #6ea8ff; }
+  .connection .section-num { color: #9ec1ff; }
+  .connection p { color: #d3def3; font-size: 16px; }
+  .connection .punch { font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 18px; color: #fff; line-height: 1.4; margin-top: 18px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,0.18); }
+  .assume { border: 1px solid var(--line); border-left: 5px solid var(--amber); border-radius: 6px; padding: 24px 28px; background: #fffdf9; }
+  .assume h3 { font-family: 'Montserrat', sans-serif; font-size: 17px; font-weight: 700; color: var(--ink); margin-bottom: 10px; }
+  .assume p { font-size: 15px; color: #3a3320; }
+  .assume p:last-child { margin-bottom: 0; }
+  .action-item { display: flex; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+  .action-item:last-child { border-bottom: none; }
+  .action-mark { font-family: 'Roboto Mono', monospace; font-weight: 600; font-size: 13px; color: var(--blue); flex-shrink: 0; width: 34px; }
+  .action-item .do { font-weight: 600; color: var(--ink); }
+  .action-item p { font-size: 14.5px; margin-bottom: 0; color: #2b3950; }
+  .frontier { border: 2px dashed var(--blue); border-radius: 12px; padding: 30px 34px; background: var(--bg-soft); }
+  .frontier .q { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 22px; line-height: 1.32; color: var(--blue-dark); margin-bottom: 16px; }
+  .frontier p { font-size: 15px; color: #2b3950; }
+  .oncam { margin-top: 18px; }
+  .oncam-col { border-radius: 10px; padding: 20px 24px; margin-bottom: 14px; }
+  .oncam-col.safe { background: var(--green-bg); border: 1px solid #bfe3cc; }
+  .oncam-col.caveat { background: var(--amber-bg); border: 1px solid #f0d9b5; }
+  .oncam-col.avoid { background: var(--red-bg); border: 1px solid #f3c9c9; }
+  .oncam-col h4 { font-family: 'Roboto Mono', monospace; font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 12px; }
+  .oncam-col.safe h4 { color: var(--green); }
+  .oncam-col.caveat h4 { color: var(--amber); }
+  .oncam-col.avoid h4 { color: var(--red); }
+  .oncam-col ul { list-style: none; }
+  .oncam-col li { font-size: 14px; color: #233; margin-bottom: 8px; padding-left: 16px; position: relative; line-height: 1.5; }
+  .oncam-col li::before { content: "•"; position: absolute; left: 0; font-weight: 700; }
+  .oncam-col.safe li::before { color: var(--green); }
+  .oncam-col.caveat li::before { color: var(--amber); }
+  .oncam-col.avoid li::before { color: var(--red); }
+  .refs { margin-top: 56px; padding-top: 26px; border-top: 2px solid var(--line); }
+  .refs h3 { font-family: 'Roboto Mono', monospace; font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; }
+  .refs ul { list-style: none; }
+  .refs li { font-size: 12.5px; color: var(--muted); margin-bottom: 11px; padding-left: 16px; position: relative; line-height: 1.5; }
+  .refs li::before { content: "›"; position: absolute; left: 0; color: var(--blue); font-weight: 700; }
+  .refs a { color: #34507e; text-decoration: none; }
+  .refs a:hover { text-decoration: underline; }
+  .refs .vstat { font-family: 'Roboto Mono', monospace; font-size: 10px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; padding: 2px 6px; border-radius: 3px; margin-right: 6px; }
+  .vstat.ok { background: var(--green-bg); color: var(--green); }
+  .vstat.part { background: var(--amber-bg); color: var(--amber); }
+  .vstat.weak { background: var(--red-bg); color: var(--red); }
+  .footer { margin-top: 40px; font-family: 'Roboto Mono', monospace; font-size: 11px; color: #9aa6b8; text-align: center; }
+  @media (max-width: 640px) { .page { padding: 40px 24px 56px; } h1 { font-size: 30px; } }
+  @media print { body { background: #fff; } .page { box-shadow: none; max-width: 100%; padding: 0; } .connection, .oncam-col { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <div class="eyebrow">Storm Research &middot; v2 (verified)</div>
+    <h1>Autonomous "Operate &amp; Maintain" for Shipped Apps</h1>
+    <p class="lede">A five-lens synthesis — practitioner, academic, skeptic, economist, historian — on whether a scheduled AI maintenance loop for a shipped web app should auto-patch, delegate, or just report. Every claim independently checked against its primary source before publication.</p>
+    <div class="meta-row">
+      <span><b>Date</b> &nbsp;2026-07-03</span>
+      <span><b>Method</b> &nbsp;5 author-built expert lenses + contradiction map + 5 citation verifiers</span>
+      <span><b>Audience</b> &nbsp;A developer-tooling / template author deciding whether &amp; how to ship this rung</span>
+    </div>
+    <div class="verify-banner">
+      <span class="tag">Verified</span>
+      <span>All 22 citations independently checked against primary sources on 2026-07-03. <b>Result: 0 fabricated, 8 corrected/re-attributed, 7 demoted.</b> Confidence scores reflect post-verification evidence quality.</span>
+    </div>
+    <div class="howto">
+      <h4>How to read this</h4>
+      <ul>
+        <li><b>The panel was author-constructed.</b> All five lenses share one framing, so where they agree, treat it as a strong hypothesis, not independent proof.</li>
+        <li><b>Confidence is scored 1-10</b> on evidence quality: peer-reviewed causal work &gt; official policy/financial data &gt; single commissioned survey &gt; analogy &gt; preprint.</li>
+        <li><b>Measured fact and interpretation are flagged separately.</b> A high score means the data is solid, not that the strategic reading is certain.</li>
+      </ul>
+    </div>
+  </header>
+
+  <!-- ============ 01 CEO SUMMARY ============ -->
+  <section class="section">
+    <div class="section-num">01</div>
+    <h2><span class="bar"></span>The 60-Second Summary</h2>
+    <div class="ceo">
+      <p style="margin-bottom:0;">Two things are settled by the evidence. First, <strong>automatic dependency patching is a solved commodity</strong> — free, native, and owned by the platform (Dependabot generated 75M+ PRs in 2022 alone); rebuilding it inside a template is rebuilding a wheel that already rolls. Second, the design's tempting shortcut — "patch/minor bump + green tests = safe" — is <strong>demonstrably false from two directions at once</strong>: automated-repair research finds test-passing patches are frequently incorrect (SWE-Bench+ flagged 12.75% of passing patches as wrong, and a peer-reviewed ISSTA study found the *majority* of plausible patches overfit weak tests), and supply-chain malware runs at <em>install time, before a single test executes</em> (the March 2026 Axios compromise dropped its payload from a postinstall hook). The contested part is what to build instead. The bull case (recurring-revenue wedge, "Dependabot with your app's context") and the bear case (more ignored bot-PRs, a false sense of safety) resolve to one design principle the whole council converges on: <strong>the durable, defensible product is a sparse, high-signal health <em>report</em> that triages what matters — not a stream of auto-fix PRs — and the "human merges" gate must be treated as a decaying asset, not a safety guarantee.</strong></p>
+    </div>
+  </section>
+
+  <!-- ============ 02 KEY FINDINGS ============ -->
+  <section class="section">
+    <div class="section-num">02</div>
+    <h2><span class="bar"></span>Five Key Findings, Ranked by Reliability</h2>
+
+    <div class="finding">
+      <div class="finding-head">
+        <div class="finding-title">"Passing tests" is not a proof of safety — patches overfit, and supply-chain payloads fire before tests even run</div>
+        <div class="finding-rank">1</div>
+      </div>
+      <div class="rel-row">
+        <div class="rel high">Reliability: High</div>
+        <div class="score"><b>9</b><span>/10</span></div>
+      </div>
+      <p>Two independent evidence bases converge. <b>(a) Repair overfits weak oracles:</b> Qi, Long, Achour &amp; Rinard (ISSTA 2015, peer-reviewed) showed the majority of accepted "plausible" generate-and-validate patches are semantically incorrect — a deletion-only baseline (Kali) matched prior systems — and SWE-Bench+ (arXiv 2410.06992) found <b>12.75% of test-passing patches were incorrect</b> and 32.67% of "solved" issues had the answer leaked in the text. <b>(b) Malware pre-empts the oracle entirely:</b> the Axios compromise (Mar 31 2026) executed a cross-platform RAT from a <b>postinstall</b> hook — the breach completes at <code>npm install</code>, before tests, lint, or app launch. Green is an existence-proof of non-failure on sampled inputs, never correctness.</p>
+      <div class="chips">
+        <div class="chip-row"><span class="chip-label sup">Supported by</span><span class="who"><b>Academic</b> (Qi 2015; SWE-Bench+), <b>Skeptic</b> (Axios postinstall), <b>Practitioner</b> (GitHub Autofix "review before merging")</span></div>
+        <div class="chip-row"><span class="chip-label chal">Challenged by</span><span class="who">No one — no lens argued green tests prove safety.</span></div>
+        <div class="chip-row"><span class="chip-label fix">Corrected</span><span class="who">The 12.75% / 32.67% figures were re-attributed from a wrong arXiv id to their true source, <b>SWE-Bench+ (2410.06992)</b>; both remain preprint.</span></div>
+      </div>
+    </div>
+
+    <div class="finding">
+      <div class="finding-head">
+        <div class="finding-title">Dependency auto-patching is a commodity owned by free platform tools — delegate it, don't rebuild it</div>
+        <div class="finding-rank">2</div>
+      </div>
+      <div class="rel-row">
+        <div class="rel high">Reliability: High</div>
+        <div class="score"><b>9</b><span>/10</span></div>
+      </div>
+      <p>The history is a clean consolidation: Greenkeeper (2015 first-mover) shut down June 2020 and folded into Snyk once GitHub acquired Dependabot (2019) and Mend/WhiteSource absorbed Renovate — the engine became a commodity and <em>distribution</em> decided the winner. Dependabot is now free, bundled, and generated <b>75M+ PRs in 2022</b>; GitHub sells the security layer at <b>$30/active committer/month</b>. A template that re-implements "scan deps → open PR" competes with a free platform feature on its worst axis while paying LLM tokens to do it.</p>
+      <div class="chips">
+        <div class="chip-row"><span class="chip-label sup">Supported by</span><span class="who"><b>Historian</b> (Greenkeeper→Snyk, Dependabot→GitHub), <b>Economist</b> ($30/committer bundling), <b>Practitioner</b>, <b>Skeptic</b></span></div>
+        <div class="chip-row"><span class="chip-label chal">Challenged by</span><span class="who">Partially — the bull view: an AI layer with the app's charter/design/test context could out-triage Dependabot. True for <em>triage</em>, not for the raw patching.</span></div>
+      </div>
+    </div>
+
+    <div class="finding">
+      <div class="finding-head">
+        <div class="finding-title">The "human merges" safeguard predictably decays into rubber-stamping — measured across software, aviation, and medicine</div>
+        <div class="finding-rank">3</div>
+      </div>
+      <div class="rel-row">
+        <div class="rel medhigh">Reliability: Med-High</div>
+        <div class="score"><b>8</b><span>/10</span></div>
+      </div>
+      <p>The design leans on "the human is the gate." The evidence says that slot self-erodes, and <em>volume is the accelerant</em>. Dependabot's own 75M-PR scale produced a bimodal population of rubber-stampers and abandoners (reported merge ~54%, security-PR adoption low). ICU alarm fatigue is the hard analog: <b>72–99% of clinical alarms are false or irrelevant</b> (NCBI/AHRQ, confirmed), producing measurable desensitization. Aviation automation-bias studies and SOC automation-bias reviews point the same way. A tool that reliably emits correct-looking green PRs is <em>training</em> the reviewer to stop looking — the more reliable it is, the weaker its gate becomes.</p>
+      <div class="chips">
+        <div class="chip-row"><span class="chip-label sup">Supported by</span><span class="who"><b>Historian</b> (Dependabot at scale; aviation), <b>Academic</b> (automation bias), <b>Skeptic</b> (rubber-stamp input)</span></div>
+        <div class="chip-row"><span class="chip-label chal">Challenged by</span><span class="who">The bull view treats human-merge as a durable safety valve; history treats it as the decay point.</span></div>
+        <div class="chip-row"><span class="chip-label fix">Demoted</span><span class="who">The ICU 72–99% is confirmed; the aviation 77% (secondary only) and SOC 47%/53% (paywalled, unverified) are held as directional, not asserted.</span></div>
+      </div>
+    </div>
+
+    <div class="finding">
+      <div class="finding-head">
+        <div class="finding-title">The defensible layer is triage + a sparse health report — the PR is the exception, not the deliverable</div>
+        <div class="finding-rank">4</div>
+      </div>
+      <div class="rel-row">
+        <div class="rel medhigh">Reliability: Med-High</div>
+        <div class="score"><b>7</b><span>/10</span></div>
+      </div>
+      <p>Operators don't lack fixes; they drown in unread bot PRs and mute them within a sprint or two. The durable artifact is the pattern Renovate already learned — a single <em>Dependency Dashboard</em> digest, not a PR flood — answering "is the shipped app still healthy, and what's the one next action." AI-authored PRs make the flood worse: CodeRabbit's vendor report found AI code carries <b>1.7× more issues</b> than human code, and curl <b>ended its bug bounty in Jan 2026</b> after AI-slop submissions collapsed its valid-report rate from &gt;15% to &lt;5%. The non-redundant value of this rung is orchestration and prioritization — "which of the noise matters" — the layer Greenkeeper never built and died without.</p>
+      <div class="chips">
+        <div class="chip-row"><span class="chip-label sup">Supported by</span><span class="who"><b>Practitioner</b> ("copy the Dashboard, not the PRs"), <b>Historian</b> (triage is the surviving moat), <b>Economist</b></span></div>
+        <div class="chip-row"><span class="chip-label chal">Challenged by</span><span class="who"><b>Skeptic</b> — even a report can land in the alert graveyard if it isn't rare and high-signal.</span></div>
+        <div class="chip-row"><span class="chip-label fix">Corrected</span><span class="who">"1-in-10 AI PRs legit" was a single maintainer anecdote, <em>not</em> the CodeRabbit study — separated; CodeRabbit's 1.7× is vendor-reported.</span></div>
+      </div>
+    </div>
+
+    <div class="finding">
+      <div class="finding-head">
+        <div class="finding-title">The economics close only as a recurring managed service — running cost is trivial, but a one-time template captures none of the rent</div>
+        <div class="finding-rank">5</div>
+      </div>
+      <div class="rel-row">
+        <div class="rel medium">Reliability: Medium</div>
+        <div class="score"><b>6</b><span>/10</span></div>
+      </div>
+      <p>The category is priced as an annuity — GitHub Code Security at $30/committer/mo, Snyk at &gt;$300M ARR, fresh capital into Socket ($60M Series C, $1B) and Factory.ai ($150M Series C, $1.5B). Yet the compute has collapsed: an autonomous agent run is <b>~$1</b> (a worked example puts a Claude Code task at $0.54), so a weekly per-app tick is <b>~$52/app/year</b> — under one-sixth of a single Snyk seat. The follow-the-money read: incumbents sell "rent on unresolved risk," and cheap agents drag the detection premium toward zero. A one-time template hands buyers the tool to keep that annuity themselves; the defensible business is the recurring managed tick, priced per-repo/month.</p>
+      <div class="chips">
+        <div class="chip-row"><span class="chip-label sup">Supported by</span><span class="who"><b>Economist</b> (annuity pricing; ~$1/run), corroborated by <b>Expansionist</b> read from the roast (recurring-cadence wedge)</span></div>
+        <div class="chip-row"><span class="chip-label chal">Challenged by</span><span class="who">The template's own open/one-time distribution strategy — monetizing a recurring service is a different business than selling a template.</span></div>
+        <div class="chip-row"><span class="chip-label fix">Demoted</span><span class="who">Snyk "$407.8M ARR / $7.4B" is an aggregator/2023 figure (hard public number: &gt;$300M ARR; a sub-$3B PE bid was later rejected); the SCA "$24B by 2035" traces to one analyst (MRFR) with peers 10× lower.</span></div>
+      </div>
+    </div>
+
+    <div class="contested">
+      <div class="tag">Contested signal &middot; monitor, do not assert &middot; confidence 4/10</div>
+      <h4>The exact bot-PR and alert-fatigue numbers</h4>
+      <p>The Dependabot merge/adoption percentages (54% merge, 37% vs 72% acceptance, 13% JS-security adoption) are real-in-spirit but reach us secondhand through a vendor blog (Pixee) aggregating academic sources — assert the <em>pattern</em> (bot PRs get muted), not the digits. Likewise the "2,992 alerts/day, 63% never investigated" stat is single-vendor (Vectra), contested by a competing 42% (Microsoft/Omdia) and flagged as unreliable by a Google Cloud analyst. Use these as directional color; never as load-bearing fact.</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 HIDDEN CONNECTION ============ -->
+  <section class="section">
+    <div class="connection">
+      <div class="section-num">03</div>
+      <h2><span class="bar"></span>The Hidden Connection</h2>
+      <p>Read the lenses separately and they seem to argue about different things — the Academic about test oracles, the Skeptic about malware, the Historian about aviation, the Economist about pricing, the Practitioner about muted notifications.</p>
+      <p>But every one of them is circling the same mechanism from a different side: <em>the automation's fluency is exactly what disarms the human it depends on.</em> A patch that passes tests looks safe (so it gets merged); a stream of correct green PRs looks trustworthy (so it stops being read); a cheap agent makes the fix look free (so the value migrates to whoever still owns the judgment). The competence and the danger are not opposites — they are the <em>same property</em> viewed from safety vs. from risk.</p>
+      <p class="punch">In automated maintenance, human attention is the scarce resource and every output spends it. The correct design maximizes protection per unit of attention spent — which means: emit as little as possible, make each output maximally legible, and be radically honest about what was not verified.</p>
+    </div>
+  </section>
+
+  <!-- ============ 03b MISSING 6TH LENS ============ -->
+  <section class="section">
+    <div class="assume">
+      <h3>The assumption this briefing rests on (and the missing 6th lens)</h3>
+      <p>All five lenses reason as <em>developers or operators</em> — people who can read a diff, judge a PR, and act on a dashboard. They froze the reader's competence. But this template's headline user is often a <b>non-technical maker</b> who cannot operate a pull request at all. That is the missing 6th lens: the <b>novice end-user</b>. For them, even a perfectly triaged report may be unactionable, and a "SAFE-PR" is meaningless.</p>
+      <p>This omission could <em>invert</em> the report-first conclusion. For a developer, "one high-signal digest + rare PRs" is right. For a non-technical maker, the right output may be narrower still: a single plain-language verdict ("your app is healthy" / "one thing needs a developer — here's who to ask"), with the honest admission that some findings are simply not theirs to fix. Build the rung so it degrades gracefully across both — a report the developer acts on and the novice can at least understand without being handed homework they can't do (a false sense of safety is worse than none).</p>
+    </div>
+  </section>
+
+  <!-- ============ 04 ACTIONABLE INSIGHT ============ -->
+  <section class="section">
+    <div class="section-num">04</div>
+    <h2><span class="bar"></span>What To Actually Do Differently</h2>
+    <p class="body-lg" style="color:var(--muted);">For the template author building this rung — concrete moves, each tied to a verified finding:</p>
+
+    <div class="action-item">
+      <div class="action-mark">01</div>
+      <div><span class="do">Invert the deliverable: ship the report, make the PR the exception.</span><p>Default output is one recurring, low-frequency, plain-language health digest per repo with a single prioritized next action — the Renovate <em>Dependency Dashboard</em> pattern, not a PR flood (Finding 4). Suppress no-op ticks entirely.</p></div>
+    </div>
+    <div class="action-item">
+      <div class="action-mark">02</div>
+      <div><span class="do">Delegate dependency/CVE patching to Dependabot/Renovate, and scaffold a 7-day cooldown.</span><p>Don't auto-apply bumps — surface and explain them in the report, filed for sign-off. Scaffold <code>min-release-age</code> (npm 11.10.0) at ~7 days: analysis of 10 real attacks found 8 had exploitation windows under a week, so a cooldown would have caught them (Findings 1–2). Never let the loop rush a fresh release.</p></div>
+    </div>
+    <div class="action-item">
+      <div class="action-mark">03</div>
+      <div><span class="do">Make "what I did NOT verify" mandatory, specific, and per-PR.</span><p>Vindicated by GitHub's own Autofix docs ("may be incorrect or insecure — review and test before merging") and the overfitting literature. Spell out the unsampled behavior for <em>this</em> change; ban boilerplate (Finding 1).</p></div>
+    </div>
+    <div class="action-item">
+      <div class="action-mark">04</div>
+      <div><span class="do">Protect attention as the scarce asset; gate cost and cap precision-loss.</span><p>Run expensive steps only behind a cheap "did anything materially change since last tick?" trigger. If a fix class can't clear ~90% precision, demote it to report-only — a 10–20% false-positive rate is the documented point where trust in an autofixer collapses (Finding 3).</p></div>
+    </div>
+    <div class="action-item">
+      <div class="action-mark">05</div>
+      <div><span class="do">Enforce the boundary with a real mechanical hook, and never add auto-merge.</span><p>A lifecycle hook must hard-block merge/push-to-main/deploy/publish/key-writes — not a prompt Claude is asked to honor. Even Snyk's own Agent Fix carries a 5.3% regression rate its vendor calls "too high for auto-merge, appropriate for human-in-the-loop" (Findings 1, 3).</p></div>
+    </div>
+    <div class="action-item">
+      <div class="action-mark">06</div>
+      <div><span class="do">Decide the buyer, and be honest about the ceiling.</span><p>For the non-technical maker, translate findings into "healthy / one thing to do / bring in a developer for this one" (the missing 6th lens). If you monetize, the defensible SKU is the recurring managed tick (per-repo/month at ~$52/app/yr cost), not the one-time template — which hands buyers the annuity (Finding 5).</p></div>
+    </div>
+  </section>
+
+  <!-- ============ 04b CLAIM SAFETY GUIDE ============ -->
+  <section class="section">
+    <div class="section-num">04b</div>
+    <h2><span class="bar"></span>What's Safe to Assert</h2>
+    <div class="oncam">
+      <div class="oncam-col safe">
+        <h4>✓ Safe — verified against primary source</h4>
+        <ul>
+          <li>Passing tests do not prove a patch is correct (Qi et al., ISSTA 2015, peer-reviewed; SWE-Bench+ 12.75% incorrect-but-passing).</li>
+          <li>Supply-chain malware executes at install time, before tests (Axios postinstall RAT, Mar 31 2026).</li>
+          <li>Dependabot generated 75M+ PRs in 2022; GitHub Code Security is $30/active committer/month.</li>
+          <li>ICU alarm fatigue: 72–99% of clinical alarms are false/irrelevant (NCBI/AHRQ).</li>
+          <li>GitHub Autofix docs officially say suggested fixes may be incorrect/insecure — review before merging.</li>
+          <li>npm <code>min-release-age</code> cooldowns exist (npm 11.10.0); Snyk Agent Fix regression ~5.3% ("too high for auto-merge").</li>
+          <li>curl ended its bug bounty (Jan 2026) over AI-slop reports; an agent run costs on the order of ~$1.</li>
+        </ul>
+      </div>
+      <div class="oncam-col caveat">
+        <h4>⚠ Say with a caveat</h4>
+        <ul>
+          <li>SWE-Bench+ (12.75%/32.67%) and the SWE-Bench Illusion (76%→53% memorization gap) are arXiv <em>preprints</em>.</li>
+          <li>Dependabot merge/adoption percentages (54%/37%/13%) are secondhand (Pixee aggregating academic sources) — cite the pattern.</li>
+          <li>CodeRabbit's "AI code = 1.7× more issues" is a vendor self-report, not peer-reviewed.</li>
+          <li>Aviation automation-bias "77%" rests on secondary corroboration (some sources say 81%).</li>
+          <li>Snyk's ARR is &gt;$300M (public); "$407.8M / $7.4B" are aggregator/2023 figures.</li>
+        </ul>
+      </div>
+      <div class="oncam-col avoid">
+        <h4>✕ Don't assert</h4>
+        <ul>
+          <li>"Only 1 in 10 AI PRs is legitimate" — a single maintainer anecdote, not a study.</li>
+          <li>"2,992 alerts/day, 63% never investigated" as research — single-vendor (Vectra), contested by a 42% figure.</li>
+          <li>"SCA market → $24B by 2035" as consensus — one analyst (MRFR); peers are ~10× lower.</li>
+          <li>That the AI layer adds <em>safety</em> — it adds triage/visibility; safety still rests on the (decaying) human gate.</li>
+          <li>That "mechanically-verified" or "green tests" equals safe to merge.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 05 FRONTIER QUESTION ============ -->
+  <section class="section">
+    <div class="section-num">05</div>
+    <h2><span class="bar"></span>The Frontier Question</h2>
+    <div class="frontier">
+      <div class="q">Can an always-on AI maintainer be designed so its outputs <em>build</em> human trust over time — earning attention through a proven precision track record — rather than <em>spending</em> it until the reviewer tunes out?</div>
+      <p>Every finding here assumes attention decays monotonically under a stream of automated outputs (aviation, ICU, and Dependabot all show it). If that decay is inescapable, then "report-first + human-merge" is merely a slower path to the same rubber-stamp, and the only safe autonomous action is the truly reversible, truly verifiable one. But if an agent can earn a legibility/precision reputation — surfacing so few, so-well-triaged, so-honestly-caveated items that each one re-earns a real look — then the whole rung becomes durable rather than self-defeating. No lens addressed how to measure or bootstrap that trust curve; it is the question that decides whether this category is a product or a treadmill.</p>
+    </div>
+  </section>
+
+  <!-- ============ REFERENCES ============ -->
+  <div class="refs">
+    <h3>Evidence base &middot; verification status</h3>
+    <ul>
+      <li><span class="vstat ok">Confirmed</span> Qi, Long, Achour &amp; Rinard, "An Analysis of Patch Plausibility and Correctness for Generate-and-Validate Patch Generation Systems," ISSTA 2015 (peer-reviewed): majority of plausible test-passing patches are semantically incorrect. <a href="https://dl.acm.org/doi/10.1145/2771783.2771791">dl.acm.org</a></li>
+      <li><span class="vstat part">Corrected</span> Aleithan et al., "SWE-Bench+: Enhanced Coding Benchmark for LLMs," arXiv:2410.06992 (preprint): 12.75% of passing patches incorrect, 32.67% answer-leak. Re-attributed from a wrongly-cited id. <a href="https://arxiv.org/html/2410.06992v2">arxiv.org</a></li>
+      <li><span class="vstat weak">Preprint</span> Liang, Garg &amp; Zilouchian Moghaddam, "The SWE-Bench Illusion," arXiv:2506.12286: 76% file-ID on-benchmark → 53% off-benchmark (memorization). <a href="https://arxiv.org/abs/2506.12286">arxiv.org</a></li>
+      <li><span class="vstat part">Corrected</span> Just et al., "Are Mutants a Valid Substitute for Real Faults?," FSE 2014 (peer-reviewed): mutant detection tracks real-fault detection independent of coverage; 73% of faults coupled (claim said "2/3"). <a href="https://dl.acm.org/doi/10.1145/2635868.2635929">dl.acm.org</a></li>
+      <li><span class="vstat part">Corrected</span> Axios npm compromise, Mar 31 2026 — postinstall RAT via phantom dep <code>plain-crypto-js</code>; ~3h window (the "bots opened 111 PRs" propagation claim could not be verified and is dropped). <a href="https://snyk.io/blog/axios-npm-package-compromised-supply-chain-attack-delivers-cross-platform/">snyk.io</a> · <a href="https://securitylabs.datadoghq.com/articles/axios-npm-supply-chain-compromise/">datadoghq.com</a></li>
+      <li><span class="vstat part">Corrected</span> Shai-Hulud npm worm (Sept 2025): 500+ packages via stolen npm tokens/PATs from CI env (not OIDC-specific); CISA alert AL-2025-093, Sept 23 2025; "2.0" reached 25k+ repos in Nov. <a href="https://unit42.paloaltonetworks.com/npm-supply-chain-attack/">unit42.paloaltonetworks.com</a></li>
+      <li><span class="vstat ok">Confirmed</span> npm <code>min-release-age</code> / cooldowns (npm 11.10.0); Woodruff data via Nesbitt — 8 of 10 attacks had &lt;7-day exploitation windows. <a href="https://nesbitt.io/2026/03/04/package-managers-need-to-cool-down.html">nesbitt.io</a> · <a href="https://socket.dev/blog/npm-introduces-minimumreleaseage-and-bulk-oidc-configuration">socket.dev</a></li>
+      <li><span class="vstat ok">Confirmed</span> GitHub Blog, "A Smarter, Quieter Dependabot": 75M+ PRs generated in 2022. <a href="https://github.blog/security/supply-chain-security/a-smarter-quieter-dependabot/">github.blog</a></li>
+      <li><span class="vstat weak">Secondhand</span> Dependabot merge ~54% / bot 37% vs human 72% / JS-security 13% adoption — aggregated by Pixee from academic sources (not arXiv 2502.06175, which lacks these figures). <a href="https://www.pixee.ai/blog/merge-rate-problem-security-prs-ignored">pixee.ai</a></li>
+      <li><span class="vstat ok">Confirmed</span> GitHub Docs, "Responsible use of Copilot Autofix": fixes may be incomplete/incorrect/insecure — review and test before merging. <a href="https://docs.github.com/en/code-security/responsible-use/responsible-use-autofix-code-scanning">docs.github.com</a></li>
+      <li><span class="vstat ok">Confirmed</span> GitHub Changelog: Copilot code review begins consuming Actions minutes, June 1 2026. <a href="https://github.blog/changelog/2026-04-27-github-copilot-code-review-will-start-consuming-github-actions-minutes-on-june-1-2026/">github.blog</a></li>
+      <li><span class="vstat ok">Confirmed</span> Daniel Stenberg, "The end of the curl bug-bounty" (Jan 26 2026): valid-report rate fell &gt;15%→&lt;5% amid AI-slop; bounty ended Jan 31 2026. <a href="https://daniel.haxx.se/blog/2026/01/26/the-end-of-the-curl-bug-bounty/">daniel.haxx.se</a></li>
+      <li><span class="vstat weak">Vendor</span> CodeRabbit, "State of AI vs Human Code Generation" (Dec 2025): AI PRs 10.83 issues/PR vs 6.45 human (1.7×) — vendor self-report. <a href="https://www.coderabbit.ai/blog/state-of-ai-vs-human-code-generation-report">coderabbit.ai</a></li>
+      <li><span class="vstat ok">Confirmed</span> Woo &amp; Bacon, "Alarm Fatigue," AHRQ Making Healthcare Safer III / NCBI Bookshelf (2020): 72–99% of clinical alarms false/insignificant. <a href="https://www.ncbi.nlm.nih.gov/books/NBK555522/">ncbi.nlm.nih.gov</a></li>
+      <li><span class="vstat part">Partial</span> Tilbury &amp; Flowerday, "Automation Bias and Complacency in Security Operation Centers," Computers 2024, 13(7):165 (scoping review; the 47%/53% figures could not be independently verified). <a href="https://www.mdpi.com/2073-431X/13/7/165">mdpi.com</a></li>
+      <li><span class="vstat weak">Secondary</span> Mosier, Skitka &amp; Korte (1994), ASRS automation over-reliance ~77% vigilance failure — secondary corroboration only (some sources 81%). <a href="https://journals.sagepub.com/doi/pdf/10.1177/154193129904300346">journals.sagepub.com</a></li>
+      <li><span class="vstat weak">Single-vendor</span> Alert fatigue "2,992/day, 63% uninvestigated" — Vectra AI proprietary survey; contested (Microsoft/Omdia 42%). <a href="https://www.vectra.ai/topics/alert-fatigue">vectra.ai</a></li>
+      <li><span class="vstat ok">Confirmed</span> GitHub Code Security = $30/active committer/month (official pricing). <a href="https://github.com/security/plans">github.com/security/plans</a></li>
+      <li><span class="vstat part">Partial</span> Snyk: publicly &gt;$300M ARR ($278.4M GAAP 2024); "$407.8M / $7.4B (2023)" are estimate/stale; sub-$3B PE bid reportedly rejected. <a href="https://www.calcalistech.com/ctechnews/article/bymlg4mejl">calcalistech.com</a></li>
+      <li><span class="vstat weak">One analyst</span> SCA market $4.589B (2025) → $24.45B (2035), 18.21% CAGR — Market Research Future; peers (SNS Insider $382M) diverge ~10×. <a href="https://www.marketresearchfuture.com/reports/software-composition-analysis-market-32737">marketresearchfuture.com</a></li>
+      <li><span class="vstat ok">Confirmed</span> Socket $60M Series C at $1B (May 2026); Factory.ai $150M Series C at $1.5B (Apr 2026). <a href="https://socket.dev/blog/series-c">socket.dev</a> · <a href="https://techcrunch.com/2026/04/16/factory-hits-1-5b-valuation-to-build-ai-coding-for-enterprises/">techcrunch.com</a></li>
+      <li><span class="vstat part">Partial</span> Agent run cost ~$0.54 (worked example on published Anthropic rates, MorphLLM); Snyk Agent Fix 5.3% regression "too high for auto-merge" (safeguard.sh field test). <a href="https://safeguard.sh/resources/blog/snyk-agent-fix-autofix-field-test-2026">safeguard.sh</a></li>
+    </ul>
+  </div>
+
+  <div class="footer">Storm Research v2 &middot; 22/22 citations independently verified against primary sources, 2026-07-03 &middot; 0 fabricated, 8 corrected, 7 demoted &middot; Reliability = evidence quality, not author confidence</div>
+
+</div>
+</body>
+</html>

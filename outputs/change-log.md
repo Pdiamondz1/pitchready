@@ -6,6 +6,8 @@ updated: 2026-06-29
 
 # Change Log
 
+- 2026-07-03 — storm-research — wrote briefing outputs/vetting/2026-07-03-maintain-app/maintain-app-briefing.html — auto
+- 2026-07-03 — roast — wrote roast verdict outputs/vetting/2026-07-03-maintain-app/roast-verdict.md — auto
 - 2026-07-03 — define-design — generalized to vendor-neutral design-tool providers (Stitch silent default + Claude Design manual example + bring-your-own); ## Stitch prompt → ## Regeneration prompt; assets/Higgsfield deferred to a later keyed tier — applied
 - 2026-07-03 — storm-research — wrote briefing outputs/vetting/2026-07-03-claude-design-higgsfield-integration/design-tool-integrations-briefing.html — auto
 - 2026-07-03 — roast — wrote roast verdict outputs/vetting/2026-07-03-claude-design-higgsfield-integration/roast-verdict.md — auto
