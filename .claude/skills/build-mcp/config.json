@@ -1,0 +1,7 @@
+{
+  "app_dir": "app",
+  "mcp_dir": "mcp",
+  "transport": "stdio",
+  "include_writes": false,
+  "max_entities": 12
+}

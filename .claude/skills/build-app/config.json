@@ -2,5 +2,6 @@
   "app_dir": "app",
   "dev_port": 5174,
   "max_screens": 6,
-  "include_react_query": false
+  "include_react_query": false,
+  "include_discovery": true
 }

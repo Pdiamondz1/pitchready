@@ -57,6 +57,33 @@ go-live. That boundary is deliberate and permanent.
    confirm gate, `layer: polish` provenance) that closes the `content`/`legal` gaps `ship-check` flags. See
    `docs/POLISH.md`.
 
+## Agent-accessibility — making built apps usable by AI (a parallel track)
+
+Vetted 2026-07-03 (`roast` RESHAPE + `storm-research` + a 48h spike —
+`outputs/vetting/2026-07-03-agent-accessibility/`): the durable way to future-proof a built app for the AI
+era splits cleanly into **discovery** (static, ship-now) and **operability** (a real agent surface), and two
+tempting pieces were deliberately cut. This is a **parallel track**, not a rung in the 1–6 sequence — it can
+follow `build-app` (mock, Tier-0) and gains a real backend once `build-backend` has run.
+
+- **Discovery — in `build-app` (`include_discovery`).** schema.org structured data (as full entity pages) +
+  a static `llms.txt`. Static, keyless, Tier-0; it *aids* AI/search legibility but is **not** a claim of AI
+  visibility. Ships as part of the front-end build. See `docs/BUILD-APP.md`.
+- **Operability — `build-mcp`** *(shipped).* Generates a **read-only** MCP server over the app's `DataStore`
+  so AI agents (Claude/ChatGPT) can query it in natural language. Read-only **by construction** (no
+  create/update/delete tool), Tier-0 local stdio over mock data; the **remote** go-live (Streamable HTTP +
+  OAuth + real backend) is a keyed checklist step the user owns — so it's attended, never in the loop, and
+  **deliberately not in `autopilot`** (like `deploy`/`polish`). See `docs/BUILD-MCP.md`.
+- **Deliberately deferred / out of scope:**
+  - **Siri / Apple App Intents** — can't run at Tier-0 (needs a native EAS build + an Apple Developer
+    account; SiriKit is deprecated and Expo's `expo-app-intents` is still an unmerged PR), and it's
+    single-vendor with no neutral governance. A later native-build tier, noted in `docs/BUILD-MOBILE.md` —
+    not scaffolded today.
+  - **A new API layer** — not added. Where `build-backend` ran, Supabase already exposes PostgREST +
+    GraphQL; the value-add is the RLS-aware, DataStore-native, read-first wiring in `build-mcp`, not
+    re-wrapping an API.
+  - **Agent write tools** — a later opt-in, confirmation-gated tier; v1 is read-only so an agent can never
+    take an irreversible action.
+
 ## The rule that never changes
 
 The template never enters your API keys, never charges your card, and never publishes or deploys on your

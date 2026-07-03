@@ -77,6 +77,12 @@ Only the skill and this doc ship. **No `mobile/` is ever built into the template
 - **Installable builds (EAS)** — Expo's cloud build service turns your app into a real installable
   build for **TestFlight** / the **Play Store**. Needs a free Expo account and cloud builds — a bigger
   lift, so it's a dedicated later tier beyond the no-accounts default.
+- **Voice assistants (Siri / Apple App Intents)** — letting Siri drive your app is a genuine later tier,
+  **not Tier-0**: App Intents is Swift-only and needs a native build (EAS + an Apple Developer account, no
+  Expo Go preview), Apple deprecated the older SiriKit, and Expo's `expo-app-intents` module is still an
+  unmerged PR — and it's single-vendor. Vetted and **deferred** on 2026-07-03 (see
+  `outputs/vetting/2026-07-03-agent-accessibility/`); `build-mobile` won't scaffold it yet. To make your app
+  usable by *cross-platform* AI agents today, use [`build-mcp`](BUILD-MCP.md) on the web `app/` instead.
 - **Real data, accounts, and backend** — swap mock data for a real backend (e.g. Supabase) and add
   sign-in. These need keys/services, so they're opt-in tiers.
 - **Other targets** — the **web** app ([`build-app`](BUILD-APP.md)) and **browser extension**

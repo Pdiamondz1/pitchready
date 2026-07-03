@@ -33,6 +33,9 @@ Read `.claude/skills/build-app/config.json` (all values default; never block on 
   console's so both can run at once.
 - `max_screens` (default `6`) — the cap on screens built in one pass (the runaway-scope guard).
 - `include_react_query` (default `false`) — mock data needs no query cache; leave off for v1.
+- `include_discovery` (default `true`) — emit static AI-legibility output (schema.org JSON-LD as full
+  entity pages + a `public/llms.txt`). Additive, keyless, honestly framed; turning it off makes `build-app`
+  behave exactly as before.
 
 ## Procedure
 
@@ -154,6 +157,19 @@ wrapping it in `<Button>`.
 associate inputs with a `<label htmlFor>`, and keep one `<h1>` per page — so generated apps clear the
 basics without a later `audit-app` pass catching avoidable misses.
 
+**Discoverable by AI agents (when `include_discovery`).** Emit two static, keyless artifacts so agents and
+AI search can make sense of the app: (1) **schema.org JSON-LD** for the app's core entities as *full
+entity-page* structured data — the structured markup **plus** the readable content already on the page
+(the format that measurably helps retrieval; a bare JSON-LD blob alone barely moves the needle) — injected
+into the relevant pages via a small `src/lib/structured-data.ts` helper; and (2) a static **`public/llms.txt`**
+listing the app's name, purpose, routes, and entities. **Frame both honestly** (the multi-target-honesty
+brand — same spirit as the web-only-ladder message): schema.org *aids* AI/search understanding but is **not
+required** for AI visibility, and `llms.txt` is a low-cost signal with limited confirmed consumption — never
+call the app "agent-accessible" on the strength of these (that's what `build-mcp` gives it, a real agent
+surface). Record the SPA caveat in `app/README.md`: because this is a client-rendered app, the JSON-LD is
+seen by agents/crawlers that execute JS; full crawler pickup is an SSR/prerender concern for the deploy tier.
+Additive only — it changes no existing page behavior and adds no keys or runtime deps.
+
 ### Phase 4 — Record it (provenance)
 
 The **code** lives in `app/` (a build target outside the knowledge folders, like `aios/`). The
@@ -221,13 +237,17 @@ If a prior build is partial/broken (missing spine files), offer a targeted repai
 - **Be honest about what it is.** Every artifact (the `app/README.md`, `wiki/build.md`, the close-out)
   calls it a **themed front-end MVP with placeholder data**, and names the later tiers (real
   data/accounts/deploy, mobile, plugins) so no one mistakes it for a finished product.
+- **Honest about discovery.** The optional schema.org + `llms.txt` output *aids* AI/search legibility; it
+  is not a guarantee of AI visibility, and the app isn't *agent-operable* until `build-mcp` gives it a real
+  read-only agent surface. Never overclaim it.
 - **Web only (v1).** Mobile and plugins are later phases.
 
 ## Output
 
 A new `app/` folder (a runnable, themed front-end MVP), an immutable `raw/builds/<date>-<slug>.md`
-record, a created/updated `wiki/build.md` (+ `wiki/index.md` cross-links), one `change-log.md` line —
-and a one-command path to preview it.
+record, a created/updated `wiki/build.md` (+ `wiki/index.md` cross-links), one `change-log.md` line,
+optional discovery artifacts (schema.org JSON-LD + `public/llms.txt`) when `include_discovery` — and a
+one-command path to preview it.
 
 ## Autonomous invocation (driven by `autopilot`)
 

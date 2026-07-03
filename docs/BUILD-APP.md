@@ -7,6 +7,7 @@ a browser — without you having to write or wire up any of it.
 
 > For a **phone app**, see the sibling skill [`build-mobile`](BUILD-MOBILE.md).
 > For a **browser extension**, see the sibling skill [`build-plugin`](BUILD-PLUGIN.md).
+> To make it usable **by AI agents**, see the sibling skill [`build-mcp`](BUILD-MCP.md).
 
 ## What it makes
 
@@ -48,6 +49,16 @@ npm run dev      # opens http://localhost:5174
 
 The app runs on a **different port** than the AIOS console (the console is the dashboard onto your
 knowledge base; the app is your product), so you can run **both at once**.
+
+## Found by AI agents (optional)
+
+By default `build-app` also emits two static, no-key extras so AI agents and AI search can make sense of
+your app: **schema.org** structured data (as full entity pages) and a **`public/llms.txt`** describing the
+app. These *help* AI/search understand your content — they are **not** a guarantee of AI visibility, and
+they don't make your app *operable* by an agent (that's [`build-mcp`](BUILD-MCP.md), which gives it a real
+read-only agent surface). Because the app is client-rendered, the structured data is seen by agents/crawlers
+that run JavaScript; full crawler pickup is an SSR/prerender concern for the deploy tier. Turn it off with
+`include_discovery: false`.
 
 ## Re-running
 

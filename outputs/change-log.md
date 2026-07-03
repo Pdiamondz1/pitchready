@@ -6,6 +6,9 @@ updated: 2026-06-29
 
 # Change Log
 
+- 2026-07-03 — improve-system — applied rv-20260703-001: new read-only build-mcp skill (.claude/skills/build-mcp/ + assets/adapter.mjs + docs/BUILD-MCP.md + PATH-TO-PRODUCTION rung + CLAUDE.md) — applied
+- 2026-07-03 — improve-system — applied rv-20260703-002: schema.org + llms.txt discovery layer in build-app (SKILL.md + config.json + docs/BUILD-APP.md) — applied
+- 2026-07-03 — improve-system — applied rv-20260703-003: recorded agent-accessibility deferrals (Siri/App Intents, no new API layer) in PATH-TO-PRODUCTION.md + BUILD-MOBILE.md — applied
 - 2026-07-03 — storm-research — wrote briefing outputs/vetting/2026-07-03-agent-accessibility/agent-accessibility-briefing.html — auto
 - 2026-07-03 — roast — wrote roast verdict outputs/vetting/2026-07-03-agent-accessibility/roast-verdict.md — auto
 
