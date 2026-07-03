@@ -10,8 +10,8 @@ Say **"keep my app healthy"**, **"maintain my app"**, **"set up scheduled mainte
 
 `maintain-app` **never merges, never deploys, never publishes, and never enters a key.** Everything it does is
 a proposal you can accept: a report to read, and — for a few genuinely safe, mechanical fixes — a pull request
-you can merge if you like. A built-in guard makes it *impossible* for the loop to do the irreversible step; a
-human always pulls that trigger. (Same boundary as `deploy` and the backend go-live.)
+you can merge if you like. A built-in guard blocks it during a run, and **GitHub branch protection on your default branch is the authoritative
+backstop** (the go-live checklist sets it up) — a human always pulls that trigger. (Same boundary as `deploy` and the backend go-live.)
 
 ## What a weekly check does (report-first)
 
@@ -60,8 +60,9 @@ to rubber-stamp — the report, not the PRs, is the point.)
 
 ## Safety
 
-Keys live only where you put them (never in chat, never committed). A real guard hook blocks the loop from
-merging, deploying, publishing, or writing keys. It runs **its own schedule — never in the unattended
-`maintenance-loop`, never in `autopilot`.** Maintaining is the seventh rung of the **path to production**
+Keys live only where you put them (never in chat, never committed). A guard hook blocks the loop from
+merging, deploying, publishing, or writing keys during a tick — **defense-in-depth**; **GitHub branch
+protection on your default branch is the authoritative gate** (the go-live checklist sets it up). It runs
+**its own schedule — never in the unattended `maintenance-loop`, never in `autopilot`.** Maintaining is the seventh rung of the **path to production**
 (`docs/PATH-TO-PRODUCTION.md`). Vetted 2026-07-03 (`roast` RESHAPE + a citation-verified `storm-research` —
 `outputs/vetting/2026-07-03-maintain-app/`).

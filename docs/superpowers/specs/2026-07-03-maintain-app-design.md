@@ -32,7 +32,9 @@ report** (the Renovate *Dependency Dashboard* pattern — one digest per repo, o
 an auto-opened **SAFE-PR is a rare exception**, not the deliverable. Dependency/CVE patching is **delegated to
 Dependabot/Renovate** (surfaced + explained in the report, never auto-applied), behind a scaffolded **~7-day
 release cooldown** (`min-release-age`). The one irreversible act (merge/deploy/publish/key-entry) is blocked
-by a **real mechanical hook** and stays the human's — the template's permanent invariant.
+by a **guard hook** (**defense-in-depth** — denylisting shell strings is not airtight, verified during review)
+and by **GitHub branch protection on the default branch** (human-owned), which the go-live checklist sets up —
+the authoritative boundary that stays the human's.
 
 **Intended outcome.** A new `maintain-app` skill that, on a schedule, reads a shipped `app/`, re-runs the
 quality signals the template already produces, and writes one prioritized health report to
@@ -153,7 +155,7 @@ it emits is a *proposal*, not an applied change to the shipped artifact. `improv
 applier and single `change-log.md` writer. (Same invariant family as `audit-app`/`codex-review`; the one
 addition is that a proposal may take the form of a PR, never a merge.)
 
-**The mechanical guardrail hook (not a prompt — a real, registered, scoped block).** Ship a `PreToolUse`
+**The guardrail hook (a sentinel-scoped PreToolUse block — defense-in-depth, not airtight alone).** Ship a `PreToolUse`
 guard script (`.claude/skills/maintain-app/hooks/guard.*`) **registered in `.claude/settings.json`** — which
 this phase **creates**, since the template currently ships none; a script sitting in a skill folder is never
 invoked without that registration. The guard is **scoped by a sentinel lock file**: the maintain-app tick
@@ -161,8 +163,9 @@ writes `outputs/runs/maintain-app.lock` at Phase 1 start and removes it at Phase
 the guard is a no-op (exit 0)**, so ordinary developer sessions are never affected; **lock present (a tick is
 running) → the guard hard-blocks** any command attempting `git merge`, a push to the default branch,
 `gh pr merge`, a deploy/publish command, or a write to a secret/key file. Enforcement is by the harness (a
-non-zero hook exit denies the tool call), not by asking the model to honor a prompt — the reshape's "real
-mechanical hook, never a prompt" requirement. There is **no in-repo hook precedent**; the external
+non-zero hook exit denies the tool call) — the hook is **defense-in-depth** (denylisting shell strings is not
+airtight, verified during review); the **authoritative** boundary is **GitHub branch protection on the default
+branch** (human-owned), which the go-live checklist sets up. There is **no in-repo hook precedent**; the external
 `hook-development` plugin skill is *guidance* for building it, not a file to transcribe. (The sentinel-scoping
 is what solves "PreToolUse is session-global" — the block is active only during an actual tick.) The tick
 writes the lock with its PID + a timestamp and clears it on exit (including an **exit trap**); a **stale lock**
@@ -214,8 +217,9 @@ clauses + docs), `define-*`, `roast`, `storm-research`, `autopilot` (NOT a phase
 - **Report-first, propose-only outputs; PR-as-exception; never merges/deploys/publishes/enters keys.** Every
   tick emits only proposals (a report + at most `max_safe_prs_per_tick` PRs on branches). `improve-system`
   stays the single applier to `main`.
-- **Mechanical hook, not a prompt.** The irreversible step is blocked by a `PreToolUse` hook — the reshape's
-  hardest requirement.
+- **Guard hook (defense-in-depth) + branch protection (authoritative).** The irreversible step is blocked by a
+  `PreToolUse` hook during a tick; denylisting shell strings is not airtight — the authoritative boundary is
+  **GitHub branch protection on the default branch** (human-owned), set up by the go-live checklist.
 - **Dependencies delegated + cooled.** No auto-bumps; Dependabot/Renovate + a scaffolded ~7-day cooldown
   (`min-release-age`) — directly answers the verified supply-chain evidence (install-time payloads;
   green-tests ≠ safe).

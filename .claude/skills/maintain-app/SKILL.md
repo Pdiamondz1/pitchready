@@ -1,6 +1,6 @@
 ---
 name: maintain-app
-description: Use when someone asks to "maintain my app", "keep my app healthy", "watch my app for security/bugs post-launch", "set up scheduled maintenance", or says "/maintain-app". The "operate & maintain" step (path-to-production rung 7) for an already-shipped app/. On a schedule it re-runs your quality signals (npm audit / the test suite / an audit-app re-run) into ONE plain-language health report, delegates dependency/CVE patching to Dependabot/Renovate (with a ~7-day cooldown — surfaced, never auto-bumped), and opens a gated SAFE-PR only for a narrow reversible fix class (lint/format/mechanical-a11y/dead-code/doc-drift) — never for a dependency bump. Report-first: the PR is the exception, not the deliverable. It NEVER merges, deploys, publishes, or enters keys — a real PreToolUse guard hook enforces that. Scaffolds a local Routine (offline sandbox) + a ready-to-enable keyed CI workflow. Attended setup (one confirm gate); its own schedule — never in maintenance-loop, never in autopilot. Requires a built app/. Re-runnable. Zero-argument safe.
+description: Use when someone asks to "maintain my app", "keep my app healthy", "watch my app for security/bugs post-launch", "set up scheduled maintenance", or says "/maintain-app". The "operate & maintain" step (path-to-production rung 7) for an already-shipped app/. On a schedule it re-runs your quality signals (npm audit / the test suite / an audit-app re-run) into ONE plain-language health report, delegates dependency/CVE patching to Dependabot/Renovate (with a ~7-day cooldown — surfaced, never auto-bumped), and opens a gated SAFE-PR only for a narrow reversible fix class (lint/format/mechanical-a11y/dead-code/doc-drift) — never for a dependency bump. Report-first: the PR is the exception, not the deliverable. It NEVER merges, deploys, publishes, or enters keys — a guard hook (plus your branch protection) enforces that. Scaffolds a local Routine (offline sandbox) + a ready-to-enable keyed CI workflow. Attended setup (one confirm gate); its own schedule — never in maintenance-loop, never in autopilot. Requires a built app/. Re-runnable. Zero-argument safe.
 argument-hint: "[leave blank to set up scheduled maintenance for your app, or say 'run a tick now']"
 ---
 
@@ -10,8 +10,10 @@ The **"operate & maintain"** step. `deploy` ships it, `ship-check` gates it, `po
 `maintain-app` **keeps it healthy over time**. On a schedule it reads the shipped `app/`, re-runs the quality
 signals the template already produces, and writes **one plain-language health report**. The report is the
 product; a SAFE-PR is the rare exception; dependency patching is delegated to Dependabot/Renovate. Everything
-it emits is a **proposal** — it never touches `main`, never merges, never deploys, never enters a key. A real
-`PreToolUse` guard hook enforces that boundary mechanically, not by good intentions.
+it emits is a **proposal** — it never touches `main`, never merges, never deploys, never enters a key. A sentinel-scoped
+`PreToolUse` guard hook is **defense-in-depth** — it blocks the common merge/push/deploy/publish/key forms during a tick,
+but denylisting shell commands is not airtight; the **authoritative** never-push-to-default boundary is **GitHub branch
+protection on your default branch** (require PRs, block direct pushes), which you own.
 
 ## When to use
 
@@ -60,7 +62,7 @@ ready-to-enable CI workflow — and a guard that makes sure the loop can only ev
 deploy. Nothing runs until you turn it on. (yes / tweak)"* On "tweak", revise and re-ask. On yes, **scaffold
 offline** (into the user's project, not the template):
 
-1. **Dependency cooldown → `.github/dependabot.yml`** (delegate patching; never auto-bump). Write:
+1. **Dependency cooldown → `.github/dependabot.yml`** (delegate patching; never auto-bump). If `.github/dependabot.yml` already exists, **merge** this `/app` npm entry into its existing `updates:` list — preserving all existing ecosystems, registries, labels, reviewers, and ignore rules; only create the file fresh if none exists:
 
    ```yaml
    version: 2
@@ -135,7 +137,9 @@ offline** (into the user's project, not the template):
    ```
 
 **Never** add the secret, enable a schedule for the user, register the Routine without an explicit yes, or run
-a tick during setup. Hand over the go-live checklist (`docs/MAINTAIN-APP.md`) for the one keyed step.
+a tick during setup. Hand over the go-live checklist (`docs/MAINTAIN-APP.md`) for the one keyed step — which
+includes: before enabling the CI tier, turn on **branch protection for the default branch** (Settings → Branches:
+require a PR, disallow direct pushes) — the authoritative guarantee; the guard hook is defense-in-depth.
 
 ### Phase 1 — Scan / identify (act; cheap-trigger-gated; write the sentinel)
 
@@ -184,15 +188,17 @@ opens **branches/PRs** (proposals awaiting a human merge). It writes **no** `raw
 `improve-system` stays the single applier and single `change-log.md` writer. (The `audit-app`/`codex-review`
 invariant family; the one addition is that a proposal may take the form of a PR, never a merge.)
 
-## The guardrail hook (a real, registered, sentinel-scoped block — not a prompt)
+## The guardrail hook (a sentinel-scoped PreToolUse block — defense-in-depth)
 
 The shipped `hooks/guard.mjs` is registered as a `PreToolUse(Bash)` hook in `.claude/settings.json` at setup.
 It is **scoped by the sentinel** `outputs/runs/maintain-app.lock`: **lock absent → no-op (exit 0)** so ordinary
 developer sessions are never affected; **lock present (a tick is running) → it hard-blocks** `git merge`, a
 push to any branch other than the tick's own `maintain-app/*`, `gh pr merge`, deploy/publish, or a secret/key write (a non-zero exit denies the
 tool call). A **stale lock** (older than a max-tick bound) is treated as absent, so a crashed tick can never
-silently block a developer's merge. This is the enforcement path — the harness blocks the action; the model is
-not merely asked to behave.
+silently block a developer's merge. The hook is **defense-in-depth** — it blocks the common merge/push/deploy/publish/key
+forms during a tick, but denylisting shell commands is not airtight; the **authoritative** never-push-to-default boundary
+is **GitHub branch protection on your default branch** (require PRs, block direct pushes), which you own and the
+go-live checklist sets up.
 
 ## Hybrid scaffold — CI is the product, local is the sandbox
 
@@ -205,8 +211,7 @@ tier's job**. The **keyed CI workflow** is the **real home** — it ships **iner
 
 - **Report-first, PR-as-exception.** One sparse health report per tick is the deliverable; a SAFE-PR is rare,
   capped, precision-gated, and never for a dependency bump.
-- **Never merges/deploys/publishes/enters keys.** Every tick emits only proposals; the `guard.mjs` hook
-  enforces it mechanically. **Never auto-merge.**
+- **Never merges/deploys/publishes/enters keys.** Every tick emits only proposals; the `guard.mjs` hook is defense-in-depth (GitHub branch protection on your default branch is the authoritative backstop). **Never auto-merge.**
 - **Dependencies delegated + cooled.** Dependabot/Renovate + a ~7-day `min-release-age`; surfaced/explained,
   never auto-bumped ("green tests" is not a supply-chain safety proof).
 - **Attention-protected.** No-op ticks suppressed; SAFE-PRs capped; the report has a single next action.
