@@ -51,10 +51,11 @@ missing file or key):
   Stitch MCP directly — and even then it **gracefully falls back to the manual path** if the key or MCP is
   absent at runtime.
 - **`providers`** — optional, descriptive array of registered design-tool providers (see
-  `config.json`). Each entry records a provider's `id`, `label`, `mode` (`manual` or `mcp`), and
-  `notes`. **Stitch's actual on/off control remains `mcp_enabled` + `STITCH_API_KEY`
+  `config.json`). Each entry records a provider's `name`, `kind` (`look` or `assets`), `access`
+  (`manual` or `mcp`), `keyed` (bool), `default` (bool — `true` marks the silent default, i.e. Stitch),
+  and `status_note`. **Stitch's actual on/off control remains `mcp_enabled` + `STITCH_API_KEY`
   (backward-compatible)**; this array is informational and lets the skill surface alternative
-  providers when asked.
+  providers when asked (never on the default path).
 
 ## Procedure
 
