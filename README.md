@@ -50,7 +50,7 @@ Everything below is built in from day one:
 - 🩹 **Self-healing** — it spots and proposes fixes, and **always asks before** changing anything important.
 - 💡 **Proactive advisor** — it reads your usage data and proactively proposes improve, scale, and maintain ideas for you to approve (see [metrics feed](docs/METRICS-FEED.md)).
 - 🧪 **Vetted before you build** — say **"/roast"** and a council of expert "advisors" pressure-tests your idea, returns a clear **go / reshape / stop** verdict plus the cheapest way to test it, and can back it with a fact-checked research briefing — so you don't pour time into the wrong thing (see [idea vetting](docs/IDEA-VETTING.md)).
-- 🎨 **Designed, not generic** — a guided design step (Google Stitch–aware) captures your look-and-feel so what you build looks intentional, not AI-default.
+- 🎨 **Designed, not generic** — a guided design step (design-tool-provider aware) captures your look-and-feel so what you build looks intentional, not AI-default.
 - 🛠️ **Built for you** — when you're ready, say **"build my app"** (web), **"build my mobile app"** (phone), or **"build my browser extension"** (Chrome) and it scaffolds a working, on-brand first version in an `app/`, `mobile/`, or `plugin/` folder — mock data first, no coding (see [web](docs/BUILD-APP.md) · [mobile](docs/BUILD-MOBILE.md) · [extension](docs/BUILD-PLUGIN.md)).
 - 🚀 **Or do it all in one go** — say **"build my whole project"** and it grills you once, vets + researches the idea, confirms one plan, then builds it end-to-end hands-off — for **one platform or several** (web + phone + extension from a single run) — pausing only if the idea gets a "stop" verdict, then proposing what to build next (see [autopilot](docs/AUTOPILOT.md)).
 - 🏁 **All the way to launch-ready** — after building, take it to production the same guided way: make the data real with a database + sign-in, generate a real test suite, run a security/accessibility/performance audit, scaffold hosting + CI, get a **go / not-yet** readiness verdict, then a final polish pass (real content, legal-page templates, optional payments). It scaffolds everything offline; the few keyed "go-live" steps stay yours (see [path to production](docs/PATH-TO-PRODUCTION.md)).
@@ -178,7 +178,7 @@ The technical reference — skip this if you just want to use it.
 - Phase 6 — `advise-project` proactive advisor (propose-only, rides `maintenance-loop` tick) ✅
 - Phase 7 — optional `codex-review` cross-model code-review gate (graceful-off) ✅
 - Phase 8 — `define-project` discovery interview → project charter (`wiki/charter.md`) ✅
-- Phase 9 — `define-design` design-discovery + design system (`wiki/design-system.md`, Google Stitch–aware) ✅
+- Phase 9 — `define-design` design-discovery + design system (`wiki/design-system.md`, design-tool-provider aware) ✅
 - Phase 10 — `roast` + `storm-research` idea-vetting gate (vet before you build) ✅
 - Phase 11 — `build-app`: turn the charter + design system into a working, themed web app (`app/`) ✅
 - Phase 12 — `build-mobile`: turn the charter + design system into a themed Expo phone app (`mobile/`) ✅

@@ -21,7 +21,7 @@ directive); condense *wording*, never a *rule*.
   - `raw/curated/` — content pulled from tracked creators/publications
   - `raw/metrics/` — live usage snapshots (DAU etc.) the advisor reads
   - `raw/project/` — `define-project` discovery record; the north star lives at `wiki/charter.md`
-  - `raw/design/` — `define-design` Stitch exports; the look-and-feel north star lives at `wiki/design-system.md`
+  - `raw/design/` — `define-design` design-tool exports; the look-and-feel north star lives at `wiki/design-system.md`
   - `raw/builds/` — `build-app`/`build-mobile`/`build-plugin`/`build-mcp` build records; the apps live in `app/` (web), `mobile/` (phone), `plugin/` (browser extension), and `mcp/` (a read-only agent server) — build targets outside the knowledge system, like `aios/`
 
 - **`wiki/` — the AI-written table of contents over `raw/`.** Written and maintained

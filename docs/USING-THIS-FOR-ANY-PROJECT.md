@@ -23,7 +23,7 @@ Nothing above assumes a domain. You make it *your* project by turning a few knob
 
 **Define it first:** run **`define-project`** before specializing — a short discovery interview that captures your purpose, audience, and success criteria in `wiki/charter.md`, which `setup-project` will then read to pre-fill most questions.
 
-**Then define how it looks:** run **`define-design`** — a design-discovery interview that captures your style, palette, and voice in `wiki/design-system.md` (the look-and-feel north star), is Google Stitch–aware, and can theme the console.
+**Then define how it looks:** run **`define-design`** — a design-discovery interview that captures your style, palette, and voice in `wiki/design-system.md` (the look-and-feel north star), is design-tool-provider aware (Stitch, Claude Design, or bring-your-own — the interview alone suffices), and can theme the console.
 
 **Then vet the idea:** run **`roast`** for a brutal GO / RESHAPE / KILL second opinion before you build, and (optionally) **`storm-research`** for a citation-verified HTML briefing — both saved to `outputs/vetting/`. See `docs/IDEA-VETTING.md`.
 
