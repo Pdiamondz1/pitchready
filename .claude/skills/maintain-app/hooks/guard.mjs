@@ -24,7 +24,7 @@ try {
   process.exit(0); // sentinel absent/unreadable => allow
 }
 const startedAt = Date.parse(lock && lock.started_at);
-if (!startedAt || Date.now() - startedAt > MAX_TICK_MS) process.exit(0); // stale => allow
+if (!startedAt || Date.now() - startedAt > MAX_TICK_MS) process.exit(0); // stale => allow (time-based; lock.pid is informational, no liveness check)
 
 // 2) A tick is running: inspect the Bash command from the hook payload on stdin.
 let cmd = '';
@@ -36,14 +36,14 @@ try {
 if (!cmd) process.exit(0);
 
 const BLOCKED = [
-  [/\bgit\s+merge\b/, 'git merge'],
+  [/\bgit\s+merge(?![-\w])/, 'git merge'],
   [/\bgit\s+push\b[^\n|&;]*\b(?:main|master)\b/, 'git push to the default branch'],
   [/\bgh\s+pr\s+merge\b/, 'gh pr merge'],
-  [/\b(?:vercel|netlify)\b[^\n]*\b(?:deploy|--prod)\b/, 'deploy'],
+  [/\b(?:vercel|netlify)\b[^\n]*(?:\bdeploy\b|--prod\b)/, 'deploy'],
   [/\b(?:npm|pnpm|yarn)\s+publish\b/, 'publish'],
   [/\bgh\s+release\s+create\b/, 'gh release create'],
   [/\bgh\s+secret\s+set\b/, 'writing a repo secret'],
-  [/(?:>|>>|tee)\s+[^\n|&;]*\.env(?:\b|$)/, 'writing a .env / key file'],
+  [/(?:>|>>|tee)\s*[^\n|&;]*\.env(?:\b|$)/, 'writing a .env / key file'],
 ];
 
 for (const [re, why] of BLOCKED) {
