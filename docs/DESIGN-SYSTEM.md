@@ -1,12 +1,12 @@
-# Design system (Stitch-aware)
+# Design system (design-tool-provider aware)
 
 The foundation ships a `define-design` skill that grills you into a portable **design
 system** at `wiki/design-system.md` — the look-and-feel north star Claude reads before
-building any UI. It is **interview-first** and **Google Stitch–aware**: by default it
-hands you a ready-to-paste Stitch prompt and distills whatever you generate, but it
-produces a usable system from the interview alone if you skip Stitch entirely. An optional
-Stitch MCP can automate generation when configured; absent the key it falls back cleanly to
-the manual path. This page holds the detail; `CLAUDE.md` stays a pointer.
+building any UI. It is **interview-first** and **design-tool-provider aware**: Stitch is
+the default example provider; Claude Design and bring-your-own tools are alternatives;
+the interview alone produces a usable system without any tool. The format
+(`design-system.md`) is the durable contract — providers are swappable. This page holds
+the detail; `CLAUDE.md` stays a pointer.
 
 The skill itself is `.claude/skills/define-design/SKILL.md`.
 
@@ -27,7 +27,27 @@ updates the page in place.
 
 ---
 
-## The Google Stitch workflow
+## Design-tool providers
+
+`define-design` supports any design tool you choose; the `design-system.md` format is
+the durable contract, not the tool. The core loop is the same for every provider:
+**Generate** a look with your tool of choice → **Export** the result into
+`raw/design/<YYYY-MM-DD>-<slug>/` → **Distill** into `wiki/design-system.md`. The
+interview alone produces a usable system with no tool at all.
+
+| Provider | Job | Access | Keyed? | Notes |
+|---|---|---|---|---|
+| **Stitch** (default) | look + design system | manual prompt or optional MCP | key in `aios/.env` | Google Labs, "not officially supported"; free tier; emits a portable `DESIGN.md`-style export. |
+| **Claude Design** | look (exploration) | **manual only** | account-gated (Pro/Max+) | Interactive claude.ai; outbound-export only; **consumes**, doesn't emit, a design system; **not automatable** — paste the look back into the interview. |
+| **Bring your own** | look | manual | — | Figma export, hand-authored, the next tool. The format (`design-system.md`) is the contract. |
+
+> **Deferred — imagery/asset generation.** Tools like Higgsfield (raster image/video, with
+> a first-party API/MCP but outputs no tokens/type/palette) do a *different job* — they
+> generate visual assets, not a design system. This is a **later, keyed, opt-in "assets"
+> tier**, not part of `define-design` today. When/if built it must also reconcile the
+> "no stock photography" voice directive. **Not wired now.**
+
+### Stitch — the default provider
 
 [Google Stitch](https://stitch.withgoogle.com) generates UI from natural-language prompts
 or from screenshots you upload, and lets you iterate on the result (e.g. "warm the palette,
@@ -52,7 +72,7 @@ system from the interview alone.
 
 ---
 
-## The two tiers
+## Stitch tiers
 
 Stitch use is gated by a single toggle — `mcp_enabled` in
 `.claude/skills/define-design/config.json`.
@@ -91,7 +111,7 @@ sections — see "The design system (wiki/design-system.md) shape" in
 - **Components & layout** — buttons, cards, inputs, nav; spacing scale; elevation/shadow; motion.
 - **Voice & imagery** — microcopy tone; illustration / photo / flat; iconography.
 - **Accessibility & targets** — contrast targets, dark-first?, web / mobile / both, must-keep brand marks.
-- **Stitch prompt** — the ready-to-paste prompt that regenerates or iterates this system in Stitch.
+- **Regeneration prompt** — the ready-to-paste prompt that regenerates or iterates this system in your chosen design tool (e.g. Stitch).
 - **Open questions / assumptions** — anything flagged `(assumed — confirm later)`.
 
 A *Source* footer points back at the `raw/design/<date>-<slug>/` record it was distilled from.
@@ -124,6 +144,11 @@ structure) and `aios/src/config/brand.ts` (only if the voice changed). This is t
 attended, user-approved, logged config-edit pattern `setup-project` uses for `aios/`
 source. It is **never** automatic, touches no other source, and **never** runs in the
 unattended `maintenance-loop`. Decline, and nothing is written to `aios/`.
+
+> **W3C alignment.** `design-system.md`'s 13-token palette is compatible-in-spirit with
+> the **W3C Design Tokens 2025.10** standard and Stitch's `DESIGN.md` interchange — we
+> speak a standard, not a vendor dialect. Honest note: external tools churn — we integrate
+> the format, not the vendor.
 
 ---
 
