@@ -35,9 +35,27 @@ try {
 }
 if (!cmd) process.exit(0);
 
+function deny(why) {
+  process.stderr.write(
+    `maintain-app guardrail: blocked "${why}". The maintenance loop reports and opens PRs only — ` +
+      `merging, pushing to the default branch, deploying/publishing, and writing keys are the human's job. ` +
+      `If no tick is running, delete ${LOCK} and retry.\n`
+  );
+  process.exit(2);
+}
+
+// git push: allow ONLY a push of the tick's own maintain-app/* feature branch. Everything else —
+// a bare `git push`, `git push origin`, `git push origin HEAD` (all of which push the current branch,
+// which could be the default), any main/master target, and --all/--mirror — is blocked, so no push
+// can ever reach the default branch regardless of which branch is checked out.
+if (/\bgit\s+push\b/.test(cmd)) {
+  const ownBranch = /\bgit\s+push\b[^\n|&;]*\bmaintain-app\/[\w.\-\/]+/.test(cmd);
+  const risky = /\b(?:main|master)\b/.test(cmd) || /--(?:all|mirror)\b/.test(cmd);
+  if (!ownBranch || risky) deny('git push to anything other than a maintain-app/* feature branch');
+}
+
 const BLOCKED = [
   [/\bgit\s+merge(?![-\w])/, 'git merge'],
-  [/\bgit\s+push\b[^\n|&;]*\b(?:main|master)\b/, 'git push to the default branch'],
   [/\bgh\s+pr\s+merge\b/, 'gh pr merge'],
   [/\b(?:vercel|netlify)\b[^\n]*(?:\bdeploy\b|--prod\b)/, 'deploy'],
   [/\b(?:npm|pnpm|yarn)\s+publish\b/, 'publish'],
@@ -47,13 +65,6 @@ const BLOCKED = [
 ];
 
 for (const [re, why] of BLOCKED) {
-  if (re.test(cmd)) {
-    process.stderr.write(
-      `maintain-app guardrail: blocked "${why}". The maintenance loop reports and opens PRs only — ` +
-        `merging, pushing to the default branch, deploying/publishing, and writing keys are the human's job. ` +
-        `If no tick is running, delete ${LOCK} and retry.\n`
-    );
-    process.exit(2);
-  }
+  if (re.test(cmd)) deny(why);
 }
 process.exit(0);

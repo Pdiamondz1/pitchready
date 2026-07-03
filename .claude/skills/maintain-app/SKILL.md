@@ -155,7 +155,7 @@ never SAFE-PR-eligible (→ REVIEW).
 
 ### Phase 3 — SAFE-PR with verify-or-demote (act + Judge + Stop-clean)
 
-For each SAFE-PR item (up to `max_safe_prs_per_tick`): apply onto a **new branch** (via the reused
+For each SAFE-PR item (up to `max_safe_prs_per_tick`): apply onto a **new branch** named `maintain-app/<date>-<slug>` (via the reused
 `implementer` fleet agent), then **run `test-app` + `audit-app` gates**. **Green →** in the **keyed CI tier
 (or when a git remote + `gh` CLI are present)** push the branch and **open a PR**; in the **offline/local
 tier** **stage the branch locally and describe it in the report** (no push, no PR). Either way the change
@@ -188,7 +188,7 @@ invariant family; the one addition is that a proposal may take the form of a PR,
 The shipped `hooks/guard.mjs` is registered as a `PreToolUse(Bash)` hook in `.claude/settings.json` at setup.
 It is **scoped by the sentinel** `outputs/runs/maintain-app.lock`: **lock absent → no-op (exit 0)** so ordinary
 developer sessions are never affected; **lock present (a tick is running) → it hard-blocks** `git merge`, a
-push to the default branch, `gh pr merge`, deploy/publish, or a secret/key write (a non-zero exit denies the
+push to any branch other than the tick's own `maintain-app/*`, `gh pr merge`, deploy/publish, or a secret/key write (a non-zero exit denies the
 tool call). A **stale lock** (older than a max-tick bound) is treated as absent, so a crashed tick can never
 silently block a developer's merge. This is the enforcement path — the harness blocks the action; the model is
 not merely asked to behave.
