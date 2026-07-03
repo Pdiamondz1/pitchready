@@ -69,6 +69,26 @@ Tax reserve @ 25%:            should be $1,450, set aside $900
   Desktop step below. And for single-record lookups ("show invoice 1006") the app is just as fast — the
   agent edge is specifically synthesis + already-in-a-chat context.
 
+### Demand test — a live agent, not the probe (2026-07-03)
+
+Re-ran (b) with a **real Claude agent** (`claude -p --mcp-config --strict-mcp-config`, restricted to the
+`kept` MCP tools, no built-ins) so an LLM — not hardcoded JS — picked the tools and reasoned. Two unscripted
+questions:
+
+1. *"Where do I stand on getting paid… and taxes?"* → the agent autonomously called `list_invoices`,
+   `list_clients`, `get_settings` (3 calls) and returned an answer **richer than the probe or the app**: it
+   split outstanding into sent ($3,250) vs overdue ($2,350), named the exact invoice to chase first
+   (2026-006), and flagged the $550 tax shortfall with a "top it up" nudge.
+2. *"Find my most overdue invoice, get the client's contact, and draft a payment-reminder email."* → the
+   agent called `list_invoices` + `get_client` (drill-down, 2 calls), computed "~33 days overdue," and
+   **produced a ready-to-send reminder email** — an artifact the app cannot generate at all.
+
+**Signal:** for synthesis and "do-something-with-the-data" tasks, agent-operation clearly beats opening the
+app — tool selection was autonomous and correct, and read-only data + an LLM yields *new* capabilities
+(prioritize, draft) with zero write access. **What this does NOT prove:** that real end-users will *point*
+their agent at a niche app in the wild — that's distribution/discovery (the frontier question), a market
+question, not a usefulness one. Usefulness-when-connected is now answered: **yes.**
+
 ### Safety posture — read-only *by construction*, verified
 
 - `list_tools` returns **7 tools, every one annotated `readOnlyHint: true`**; **0 write/mutating tools**.
