@@ -46,11 +46,12 @@ function deny(why) {
 
 // git push: allow ONLY a push of the tick's own maintain-app/* feature branch. Everything else —
 // a bare `git push`, `git push origin`, `git push origin HEAD` (all of which push the current branch,
-// which could be the default), any main/master target, and --all/--mirror — is blocked, so no push
+// which could be the default), any main/master target, any colon refspec (e.g. src:production, which can
+// remap to a non-main default branch), and --all/--mirror — is blocked, so no push
 // can ever reach the default branch regardless of which branch is checked out.
 if (/\bgit\s+push\b/.test(cmd)) {
   const ownBranch = /\bgit\s+push\b[^\n|&;]*\bmaintain-app\/[\w.\-\/]+/.test(cmd);
-  const risky = /\b(?:main|master)\b/.test(cmd) || /--(?:all|mirror)\b/.test(cmd);
+  const risky = /\b(?:main|master)\b/.test(cmd) || /--(?:all|mirror)\b/.test(cmd) || /\bgit\s+push\b[^\n|&;]*:/.test(cmd);
   if (!ownBranch || risky) deny('git push to anything other than a maintain-app/* feature branch');
 }
 

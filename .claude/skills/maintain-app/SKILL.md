@@ -125,6 +125,7 @@ offline** (into the user's project, not the template):
          - name: Run the maintain-app tick
            env:
              ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+             GH_TOKEN: ${{ github.token }}
            run: |
              if [ -z "$ANTHROPIC_API_KEY" ]; then
                echo "No ANTHROPIC_API_KEY secret set — maintain-app is inert. Add it to enable."
