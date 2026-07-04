@@ -1,0 +1,161 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── PitchReady — "Ink & gold" theme tokens ──────────────────────────────────
+   Single source of truth for the palette (from wiki/design-system.md). To
+   re-theme: edit the HSL values below (and the words in src/config/app.ts).
+   Ships light-first; .dark holds the dark palette.
+   Note: --accent is the deep-gold highlight (used sparingly — key metrics, the
+   ask). Neutral hovers use --muted, so gold never becomes wallpaper.            */
+
+@layer base {
+  :root {
+    --background: 40 30% 99%;
+    --foreground: 222 47% 11%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    /* Deep indigo — brand + primary actions */
+    --primary: 232 52% 28%;
+    --primary-foreground: 40 30% 99%;
+
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 222 47% 11%;
+
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 12% 40%;
+
+    /* Refined gold — reserved highlight (metrics, the ask) */
+    --accent: 38 92% 50%;
+    --accent-foreground: 222 47% 11%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Emerald — success / traction / growth */
+    --success: 152 55% 38%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 222 47% 11%;
+
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 232 52% 28%;
+
+    --radius: 0.5rem;
+
+    --shadow-sm: 0 1px 3px rgba(22, 32, 58, 0.07), 0 1px 2px rgba(22, 32, 58, 0.04);
+    --shadow-md: 0 6px 20px rgba(22, 32, 58, 0.08), 0 2px 6px rgba(22, 32, 58, 0.05);
+    --shadow-lg: 0 14px 40px rgba(22, 32, 58, 0.12), 0 6px 14px rgba(22, 32, 58, 0.07);
+  }
+
+  .dark {
+    --background: 222 47% 8%;
+    --foreground: 40 30% 96%;
+
+    --card: 222 44% 11%;
+    --card-foreground: 40 30% 96%;
+
+    --popover: 222 44% 11%;
+    --popover-foreground: 40 30% 96%;
+
+    --primary: 231 60% 68%;
+    --primary-foreground: 222 47% 11%;
+
+    --secondary: 222 30% 18%;
+    --secondary-foreground: 40 30% 96%;
+
+    --muted: 222 30% 18%;
+    --muted-foreground: 220 15% 65%;
+
+    --accent: 38 92% 55%;
+    --accent-foreground: 222 47% 11%;
+
+    --destructive: 0 63% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 152 50% 45%;
+    --success-foreground: 222 47% 11%;
+
+    --warning: 38 92% 55%;
+    --warning-foreground: 222 47% 11%;
+
+    --border: 222 25% 20%;
+    --input: 222 25% 20%;
+    --ring: 231 60% 68%;
+
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.45), 0 2px 6px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 14px 40px rgba(0, 0, 0, 0.55), 0 6px 14px rgba(0, 0, 0, 0.4);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+  }
+
+  /* Display headings use Fraunces — the premium/editorial signal. */
+  h1, h2, h3 {
+    @apply font-serif tracking-tight;
+  }
+  h4, h5, h6 {
+    @apply tracking-tight;
+  }
+
+  *:focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+}
+
+@layer utilities {
+  /* Tabular figures for metrics/scores */
+  .tnum {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* ── Print / export-to-PDF ────────────────────────────────────────────────────
+   The Present screen renders a .print-deck of every slide (hidden on screen).
+   On print (Cmd/Ctrl-P or the Export button), the on-screen viewer (.no-print)
+   is hidden and only the deck prints — one slide per page, landscape.           */
+.print-deck {
+  display: none;
+}
+
+@media print {
+  @page {
+    size: landscape;
+    margin: 0;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-deck {
+    display: block;
+  }
+  .print-slide {
+    page-break-after: always;
+    break-after: page;
+  }
+  .print-slide:last-child {
+    page-break-after: auto;
+    break-after: auto;
+  }
+}

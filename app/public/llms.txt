@@ -1,0 +1,25 @@
+# PitchReady
+
+> A pitch-deck builder and fundraising coach for founders raising capital. Turn raw
+> business info into an investor-structured deck, and get coached on what funders
+> actually want on every slide.
+
+Themed front-end MVP (mock/templated data, no backend, no accounts). Built with the
+HMA project foundation.
+
+## Routes
+- / : Home — what PitchReady does, the coaching pillars, and example decks
+- /new : Guided intake wizard (8 steps) that generates a full templated deck
+- /decks : Your saved decks, each with an investor-readiness score
+- /decks/:id : Deck editor — slide rail + editable slide + the Investor Lens coaching panel
+- /decks/:id/present : Full-screen presentation + print-to-PDF export
+
+## Entities
+- Deck : a pitch deck (name, the founder's intake answers, slides, timestamps)
+- Slide : one deck slide (type, headline, body, optional standout metric)
+- Investor Lens : rule-based fundraising coaching — per-slide notes + a 0–100 readiness score
+
+## Notes
+This is a client-rendered SPA. The schema.org structured data aids AI/search understanding
+but is NOT a guarantee of AI visibility, and the app is NOT agent-operable (there is no MCP
+or agent surface). Live AI generation, accounts/save, and PPTX/Slides export are later tiers.

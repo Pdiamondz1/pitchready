@@ -6,6 +6,15 @@ updated: 2026-06-29
 
 # Change Log
 
+- 2026-07-04 — build-app — repo model switched to ONE self-contained project repo (template + app together, per user): removed app/.git, un-ignored /app/, renamed template remote → template-upstream + cleared push-tracking (no default push target, original template protected) — applied
+- 2026-07-04 — build-app — scaffolded web app (app/) from wiki/charter.md MVP; themed from wiki/design-system.md; app is its own git repo, gitignored from the foundation — applied
+- 2026-07-04 — define-design — wrote design system (wiki/design-system.md) from raw/design/2026-07-04-ink-and-gold-premium/ — auto
+- 2026-07-04 — define-project — wrote project charter (wiki/charter.md) from raw/project/2026-07-04-discovery.md — auto
+- 2026-07-04 — roast — wrote roast verdict outputs/vetting/2026-07-04-margin-guard/roast-verdict.md (RESHAPE med-high: coupon-blocking niche occupied by KeepCart 5★; pivot to provable found-money wedge) — auto
+- 2026-07-04 — roast — appended re-test of sharpened "investor-raise cockpit" (~3/10 as framed; surfaced always-in-market free-wedge + integrate-don't-replace follow-up radar; flagged weak founder-idea fit) to outputs/vetting/2026-07-04-pitch-deck-generator/roast-verdict.md — auto
+- 2026-07-04 — roast — appended fork pressure-test (Fork 1 vs Fork 2, both 2/10 for the $0/no-audience/weeks founder) to outputs/vetting/2026-07-04-pitch-deck-generator/roast-verdict.md — auto
+- 2026-07-04 — storm-research — wrote briefing outputs/vetting/2026-07-04-pitch-deck-generator/pitch-deck-generator-briefing.html — auto
+- 2026-07-04 — roast — wrote roast verdict outputs/vetting/2026-07-04-pitch-deck-generator/roast-verdict.md — auto
 - 2026-07-03 — storm-research — wrote briefing outputs/vetting/2026-07-03-maintain-app/maintain-app-briefing.html — auto
 - 2026-07-03 — roast — wrote roast verdict outputs/vetting/2026-07-03-maintain-app/roast-verdict.md — auto
 - 2026-07-03 — define-design — generalized to vendor-neutral design-tool providers (Stitch silent default + Claude Design manual example + bring-your-own); ## Stitch prompt → ## Regeneration prompt; assets/Higgsfield deferred to a later keyed tier — applied

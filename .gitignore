@@ -25,3 +25,7 @@ Thumbs.db
 .claude/worktrees/
 .claude/handoffs/
 .claude/settings.local.json
+
+# NOTE: app/ is tracked as part of THIS self-contained project repo (template +
+# app together). app/node_modules, app/dist and app/.env* are still ignored by
+# the rules above (which match at any depth) plus app/.gitignore.
