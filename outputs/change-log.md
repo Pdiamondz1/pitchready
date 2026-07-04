@@ -6,6 +6,7 @@ updated: 2026-06-29
 
 # Change Log
 
+- 2026-07-04 — build-app — added localStorage persistence to app/src/data/store.ts (graceful-off) so created/edited decks survive a page refresh; closes the most jarring part of the data gap without a backend; found by the end-to-end stress test, verified locally (rename survives full reload) — applied
 - 2026-07-04 — deploy — scaffolded vercel hosting (app/vercel.json SPA rewrite) + CI quality-gate (.github/workflows/deploy-app.yml) + graceful-off observability (app/src/lib/observability.ts, CDN Sentry + no-op analytics) for app/; nothing deployed, no keys; go-live checklist at outputs/deploy/2026-07-04-pitchready/GO-LIVE.md — applied
 - 2026-07-04 — build-app — repo model switched to ONE self-contained project repo (template + app together, per user): removed app/.git, un-ignored /app/, renamed template remote → template-upstream + cleared push-tracking (no default push target, original template protected) — applied
 - 2026-07-04 — build-app — scaffolded web app (app/) from wiki/charter.md MVP; themed from wiki/design-system.md; app is its own git repo, gitignored from the foundation — applied

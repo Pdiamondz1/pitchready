@@ -8,10 +8,38 @@ import { SEED_DECKS } from "./decks";
 import { generateSlides } from "./deckStructure";
 import { uid } from "@/lib/utils";
 
-let decks: Deck[] = SEED_DECKS;
+// localStorage persistence — created/edited decks survive a refresh. Graceful:
+// if storage is unavailable (private mode, disabled), the app stays in-memory
+// and never crashes. Bump the version suffix to reset stored data after a
+// breaking schema change.
+const STORAGE_KEY = "pitchready.decks.v1";
+
+function loadInitial(): Deck[] {
+  if (typeof window === "undefined") return SEED_DECKS;
+  try {
+    const raw = window.localStorage.getItem(STORAGE_KEY);
+    if (!raw) return SEED_DECKS; // first visit → seed with the examples
+    const parsed: unknown = JSON.parse(raw);
+    return Array.isArray(parsed) ? (parsed as Deck[]) : SEED_DECKS;
+  } catch {
+    return SEED_DECKS;
+  }
+}
+
+function persist(): void {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(decks));
+  } catch {
+    // storage full or unavailable — stay in-memory, never crash.
+  }
+}
+
+let decks: Deck[] = loadInitial();
 const listeners = new Set<() => void>();
 
 function notify(): void {
+  persist();
   for (const l of listeners) l();
 }
 function subscribe(l: () => void): () => void {
