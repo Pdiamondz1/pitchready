@@ -2,37 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { ChevronLeft, ChevronRight, Download, X } from "lucide-react";
 import { useDeck } from "@/data/store";
-import { cn } from "@/lib/utils";
-import type { Slide } from "@/data/types";
-
-function SlideView({ slide, className }: { slide: Slide; className?: string }) {
-  return (
-    <div
-      className={cn(
-        "flex aspect-[16/9] w-full flex-col justify-center bg-card p-10 sm:p-16",
-        className
-      )}
-    >
-      <div className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-        {slide.type}
-      </div>
-      <h2 className="mt-3 font-serif text-3xl font-semibold tracking-tight sm:text-5xl">
-        {slide.title}
-      </h2>
-      {slide.metric && (
-        <div className="mt-4 flex items-baseline gap-3">
-          <span className="tnum font-serif text-4xl font-bold text-accent sm:text-6xl">
-            {slide.metric}
-          </span>
-          <span className="text-sm text-muted-foreground">{slide.metricLabel}</span>
-        </div>
-      )}
-      <p className="mt-5 max-w-3xl whitespace-pre-wrap text-base leading-relaxed text-foreground/90 sm:text-lg">
-        {slide.body}
-      </p>
-    </div>
-  );
-}
+import { SlideView } from "@/components/SlideView";
 
 export default function Present() {
   const { id } = useParams();

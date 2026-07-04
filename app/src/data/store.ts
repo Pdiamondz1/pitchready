@@ -12,7 +12,7 @@ import { uid } from "@/lib/utils";
 // if storage is unavailable (private mode, disabled), the app stays in-memory
 // and never crashes. Bump the version suffix to reset stored data after a
 // breaking schema change.
-const STORAGE_KEY = "pitchready.decks.v1";
+const STORAGE_KEY = "pitchready.decks.v2";
 
 function loadInitial(): Deck[] {
   if (typeof window === "undefined") return SEED_DECKS;

@@ -2,7 +2,7 @@
 // DECK_STRUCTURE drives BOTH generation (here) and coaching (coaching.ts), so
 // the two never drift.
 
-import type { Slide, SlideType, StartupInput } from "./types";
+import type { ChartPoint, Slide, SlideType, StartupInput } from "./types";
 import { uid } from "@/lib/utils";
 
 export interface SlideSpec {
@@ -160,6 +160,24 @@ function contentFor(type: SlideType, input: StartupInput): GenContent {
   }
 }
 
+/** A starter chart for the slides that read best as a visual (editable later). */
+function chartFor(type: SlideType): ChartPoint[] | undefined {
+  if (type === "traction")
+    return [
+      { label: "Q1", value: 32 },
+      { label: "Q2", value: 55 },
+      { label: "Q3", value: 79 },
+      { label: "Q4", value: 100 },
+    ];
+  if (type === "market")
+    return [
+      { label: "TAM", value: 100 },
+      { label: "SAM", value: 34 },
+      { label: "SOM", value: 8 },
+    ];
+  return undefined;
+}
+
 /** Turn intake answers into a full templated deck (Tier 0 — no LLM). */
 export function generateSlides(input: StartupInput): Slide[] {
   return DECK_STRUCTURE.map((spec) => {
@@ -172,6 +190,7 @@ export function generateSlides(input: StartupInput): Slide[] {
       body: gen.body ?? "",
       metric: gen.metric,
       metricLabel: gen.metric ? gen.metricLabel : undefined,
+      chart: chartFor(spec.type),
     } satisfies Slide;
   });
 }

@@ -13,6 +13,11 @@ export type SlideType =
   | "ask"
   | "contact";
 
+export interface ChartPoint {
+  label: string;
+  value: number;
+}
+
 export interface Slide {
   id: string;
   type: SlideType;
@@ -20,6 +25,8 @@ export interface Slide {
   body: string; // main content (may be multi-line)
   metric?: string; // optional standout figure (rendered in gold)
   metricLabel?: string;
+  chart?: ChartPoint[]; // optional bar chart (traction trend, market TAM/SAM/SOM…)
+  image?: string; // optional image as a data URL (user-uploaded)
 }
 
 /** What the intake wizard collects. */
