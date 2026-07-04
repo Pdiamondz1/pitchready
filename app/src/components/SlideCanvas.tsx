@@ -1,11 +1,33 @@
+import { useRef, useState, type ChangeEvent } from "react";
+import { ImagePlus, Trash2 } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { updateSlide } from "@/data/store";
 import { DECK_STRUCTURE } from "@/data/deckStructure";
+import { fileToResizedDataUrl } from "@/lib/image";
 import type { Deck, Slide } from "@/data/types";
 
-/** The editable slide surface — WYSIWYG-ish, styled like the final deck. */
+/** The editable slide surface — content editing + an optional image. */
 export function SlideCanvas({ deck, slide }: { deck: Deck; slide: Slide }) {
   const spec = DECK_STRUCTURE.find((s) => s.type === slide.type);
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const onPick = async (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setBusy(true);
+    setError(null);
+    try {
+      const url = await fileToResizedDataUrl(file);
+      updateSlide(deck.id, slide.id, { image: url });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not add that image.");
+    } finally {
+      setBusy(false);
+      if (fileRef.current) fileRef.current.value = "";
+    }
+  };
 
   return (
     <div className="mx-auto w-full max-w-3xl">
@@ -44,9 +66,52 @@ export function SlideCanvas({ deck, slide }: { deck: Deck; slide: Slide }) {
             placeholder="Write this slide…"
             aria-label="Slide content"
           />
+
+          {slide.image && (
+            <img
+              src={slide.image}
+              alt="This slide"
+              className="mt-4 max-h-40 self-start rounded-lg border border-border object-contain"
+            />
+          )}
         </div>
       </div>
-      {spec && <p className="mt-3 text-center text-xs text-muted-foreground">{spec.purpose}</p>}
+
+      <div className="mt-3 flex flex-wrap items-center justify-center gap-2">
+        <input
+          ref={fileRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={onPick}
+          aria-label="Upload an image for this slide"
+        />
+        <button
+          type="button"
+          onClick={() => fileRef.current?.click()}
+          disabled={busy}
+          className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:opacity-50"
+        >
+          <ImagePlus className="h-3.5 w-3.5" />
+          {busy ? "Adding…" : slide.image ? "Replace image" : "Add image"}
+        </button>
+        {slide.image && (
+          <button
+            type="button"
+            onClick={() => updateSlide(deck.id, slide.id, { image: undefined })}
+            className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-destructive"
+          >
+            <Trash2 className="h-3.5 w-3.5" /> Remove
+          </button>
+        )}
+      </div>
+
+      {error && <p className="mt-2 text-center text-xs text-destructive">{error}</p>}
+      {spec && (
+        <p className="mt-2 text-center text-xs text-muted-foreground">
+          {spec.purpose} · images show in Present &amp; PDF
+        </p>
+      )}
     </div>
   );
 }

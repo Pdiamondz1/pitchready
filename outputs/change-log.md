@@ -6,6 +6,7 @@ updated: 2026-06-29
 
 # Change Log
 
+- 2026-07-04 — build-app — visual upgrade (stage 2): per-slide image upload — client-side canvas resize to a capped JPEG data URL (no upload, no network), rendered prominently in the image-forward layout + subtly as a cover background; persists via localStorage; graceful errors (app/src/lib/image.ts new, SlideCanvas.tsx). Verified end-to-end live — a product screenshot renders in the deck — applied
 - 2026-07-04 — build-app — visual upgrade (stage 1): rebuilt deck OUTPUT (Present + PDF) into type-specific designed layouts — hero cover, split problem/solution, metric+chart; added keyless CSS bar charts (traction growth curve + market TAM/SAM/SOM); Slide gains chart?/image?; store schema bumped v1→v2 (SlideView.tsx, SlideChart.tsx, data/types + deckStructure, Present.tsx) — applied
 - 2026-07-04 — build-app — added localStorage persistence to app/src/data/store.ts (graceful-off) so created/edited decks survive a page refresh; closes the most jarring part of the data gap without a backend; found by the end-to-end stress test, verified locally (rename survives full reload) — applied
 - 2026-07-04 — deploy — scaffolded vercel hosting (app/vercel.json SPA rewrite) + CI quality-gate (.github/workflows/deploy-app.yml) + graceful-off observability (app/src/lib/observability.ts, CDN Sentry + no-op analytics) for app/; nothing deployed, no keys; go-live checklist at outputs/deploy/2026-07-04-pitchready/GO-LIVE.md — applied
