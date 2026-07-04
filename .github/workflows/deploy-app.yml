@@ -1,0 +1,33 @@
+name: app-quality-gate
+
+# Informational quality gate for the PitchReady app (app/).
+# On push/PR to main: typecheck + tests (if present) + production build.
+# This does NOT deploy — Vercel's Git integration deploys on push. This workflow
+# only proves the build is green. To make a red build block a deploy, enable
+# "wait for CI" / required status checks in your Vercel + GitHub settings.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  quality-gate:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install deps
+        run: npm install
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Test (if a suite exists)
+        run: npm test --if-present
+      - name: Production build
+        run: npm run build

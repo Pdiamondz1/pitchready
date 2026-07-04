@@ -39,5 +39,17 @@ original template can't be overwritten. See the charter's repo section.
 - Charter: [charter.md](charter.md) · Design system: [design-system.md](design-system.md)
 - Vetting: [outputs/vetting/2026-07-04-pitch-deck-generator/](../outputs/vetting/2026-07-04-pitch-deck-generator/) (RESHAPE → narrative-coaching build)
 
+## Deploy
+
+Scaffolded for **Vercel** (offline, nothing deployed, no keys). Config in `app/vercel.json` (Vite + SPA
+rewrite), a CI quality-gate at `.github/workflows/deploy-app.yml` (typecheck + build; does **not** deploy),
+an optional env template `app/.env.production` (Sentry/analytics slots — all graceful-off), and
+`app/src/lib/observability.ts` (Sentry loads from CDN only if `VITE_SENTRY_DSN` is set; vendor-neutral
+`track()` no-ops otherwise). **The one go-live step is the user's** — connect the repo to Vercel (root dir
+`app/`), set env, deploy. Checklist: [outputs/deploy/2026-07-04-pitchready/GO-LIVE.md](../outputs/deploy/2026-07-04-pitchready/GO-LIVE.md).
+Record: [raw/builds/2026-07-04-pitchready-deploy.md](../raw/builds/2026-07-04-pitchready-deploy.md).
+Honest note: client-rendered SPA — SEO specifically needs prerender/SSR (short-form/community sharing work
+as-is).
+
 **Later tiers:** live AI generation (keyed) → accounts/save (`build-backend`) → PPTX/Slides export →
 send/tracking → monetization (`polish`).
