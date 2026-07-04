@@ -42,7 +42,7 @@ export function AppShell() {
             </span>
             {app.name}
           </Link>
-          <nav className="ml-3 hidden gap-1 sm:flex">
+          <nav className="ml-1 flex gap-1 sm:ml-3">
             <NavItem to="/decks">My decks</NavItem>
           </nav>
           <div className="ml-auto flex items-center gap-2">
@@ -54,8 +54,8 @@ export function AppShell() {
             >
               {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             </button>
-            <Link to="/new" className={cn(buttonVariants({ size: "sm" }))}>
-              <Plus /> New deck
+            <Link to="/new" className={cn(buttonVariants({ size: "sm" }))} aria-label="New deck">
+              <Plus /> <span className="hidden sm:inline">New deck</span>
             </Link>
           </div>
         </div>

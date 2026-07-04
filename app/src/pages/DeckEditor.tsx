@@ -55,15 +55,10 @@ export default function DeckEditor() {
       </div>
 
       <div className="grid gap-5 lg:grid-cols-[200px_1fr_320px]">
-        <div className="order-2 lg:order-1">
-          <SlideRail deck={deck} selectedId={selected.id} onSelect={setSelectedId} />
-        </div>
-        <div className="order-1 lg:order-2">
-          <SlideCanvas deck={deck} slide={selected} />
-        </div>
-        <div className="order-3">
-          <InvestorLensPanel deck={deck} selectedType={selected.type} onSelect={setSelectedId} />
-        </div>
+        {/* On phones: horizontal slide strip on top → canvas → coaching. On lg+: three columns. */}
+        <SlideRail deck={deck} selectedId={selected.id} onSelect={setSelectedId} />
+        <SlideCanvas deck={deck} slide={selected} />
+        <InvestorLensPanel deck={deck} selectedType={selected.type} onSelect={setSelectedId} />
       </div>
     </div>
   );
