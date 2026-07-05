@@ -1,4 +1,4 @@
-# BIGDREEM
+# Big Dreem
 
 > A pitch-deck builder and fundraising coach for founders raising capital. Turn raw
 > business info into an investor-structured deck, and get coached on what funders
@@ -8,7 +8,7 @@ Themed front-end MVP (mock/templated data, no backend, no accounts). Built with 
 HMA project foundation.
 
 ## Routes
-- / : Home — what BIGDREEM does, the coaching pillars, and example decks
+- / : Home — what Big Dreem does, the coaching pillars, and example decks
 - /new : Guided intake wizard (8 steps) that generates a full templated deck
 - /decks : Your saved decks, each with an investor-readiness score
 - /decks/:id : Deck editor — slide rail + editable slide + the Investor Lens coaching panel

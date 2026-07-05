@@ -11,7 +11,7 @@ updated: 2026-07-04
 AI-maintained summary of the built app(s). Code lives in build-target folders (like `aios/`),
 outside the knowledge system; this page indexes what exists and how to run it.
 
-## BIGDREEM — web app (`app/`)
+## Big Dreem — web app (`app/`)
 
 **What it is:** a pitch-deck builder + fundraising coach for founders raising capital. Guided intake →
 templated investor deck (11 slides) → the **Investor Lens** coaches every slide and scores readiness

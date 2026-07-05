@@ -1,7 +1,7 @@
-# BIGDREEM
+# Big Dreem
 
 A pitch-deck builder **and a fundraising coach** for founders raising capital. You answer a
-short guided intake, BIGDREEM assembles an investor-structured deck (the 11 slides funders
+short guided intake, Big Dreem assembles an investor-structured deck (the 11 slides funders
 expect), and the **Investor Lens** coaches you on every slide — flagging a vague ask, thin
 traction, or a missing team story — and scores how investor-ready your deck is.
 

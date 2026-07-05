@@ -6,6 +6,7 @@ updated: 2026-06-29
 
 # Change Log
 
+- 2026-07-04 — build-app — restyled the product name to "Big Dreem" (two words, title case; was BIGDREEM): app/src/config/app.ts + index.html/llms.txt/README/package.json/favicon.svg + wiki/charter.md/build.md — applied
 - 2026-07-04 — build-app — renamed the product to BIGDREEM (was working-name PitchReady): app/src/config/app.ts (single source → propagates to header/footer/structured-data) + index.html, public/llms.txt, README.md, package.json, public/favicon.svg (name-agnostic sparkle) + wiki/charter.md, wiki/build.md. GitHub repo + vercel.app URL keep the lowercase "pitchready" infra name (rename optional, user's action) — applied
 - 2026-07-04 — build-app — FIX (reported: text cut off on phone slides): the fixed 16:9 + overflow-hidden clipped long body text + charts on narrow screens; slides now grow to fit content and the 2-column layouts (metric+chart, split, image-forward) stack vertically on mobile (16:9 preserved on sm+); Present centers tall slides gracefully (SlideView.tsx, Present.tsx) — applied
 - 2026-07-04 — build-app — added keyless "Fill template" button on empty/placeholder slides (fill-in-the-blanks scaffold per slide type; deckStructure.ts templateFor + SlideCanvas.tsx); logged one-click "Improve with AI" as the top build-backend feature in the charter — applied

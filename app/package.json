@@ -1,9 +1,9 @@
 {
-  "name": "bigdreem",
+  "name": "big-dreem",
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "BIGDREEM — a pitch-deck builder + fundraising coach for founders raising capital. Themed front-end MVP with mock/templated data (Tier 0).",
+  "description": "Big Dreem — a pitch-deck builder + fundraising coach for founders raising capital. Themed front-end MVP with mock/templated data (Tier 0).",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
