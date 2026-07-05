@@ -55,7 +55,7 @@ export default function Present() {
 
       <div className="no-print flex flex-1 flex-col items-center justify-start gap-6 p-4 pt-6 sm:justify-center sm:p-8">
         <div className="w-full max-w-4xl overflow-hidden rounded-xl border border-border shadow-card-lg">
-          <SlideView slide={slide} />
+          <SlideView slide={slide} index={i} total={count} />
         </div>
         <div className="flex items-center gap-4">
           <button
@@ -84,9 +84,9 @@ export default function Present() {
 
       {/* print-only: every slide, one per page (see print styles in index.css) */}
       <div className="print-deck">
-        {deck.slides.map((s) => (
+        {deck.slides.map((s, idx) => (
           <div key={s.id} className="print-slide">
-            <SlideView slide={s} />
+            <SlideView slide={s} index={idx} total={deck.slides.length} />
           </div>
         ))}
       </div>

@@ -6,6 +6,7 @@ updated: 2026-06-29
 
 # Change Log
 
+- 2026-07-04 — build-app — BOLD deck redesign (user asked for "bold & vibrant"): each slide type gets a colored surface (dark ink / indigo gradient / tinted / light) for rhythm + a slide-type icon + a distinct layout — dramatic dark "problem" statement, indigo hero cover/closing, metric+chart (charts adapt to dark bg), economics/competition cards, team founder-cards with avatar initials, page-number + Big Dreem footer. SlideView.tsx rewrite + SlideChart onDark prop + Present passes index/total; fixed layout order so a cover with an image stays a hero. Stitch clarified (UI-mockup tool, keyed/manual — not a deck designer) so decks elevated in code instead. Preserves the mobile no-clip responsive behavior — applied
 - 2026-07-04 — build-app — live URL is now https://bigdreem.vercel.app/ (user renamed the Vercel project + claimed the domain); repo stays Pdiamondz1/pitchready — auto
 - 2026-07-04 — build-app — restyled the product name to "Big Dreem" (two words, title case; was BIGDREEM): app/src/config/app.ts + index.html/llms.txt/README/package.json/favicon.svg + wiki/charter.md/build.md — applied
 - 2026-07-04 — build-app — renamed the product to BIGDREEM (was working-name PitchReady): app/src/config/app.ts (single source → propagates to header/footer/structured-data) + index.html, public/llms.txt, README.md, package.json, public/favicon.svg (name-agnostic sparkle) + wiki/charter.md, wiki/build.md. GitHub repo + vercel.app URL keep the lowercase "pitchready" infra name (rename optional, user's action) — applied

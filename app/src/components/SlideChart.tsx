@@ -2,7 +2,15 @@ import type { ChartPoint } from "@/data/types";
 import { cn } from "@/lib/utils";
 
 /** A clean, responsive CSS bar chart (no dependency). Bars scale to the max. */
-export function SlideChart({ data, className }: { data: ChartPoint[]; className?: string }) {
+export function SlideChart({
+  data,
+  className,
+  onDark = false,
+}: {
+  data: ChartPoint[];
+  className?: string;
+  onDark?: boolean;
+}) {
   const max = Math.max(...data.map((d) => d.value), 1);
   return (
     <div className={cn("flex w-full items-end gap-3", className)}>
@@ -16,7 +24,12 @@ export function SlideChart({ data, className }: { data: ChartPoint[]; className?
               className={cn("w-full rounded-t-md transition-all", emphasis ? "bg-accent" : "bg-accent/45")}
               style={{ height: `${pct}%` }}
             />
-            <span className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+            <span
+              className={cn(
+                "text-[11px] font-medium uppercase tracking-wide",
+                onDark ? "text-white/60" : "text-muted-foreground"
+              )}
+            >
               {d.label}
             </span>
           </div>
