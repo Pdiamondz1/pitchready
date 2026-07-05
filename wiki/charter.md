@@ -54,7 +54,7 @@ In 3–6 months:
 - **🔒 Repo (self-contained project repo):** the template + knowledge base + the app live together in **one** git repo the project owns — so the app is hosted and maintained by its own template *within its repo* (clone it anywhere and the template comes too). This checkout is **detached from the original template remote** (`Pdiamondz1/hma_project_foundation`, kept as `template-upstream` for pulling future template updates); there is **no default push target** until the user adds their own remote, so the original template can never be overwritten. `app/` is a normal tracked folder (its `node_modules`/`dist`/`.env*` stay ignored).
 
 ## Open questions / assumptions
-- App **name**: **Big Dreem** (decided). The GitHub repo + `vercel.app` URL still read `pitchready` (infrastructure only, not user-facing) — renaming those is optional and the user's action.
+- App **name**: **Big Dreem** (decided). Live at **https://bigdreem.vercel.app/**. The GitHub repo still reads `Pdiamondz1/pitchready` (infrastructure only, not user-facing) — renaming it is optional.
 - **Monetization model** *(assumed — confirm later; likely freemium/subscription, deferred to the `polish` tier)*.
 - The project's **own remote**: this repo is detached from the template and awaits a new user-owned remote (e.g. `pitchready`) to be added as `origin` and pushed to.
 

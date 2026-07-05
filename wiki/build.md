@@ -41,8 +41,8 @@ original template can't be overwritten. See the charter's repo section.
 
 ## Deploy
 
-**Live:** https://pitchready-virid.vercel.app/ (Vercel, deployed 2026-07-04 from `origin/main`, root dir
-`app/`). Verified: home renders, deep-link `/decks/:id` loads via the SPA rewrite (no 404), coaching works
+**Live:** https://bigdreem.vercel.app/ (Vercel, deployed 2026-07-04 from `origin/main`, root dir `app/`;
+Vercel project renamed + `bigdreem.vercel.app` domain claimed by the user). Verified: home renders, deep-link `/decks/:id` loads via the SPA rewrite (no 404), coaching works
 live, zero console errors. Auto-deploys on every push to `main`.
 
 Scaffolded for **Vercel** (offline, nothing deployed, no keys). Config in `app/vercel.json` (Vite + SPA
