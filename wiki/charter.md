@@ -8,7 +8,7 @@ updated: 2026-07-04
 
 # Project Charter
 
-**One-liner:** A pitch-deck builder that turns a founder's raw business info into an investor-structured deck *and coaches them on what funders actually want* — for anyone raising capital. *(Working name: "PitchReady" — TBD.)*
+**One-liner:** A pitch-deck builder that turns a founder's raw business info into an investor-structured deck *and coaches them on what funders actually want* — for anyone raising capital. *(Name: **BIGDREEM**.)*
 
 ## Purpose & problem
 Help a founder who's raising a round turn raw business info into a genuinely investor-ready pitch deck in minutes — structured the way investors evaluate (problem → solution → market → traction → team → the ask), with fundraising-specific guidance on what each slide must land. The hero is **fundraising expertise + narrative coaching**, not pretty templates: generic deck styling is commoditized (Gamma/Canva/Pitch), so the durable value is *knowing how a fundable deck is built and coaching the founder into one.*
@@ -54,7 +54,7 @@ In 3–6 months:
 - **🔒 Repo (self-contained project repo):** the template + knowledge base + the app live together in **one** git repo the project owns — so the app is hosted and maintained by its own template *within its repo* (clone it anywhere and the template comes too). This checkout is **detached from the original template remote** (`Pdiamondz1/hma_project_foundation`, kept as `template-upstream` for pulling future template updates); there is **no default push target** until the user adds their own remote, so the original template can never be overwritten. `app/` is a normal tracked folder (its `node_modules`/`dist`/`.env*` stay ignored).
 
 ## Open questions / assumptions
-- App / repo **name** *(assumed — confirm later; working name "PitchReady")*.
+- App **name**: **BIGDREEM** (decided). The GitHub repo + `vercel.app` URL still read `pitchready` (infrastructure only, not user-facing) — renaming those is optional and the user's action.
 - **Monetization model** *(assumed — confirm later; likely freemium/subscription, deferred to the `polish` tier)*.
 - The project's **own remote**: this repo is detached from the template and awaits a new user-owned remote (e.g. `pitchready`) to be added as `origin` and pushed to.
 
