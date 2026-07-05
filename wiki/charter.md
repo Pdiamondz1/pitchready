@@ -44,7 +44,7 @@ In 3–6 months:
 - Accounts / login / cloud save (that's `build-backend`, later)
 - Real PPTX / Google Slides export
 
-**Later** (deferred, rough order): live AI generation (keyed — the first upgrade, replaces templated generation) → accounts + save (`build-backend`) → PPTX/Slides export → optional send/tracking → monetization (`polish`/Stripe).
+**Later** (deferred, rough order): live AI generation (keyed — the first upgrade; replaces templated generation **and powers a one-click "Improve with AI" that drafts empty slides + sharpens a vague ask straight from the Investor Lens flags — the top user-requested feature; the founder supplies the facts, AI makes them investor-grade**) → accounts + save (`build-backend`) → PPTX/Slides export → optional send/tracking → monetization (`polish`/Stripe).
 
 ## Constraints & resources
 - **Team:** solo founder/builder. **Budget:** <$1k. **Timeline:** relaxed, no hard deadline.

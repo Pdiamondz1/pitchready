@@ -1,14 +1,16 @@
 import { useRef, useState, type ChangeEvent } from "react";
-import { ImagePlus, Trash2 } from "lucide-react";
+import { ImagePlus, Trash2, LayoutTemplate } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { updateSlide } from "@/data/store";
-import { DECK_STRUCTURE } from "@/data/deckStructure";
+import { DECK_STRUCTURE, isPlaceholder, templateFor } from "@/data/deckStructure";
 import { fileToResizedDataUrl } from "@/lib/image";
 import type { Deck, Slide } from "@/data/types";
 
 /** The editable slide surface — content editing + an optional image. */
 export function SlideCanvas({ deck, slide }: { deck: Deck; slide: Slide }) {
   const spec = DECK_STRUCTURE.find((s) => s.type === slide.type);
+  const template = templateFor(slide.type);
+  const canFill = (slide.body.trim() === "" || isPlaceholder(slide.body)) && !!template;
   const fileRef = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -78,6 +80,15 @@ export function SlideCanvas({ deck, slide }: { deck: Deck; slide: Slide }) {
       </div>
 
       <div className="mt-3 flex flex-wrap items-center justify-center gap-2">
+        {canFill && template && (
+          <button
+            type="button"
+            onClick={() => updateSlide(deck.id, slide.id, { body: template })}
+            className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+          >
+            <LayoutTemplate className="h-3.5 w-3.5" /> Fill template
+          </button>
+        )}
         <input
           ref={fileRef}
           type="file"

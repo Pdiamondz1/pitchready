@@ -53,7 +53,7 @@ export default function Present() {
         </button>
       </div>
 
-      <div className="no-print flex flex-1 flex-col items-center justify-center gap-6 p-4 sm:p-8">
+      <div className="no-print flex flex-1 flex-col items-center justify-start gap-6 p-4 pt-6 sm:justify-center sm:p-8">
         <div className="w-full max-w-4xl overflow-hidden rounded-xl border border-border shadow-card-lg">
           <SlideView slide={slide} />
         </div>

@@ -4,8 +4,8 @@ import { SlideChart } from "./SlideChart";
 import { cn } from "@/lib/utils";
 
 // The rich, designed READ-ONLY slide renderer — used by Present + PDF export.
-// Picks a distinct layout by slide type (or by whether an image/chart is present)
-// so a deck reads as a designed pitch, not the same text box repeated.
+// Responsive: fixed 16:9 with side-by-side columns on sm+; on phones the slide
+// grows to fit content and columns stack, so text is never clipped.
 
 function labelFor(slide: Slide): string {
   return DECK_STRUCTURE.find((s) => s.type === slide.type)?.label ?? slide.type;
@@ -30,14 +30,14 @@ const Eyebrow = ({ children }: { children: string }) => (
 
 function Cover({ slide }: { slide: Slide }) {
   return (
-    <div className="relative flex h-full w-full flex-col justify-center overflow-hidden bg-gradient-to-br from-primary to-[hsl(232_54%_16%)] p-10 text-primary-foreground sm:p-16">
+    <div className="relative flex h-full w-full flex-col justify-center overflow-hidden bg-gradient-to-br from-primary to-[hsl(232_54%_16%)] p-8 text-primary-foreground sm:p-16">
       {slide.image && (
         <img src={slide.image} alt="" className="absolute inset-0 h-full w-full object-cover opacity-20" />
       )}
       <div className="relative">
         <div className="mb-5 h-1.5 w-14 rounded bg-accent" />
-        <h2 className="font-serif text-4xl font-semibold leading-[1.05] sm:text-6xl">{slide.title}</h2>
-        <p className="mt-5 max-w-2xl text-lg leading-snug opacity-90 sm:text-2xl">{slide.body}</p>
+        <h2 className="font-serif text-3xl font-semibold leading-[1.08] sm:text-6xl">{slide.title}</h2>
+        <p className="mt-4 max-w-2xl text-base leading-snug opacity-90 sm:mt-5 sm:text-2xl">{slide.body}</p>
       </div>
     </div>
   );
@@ -45,19 +45,21 @@ function Cover({ slide }: { slide: Slide }) {
 
 function MetricChart({ slide }: { slide: Slide }) {
   return (
-    <div className="grid h-full w-full grid-cols-2 gap-6 bg-card p-8 sm:p-12">
+    <div className="grid h-full w-full grid-cols-1 gap-5 bg-card p-6 sm:grid-cols-2 sm:gap-6 sm:p-12">
       <div className="flex flex-col justify-center">
         <Eyebrow>{labelFor(slide)}</Eyebrow>
-        <h2 className="mt-3 font-serif text-3xl font-semibold tracking-tight sm:text-4xl">{slide.title}</h2>
+        <h2 className="mt-3 font-serif text-2xl font-semibold tracking-tight sm:text-4xl">{slide.title}</h2>
         {slide.metric && (
-          <div className="tnum mt-3 font-serif text-4xl font-bold text-accent sm:text-5xl">{slide.metric}</div>
+          <div className="tnum mt-2 font-serif text-3xl font-bold text-accent sm:mt-3 sm:text-5xl">
+            {slide.metric}
+          </div>
         )}
-        <p className="mt-4 whitespace-pre-wrap text-sm leading-relaxed text-foreground/80 sm:text-base">
+        <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-foreground/80 sm:mt-4 sm:text-base">
           {slide.body}
         </p>
       </div>
-      <div className="flex items-center">
-        {slide.chart && <SlideChart data={slide.chart} className="h-40 sm:h-56" />}
+      <div className="flex items-end sm:items-center">
+        {slide.chart && <SlideChart data={slide.chart} className="h-32 sm:h-56" />}
       </div>
     </div>
   );
@@ -65,13 +67,13 @@ function MetricChart({ slide }: { slide: Slide }) {
 
 function Split({ slide }: { slide: Slide }) {
   return (
-    <div className="grid h-full w-full grid-cols-5 bg-card">
-      <div className="col-span-2 flex flex-col justify-center bg-primary p-8 text-primary-foreground sm:p-10">
+    <div className="grid h-full w-full grid-cols-1 bg-card sm:grid-cols-5">
+      <div className="flex flex-col justify-center bg-primary p-6 text-primary-foreground sm:col-span-2 sm:p-10">
         <div className="mb-3 h-1 w-10 rounded bg-accent" />
         <div className="text-xs font-medium uppercase tracking-wider opacity-80">{labelFor(slide)}</div>
-        <h2 className="mt-2 font-serif text-3xl font-semibold leading-tight sm:text-4xl">{slide.title}</h2>
+        <h2 className="mt-2 font-serif text-2xl font-semibold leading-tight sm:text-4xl">{slide.title}</h2>
       </div>
-      <div className="col-span-3 flex flex-col justify-center p-8 sm:p-12">
+      <div className="flex flex-col justify-center p-6 sm:col-span-3 sm:p-12">
         <p className="whitespace-pre-wrap text-base leading-relaxed text-foreground/85 sm:text-lg">
           {slide.body}
         </p>
@@ -82,18 +84,18 @@ function Split({ slide }: { slide: Slide }) {
 
 function ImageForward({ slide }: { slide: Slide }) {
   return (
-    <div className="grid h-full w-full grid-cols-2 bg-card">
-      <div className="flex flex-col justify-center p-8 sm:p-12">
+    <div className="grid h-full w-full grid-cols-1 bg-card sm:grid-cols-2">
+      <div className="order-2 flex flex-col justify-center p-6 sm:order-1 sm:p-12">
         <Eyebrow>{labelFor(slide)}</Eyebrow>
-        <h2 className="mt-3 font-serif text-3xl font-semibold tracking-tight sm:text-4xl">{slide.title}</h2>
+        <h2 className="mt-3 font-serif text-2xl font-semibold tracking-tight sm:text-4xl">{slide.title}</h2>
         {slide.metric && (
-          <div className="tnum mt-2 font-serif text-3xl font-bold text-accent">{slide.metric}</div>
+          <div className="tnum mt-2 font-serif text-2xl font-bold text-accent sm:text-3xl">{slide.metric}</div>
         )}
-        <p className="mt-4 whitespace-pre-wrap text-sm leading-relaxed text-foreground/80 sm:text-base">
+        <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-foreground/80 sm:mt-4 sm:text-base">
           {slide.body}
         </p>
       </div>
-      <div className="relative bg-muted">
+      <div className="relative order-1 min-h-[10rem] bg-muted sm:order-2 sm:min-h-0">
         {slide.image && <img src={slide.image} alt="" className="absolute inset-0 h-full w-full object-cover" />}
       </div>
     </div>
@@ -102,16 +104,16 @@ function ImageForward({ slide }: { slide: Slide }) {
 
 function Default({ slide }: { slide: Slide }) {
   return (
-    <div className="flex h-full w-full flex-col justify-center bg-card p-8 sm:p-14">
+    <div className="flex h-full w-full flex-col justify-center bg-card p-6 sm:p-14">
       <Eyebrow>{labelFor(slide)}</Eyebrow>
-      <h2 className="mt-4 font-serif text-3xl font-semibold tracking-tight sm:text-5xl">{slide.title}</h2>
+      <h2 className="mt-3 font-serif text-2xl font-semibold tracking-tight sm:mt-4 sm:text-5xl">{slide.title}</h2>
       {slide.metric && (
-        <div className="mt-3 flex items-baseline gap-3">
-          <span className="tnum font-serif text-4xl font-bold text-accent sm:text-6xl">{slide.metric}</span>
+        <div className="mt-2 flex items-baseline gap-3 sm:mt-3">
+          <span className="tnum font-serif text-3xl font-bold text-accent sm:text-6xl">{slide.metric}</span>
           <span className="text-sm text-muted-foreground">{slide.metricLabel}</span>
         </div>
       )}
-      <p className="mt-5 max-w-3xl whitespace-pre-wrap text-base leading-relaxed text-foreground/85 sm:text-lg">
+      <p className="mt-3 max-w-3xl whitespace-pre-wrap text-sm leading-relaxed text-foreground/85 sm:mt-5 sm:text-lg">
         {slide.body}
       </p>
     </div>
@@ -121,7 +123,12 @@ function Default({ slide }: { slide: Slide }) {
 export function SlideView({ slide, className }: { slide: Slide; className?: string }) {
   const layout = layoutFor(slide);
   return (
-    <div className={cn("relative aspect-[16/9] w-full overflow-hidden bg-card", className)}>
+    <div
+      className={cn(
+        "relative w-full overflow-hidden bg-card min-h-[13rem] sm:min-h-0 sm:aspect-[16/9]",
+        className
+      )}
+    >
       {layout === "cover" && <Cover slide={slide} />}
       {layout === "metricChart" && <MetricChart slide={slide} />}
       {layout === "split" && <Split slide={slide} />}

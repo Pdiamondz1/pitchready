@@ -110,6 +110,35 @@ export function isPlaceholder(body: string): boolean {
   return body.trim().startsWith("(");
 }
 
+// Fill-in-the-blanks scaffolds for empty slides — a keyless nudge past the blank
+// page (you add the real numbers). True AI drafting is a later build-backend step.
+const TEMPLATE_BODY: Partial<Record<SlideType, string>> = {
+  problem:
+    "Who: [the specific customer]\nToday: [what's broken / the painful workaround]\nWhy now: [what makes this urgent]",
+  solution:
+    "Before: [the status quo]\nAfter: [life with your product]\nThe magic: [the one-sentence 'how']",
+  product:
+    "How it works: [step 1] → [step 2] → [step 3]\nThe 'aha' moment: [what makes people get it]",
+  market:
+    "TAM: $[total market]\nSAM: $[who you can realistically serve]\nSOM: $[near-term, next 2–3 years]",
+  businessModel:
+    "Pricing: $[amount] per [seat / month / order]\nGross margin: [%]\nCAC: $[  ]  ·  LTV: $[  ]",
+  traction:
+    "Revenue: $[MRR / ARR]\nGrowth: [%] month-over-month\nCustomers: [#]\nRetention / churn: [%]",
+  competition:
+    "Alternatives: [competitor A], [competitor B], [DIY / status quo]\nOur edge: [the durable advantage they can't copy]",
+  team:
+    "[Founder 1] — [role], [relevant background]\n[Founder 2] — [role], [relevant background]\nWhy us: [your unfair advantage]",
+  ask:
+    "Raising $[amount] [pre-seed / seed] to reach [milestone].\nUse of funds: [# hires], [months of runway].",
+  contact: "[Your name]\n[email]\n[Next step — e.g. \"Book a 20-min call\"]",
+};
+
+/** A fill-in-the-blanks scaffold for a slide type (undefined if none). */
+export function templateFor(type: SlideType): string | undefined {
+  return TEMPLATE_BODY[type];
+}
+
 /** Pull the first impressive figure out of a string (e.g. "$1.5M", "40%", "3x"). */
 export function extractMetric(text: string): string | undefined {
   if (!text) return undefined;
