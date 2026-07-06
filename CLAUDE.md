@@ -45,6 +45,7 @@ directive); condense *wording*, never a *rule*.
   - `outputs/ship-check/` — `ship-check` GO / NOT-YET readiness verdicts (`<date>-<slug>/SHIP-CHECK.md`)
   - `outputs/polish/` — `polish` payments go-live checklists (`<date>-<slug>/GO-LIVE.md`, when payments opted in)
   - `outputs/maintenance/` — `maintain-app` scheduled health reports (`<date>-<slug>/REPORT.md`)
+  - `outputs/algorithm/` — `musk-algorithm` delete-first reports (`<date>-<slug>/ALGORITHM.md`)
 
 ## Wiki page frontmatter (RAG-ready)
 
@@ -85,6 +86,7 @@ orchestrator's run log in `outputs/runs/data-ingestion.md`.
 - **`define-project`** — interview that grills you into a clear **project charter** (`wiki/charter.md`): purpose, audience, success, scope; proposes options when unsure; re-run on a pivot. The north star other skills read.
 - **`define-design`** — interview that grills you into a **design system** (`wiki/design-system.md`, the look-and-feel north star Claude reads before building any UI): style, color, type, voice. design-tool-provider aware (Stitch · Claude Design · bring-your-own; interview alone suffices); offers to theme the console. See `docs/DESIGN-SYSTEM.md`.
 - **`roast`** — convene a 5-persona council that pressure-tests an idea, then a Judge returns one **GO / RESHAPE / KILL** verdict + the cheapest 48-hour test; saves the verdict to `outputs/vetting/` and can commission `storm-research`. Triggers: "roast" / "convene the council" / "brutal second opinion" / `/roast`.
+- **`musk-algorithm`** — Musk's 5-step algorithm (question requirements → delete → simplify → accelerate → automate, **in order**) applied to a spec/feature/process/app to cut over-engineering; propose-only, saves to `outputs/algorithm/`. The build-side counterpart to `roast` (which tests ideas). Triggers: "run the algorithm" / "delete-first" / "question the requirements" / `/musk-algorithm`.
 - **`storm-research`** — turn a topic or idea into a verified, multi-perspective HTML briefing (5 expert lenses → contradiction map → self-review + primary-source citation checks → `outputs/vetting/<date>-<slug>/`). Needs web; refuses rather than fabricates offline. See `docs/IDEA-VETTING.md`.
 - **`build-app`** — turn the charter (the MVP scope) + design system (the theme) into a working, themed front-end **web app** in a new top-level `app/` folder (its own Vite+React project, like `aios/`), runnable with `npm run dev`. Attended, Tier 0 (mock data, no keys); one confirm gate; re-runnable; **never in the unattended loop**. Its siblings: `build-mobile` (phone) and `build-plugin` (browser extension). See `docs/BUILD-APP.md`.
 - **`build-mobile`** — the phone sibling of `build-app`: turn the charter + design system into a themed **Expo (React Native)** app in a new top-level `mobile/` folder, previewed on a phone by scanning a QR code (Expo Go — no Mac/Xcode). Attended, Tier 0 (mock data, no keys/accounts); one confirm gate; re-runnable; **never in the unattended loop**. Installable app-store builds (EAS) are a later tier. See `docs/BUILD-MOBILE.md`.
