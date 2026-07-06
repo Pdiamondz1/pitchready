@@ -43,6 +43,7 @@ export function AppShell() {
             {app.name}
           </Link>
           <nav className="ml-1 flex gap-1 sm:ml-3">
+            <NavItem to="/score">Score my pitch</NavItem>
             <NavItem to="/decks">My decks</NavItem>
           </nav>
           <div className="ml-auto flex items-center gap-2">

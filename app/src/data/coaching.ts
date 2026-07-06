@@ -2,7 +2,7 @@
 // Reads a deck's slides against DECK_STRUCTURE and returns per-slide notes + a
 // weighted readiness score. No LLM — deterministic rules a founder can trust.
 
-import type { Deck, Slide } from "./types";
+import type { Deck, Slide, StartupInput } from "./types";
 import type { SlideType } from "./types";
 import { DECK_STRUCTURE, isPlaceholder, type SlideSpec } from "./deckStructure";
 
@@ -113,4 +113,55 @@ export function scoreBand(score: number): Severity {
   if (score >= 70) return "strong";
   if (score >= 40) return "warn";
   return "gap";
+}
+
+// ── Quick score ────────────────────────────────────────────────────────────
+// The "score first" front door: a fast, focused read over just the three slides
+// investors weight most (traction · team · the ask). Reuses the SAME per-slide
+// rules + weights as analyzeDeck, so the fast score never disagrees with the
+// full one.
+
+export interface QuickAnalysis {
+  score: number; // 0–100 over the three round-movers
+  notes: CoachNote[]; // worst-first (gap → warn → strong)
+}
+
+const QUICK_TYPES = ["traction", "team", "ask"] as const;
+const SEVERITY_ORDER: Record<Severity, number> = { gap: 0, warn: 1, strong: 2 };
+
+export function analyzeQuick(input: Pick<StartupInput, "traction" | "team" | "ask">): QuickAnalysis {
+  const notes: CoachNote[] = [];
+  let earned = 0;
+  let total = 0;
+  for (const type of QUICK_TYPES) {
+    const spec = DECK_STRUCTURE.find((s) => s.type === type);
+    if (!spec) continue;
+    const slide: Slide = { id: "", type, title: "", body: input[type] };
+    const note = analyzeSlide(spec, slide);
+    notes.push(note);
+    total += spec.weight;
+    earned += FRACTION[note.severity] * spec.weight;
+  }
+  notes.sort((a, b) => SEVERITY_ORDER[a.severity] - SEVERITY_ORDER[b.severity]);
+  const score = total ? Math.round((earned / total) * 100) : 0;
+  return { score, notes };
+}
+
+// A blunt, specific coach headline keyed off the single worst of the three.
+const QUICK_VERDICT: Record<string, string> = {
+  "ask:gap": "Your ask is vague — investors will pass.",
+  "ask:warn": "Your ask needs a real number and what it buys.",
+  "team:gap": "Investors fund teams first — yours is too thin.",
+  "team:warn": "Name the founders and your unfair advantage.",
+  "traction:gap": "No numbers means no proof.",
+  "traction:warn": "Traction moves rounds — add numbers and their trend.",
+};
+
+/** A one-line coach verdict from the worst of the three (notes are worst-first). */
+export function quickVerdict(analysis: QuickAnalysis): string {
+  const worst = analysis.notes[0];
+  if (!worst || worst.severity === "strong") {
+    return "Strong on the three slides investors weight most. Now build the full deck.";
+  }
+  return QUICK_VERDICT[`${worst.slideType}:${worst.severity}`] ?? worst.message;
 }

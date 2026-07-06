@@ -42,18 +42,16 @@ export default function Home() {
         </h1>
         <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">{app.shortDescription}</p>
         <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
-          <Link to="/new" className={cn(buttonVariants({ size: "lg" }))}>
-            Build your deck <ArrowRight />
+          <Link to="/score" className={cn(buttonVariants({ size: "lg" }))}>
+            Score my pitch — free <ArrowRight />
           </Link>
-          {examples[0] && (
-            <Link
-              to={`/decks/${examples[0].id}`}
-              className={cn(buttonVariants({ variant: "outline", size: "lg" }))}
-            >
-              See an example
-            </Link>
-          )}
+          <Link to="/new" className={cn(buttonVariants({ variant: "outline", size: "lg" }))}>
+            Build a full deck
+          </Link>
         </div>
+        <p className="mt-3 text-xs text-muted-foreground">
+          30 seconds · no sign-up · see how investor-ready you are
+        </p>
       </section>
 
       <section className="mx-auto max-w-5xl px-4 sm:px-6">
