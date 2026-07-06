@@ -26,9 +26,9 @@ type Surface = "light" | "tint" | "ink" | "gradient";
 
 const SURFACE: Record<Surface, { bg: string; onDark: boolean }> = {
   light: { bg: "bg-card", onDark: false },
-  tint: { bg: "bg-[hsl(40_46%_96%)]", onDark: false },
-  ink: { bg: "bg-[hsl(232_52%_15%)]", onDark: true },
-  gradient: { bg: "bg-gradient-to-br from-primary to-[hsl(232_54%_13%)]", onDark: true },
+  tint: { bg: "bg-[hsl(264_44%_97%)]", onDark: false },
+  ink: { bg: "bg-[hsl(262_48%_14%)]", onDark: true },
+  gradient: { bg: "bg-gradient-to-br from-primary to-[hsl(262_55%_11%)]", onDark: true },
 };
 
 const SLIDE_SURFACE: Record<SlideType, Surface> = {

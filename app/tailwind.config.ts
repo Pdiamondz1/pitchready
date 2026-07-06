@@ -19,8 +19,9 @@ export default {
       fontFamily: {
         // Body / UI
         sans: ["Inter", "Inter var", ...defaultTheme.fontFamily.sans],
-        // Display / headlines / slide titles
-        serif: ["Fraunces", "Georgia", ...defaultTheme.fontFamily.serif],
+        // Display / headlines / slide titles (Space Grotesk; kept the `serif`
+        // utility name so existing font-serif markup maps to it automatically)
+        serif: ["Space Grotesk", ...defaultTheme.fontFamily.sans],
         mono: [...defaultTheme.fontFamily.mono],
       },
       colors: {

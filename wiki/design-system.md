@@ -3,105 +3,112 @@ title: Design System
 source_id: wiki:design-system
 path: wiki/design-system.md
 tags: [design, design-system, ui, brand, meta]
-updated: 2026-07-04
+updated: 2026-07-06
 ---
 
 # Design System
 
-**Direction:** Elegant / premium, restrained — Stripe/Linear-grade polish that reads *credible, well-funded, investor-grade*. Applies to **both** surfaces: the builder UI (wizard, editor, coaching panel) **and** the decks it generates (slide templates inherit this DNA). The look is part of the value prop — a founder must feel the output is investor-ready the instant they see it.
+**Direction:** Bold-but-credible — "modern-corporate with a high-energy edge." **Vibrant violet** primary
+with **warm gold** reserved for investor-grade moments, Space Grotesk + Inter, tonal layering, 10px radius.
+Linear/Ramp/Mercury energy: fast, precise, confident, credible to a VC. Applies to the whole Big Dreem app
+**and** the decks it generates (slides inherit the palette + type; the bold slide layouts are unchanged).
+*(Restyled 2026-07-06 from a Stitch export — see Source. Prior "ink & gold" direction retired.)*
 
 ## Palette
-"Ink & gold" — navy ink on warm white, deep indigo primary, refined gold accent (sparingly, for highlights / key metrics / "the ask"), emerald success. HSL token triplets in `aios/src/index.css` shape (`--token: H S% L%`, no `hsl()` wrapper).
+HSL token triplets in `app/src/index.css` shape (`--token: H S% L%`, no `hsl()` wrapper).
 
 **`:root` (light):**
 ```
---background: 40 30% 99%
---foreground: 222 47% 11%
+--background: 264 24% 99%
+--foreground: 258 28% 12%
 --card: 0 0% 100%
---card-foreground: 222 47% 11%
+--card-foreground: 258 28% 12%
 --popover: 0 0% 100%
---popover-foreground: 222 47% 11%
---primary: 232 52% 28%
---primary-foreground: 40 30% 99%
---secondary: 220 14% 96%
---secondary-foreground: 222 47% 11%
---muted: 220 14% 96%
---muted-foreground: 220 12% 40%
---accent: 38 92% 50%
---accent-foreground: 222 47% 11%
---destructive: 0 72% 51%
+--popover-foreground: 258 28% 12%
+--primary: 262 83% 58%        /* vibrant violet (#7c3aed) */
+--primary-foreground: 0 0% 100%
+--secondary: 264 24% 96%
+--secondary-foreground: 258 28% 14%
+--muted: 264 24% 96%
+--muted-foreground: 260 12% 42%
+--accent: 40 94% 50%          /* warm gold — reserved */
+--accent-foreground: 258 30% 12%
+--destructive: 0 74% 52%
 --destructive-foreground: 0 0% 100%
---success: 152 55% 38%
+--success: 150 60% 40%
 --success-foreground: 0 0% 100%
---warning: 38 92% 50%
---warning-foreground: 222 47% 11%
---border: 220 13% 91%
---input: 220 13% 91%
---ring: 232 52% 28%
+--warning: 40 94% 50%
+--warning-foreground: 258 30% 12%
+--border: 264 22% 91%
+--input: 264 22% 91%
+--ring: 262 83% 58%
 ```
 
-**`.dark`:**
+**`.dark` (deep violet):**
 ```
---background: 222 47% 8%
---foreground: 40 30% 96%
---card: 222 44% 11%
---card-foreground: 40 30% 96%
---popover: 222 44% 11%
---popover-foreground: 40 30% 96%
---primary: 231 60% 68%
---primary-foreground: 222 47% 11%
---secondary: 222 30% 18%
---secondary-foreground: 40 30% 96%
---muted: 222 30% 18%
---muted-foreground: 220 15% 65%
---accent: 38 92% 55%
---accent-foreground: 222 47% 11%
---destructive: 0 63% 50%
---destructive-foreground: 0 0% 100%
---success: 152 50% 45%
---success-foreground: 222 47% 11%
---warning: 38 92% 55%
---warning-foreground: 222 47% 11%
---border: 222 25% 20%
---input: 222 25% 20%
---ring: 231 60% 68%
+--background: 262 42% 8%
+--foreground: 264 30% 96%
+--card: 262 36% 12%
+--primary: 262 90% 72%
+--primary-foreground: 262 45% 12%
+--secondary: 262 24% 18%
+--muted: 262 24% 18%
+--muted-foreground: 264 15% 68%
+--accent: 40 96% 58%
+--accent-foreground: 262 45% 10%
+--destructive: 0 70% 58%
+--success: 150 55% 50%
+--warning: 40 96% 58%
+--border: 262 26% 20%
+--input: 262 26% 20%
+--ring: 262 90% 72%
 ```
 
-**Usage rules:** indigo `primary` for main actions/brand; **gold `accent` is reserved** — use it only for the highest-signal moments (key metrics, the funding ask, one hero CTA), never as a general button color, or it stops feeling premium. Emerald `success` doubles as the "growth/traction" positive color.
+**Usage rules:** vibrant-violet `primary` for actions/brand; **gold `accent` is scarcity** — investor-grade
+metrics, badges, the ask, one hero moment per view (never a general button). `success` = growth/traction.
 
 ## Typography & shape
-- **Display / headlines / slide titles:** **Fraunces** (modern old-style serif), weights 500–600. The premium/editorial signal; differentiates from all-sans generic-AI tools and makes generated decks look expensive.
-- **UI / body / labels / forms:** **Inter**, 400 body · 500 medium · 600 semibold.
-- Both are free Google Fonts (no licensing cost).
-- **Corner radius:** `--radius: 0.5rem` (8px) — modern but refined.
-- **Density:** airy — generous whitespace and padding; premium products breathe.
+- **Display / headlines / slide titles:** **Space Grotesk** (geometric, tech-forward), weights 500–700,
+  tight letter-spacing at large sizes. *(Mapped to the `font-serif` utility so existing markup inherits it.)*
+- **Body / UI / labels:** **Inter** (400 body · 500 · 600 for labels/buttons/nav).
+- Both free Google Fonts.
+- **Corner radius:** `--radius: 0.625rem` (10px) cards/containers; buttons/inputs 8px (`rounded-md`).
+- **Density:** "tight-intentional" — close grouping within components, large (80px+) air between sections.
 
 ## Components & layout
-- **Buttons:** solid indigo `primary` for main actions; subtle `secondary` (light gray) for secondary; gold reserved for one hero moment per view.
-- **Cards:** white on warm-white background, hairline `border`, subtle shadow (low elevation — no heavy drop shadows).
-- **Inputs:** clean, `input` border, clear focus `ring` (indigo). Generous field padding.
-- **Nav:** minimal, typographic; the app chrome recedes so content/decks lead.
-- **Spacing scale:** 4px base; lean toward larger steps (16/24/32/48) for the airy feel.
-- **Motion:** quiet and functional — short fades and slides (~150–200ms), nothing bouncy or attention-seeking.
-- **Deck templates:** inherit the same palette + Fraunces headlines; clean, one-idea-per-slide, lots of whitespace, gold used only for the standout number on a slide.
+- **Buttons:** violet `primary`, **10px rounded** (not pills); a subtle raised feel; gold reserved.
+- **Elevation:** tonal layering + hairline `border` (1px low-contrast); soft **violet-tinted** ambient
+  shadow on hover (`--shadow-md/lg` use `rgba(124,58,237,…)`). No heavy drops.
+- **Cards:** white on faint-violet canvas, hairline border, low elevation.
+- **Inputs:** clean, violet focus `ring`.
+- **Readiness gauge:** circular; color bands (emerald / gold / red). *(Stitch's violet→gold sweep is a later polish.)*
+- **Grid:** 12-col, 24px gutters, max-width 1280; single column + 20px margins on mobile.
+- **Motion:** quiet, functional (~150–200ms).
+- **Decks:** inherit the palette + Space Grotesk; violet hero/ink surfaces, gold on the standout number.
 
 ## Voice & imagery
-- **Microcopy voice:** plain, confident, and encouraging — a **sharp fundraising coach, not a hype-bot.** Direct and specific ("Your ask is vague — investors want a number and what it buys"), never cutesy, exclamation-heavy, or corporate-stiff. The coaching copy IS the product's differentiator, so it carries the brand.
-- **Imagery:** restrained and functional — typography-led, subtle **Lucide** line icons, palette-only accent visuals. **No** stock photos of people shaking hands, **no** generic AI gradients/blobs — both undercut the premium/credible signal.
+- **Voice:** plain, confident, encouraging — a **sharp fundraising coach, not a hype-bot** (unchanged).
+- **Imagery:** minimalist — typography-led, Lucide line icons, palette-only accents. No stock photos, no AI blobs.
 
 ## Accessibility & targets
-- **Platforms:** web — desktop-first (the builder is a desktop-leaning workflow), fully responsive to tablet/mobile (the landing/marketing surface must look great on a phone for short-form traffic).
-- **Theme:** light-first, dark mode included (both token sets above).
-- **Contrast:** WCAG AA (≥4.5:1 for normal text) — palette built to clear it (`muted-foreground` darkened to `220 12% 40%` for AA).
-- **Brand marks:** none locked yet (name/logo TBD).
+- **Platforms:** web — desktop-first, responsive to mobile.
+- **Theme:** light-first, dark mode included.
+- **Contrast:** WCAG AA target. **Caveat:** gold-on-light is inherently low-contrast — keep gold for
+  **large/bold** metrics + fills, not small body text (ink/violet carries small text).
+- **Brand marks:** violet "Big Dreem" wordmark + gold sparkle favicon.
 
 ## Regeneration prompt
-Paste into a design tool (e.g. Stitch / Claude Design) to regenerate or iterate this look:
+Paste into Stitch (stitch.withgoogle.com) to regenerate/iterate this look:
 
-> Design an elegant, premium, restrained web app UI — Stripe/Linear-grade polish, "investor-grade and credible." It's a pitch-deck builder + fundraising coach for founders raising capital. Palette "ink & gold": warm-white background (`hsl(40 30% 99%)`), navy ink text (`hsl(222 47% 11%)`), deep indigo primary (`hsl(232 52% 28%)`), a refined gold accent (`hsl(38 92% 50%)`) used sparingly for key metrics and the funding ask, emerald success (`hsl(152 55% 38%)`). Typography: Fraunces (modern serif) for headlines and slide titles, Inter for all UI and body. 8px corner radius, airy/generous whitespace, subtle low-elevation cards, Lucide line icons, quiet motion. Include: a guided intake wizard, a slide editor with an inline "investor-lens" coaching panel, and clean investor-ready deck slide templates (one idea per slide, serif headline, gold reserved for the standout number). Light and dark modes. Confident, encouraging, plain-spoken microcopy — a fundraising coach, not a hype-bot. No stock photos, no gradient blobs.
+> Design a bold, modern, vibrant web-app UI for "Big Dreem" — a pitch-deck builder + fundraising coach.
+> Bold-but-credible modern-startup energy (Linear/Framer/Vercel). Palette: vibrant violet primary
+> (hsl 262 83% 58%), warm-gold accent (hsl 40 94% 50%) reserved for metrics + the ask, near-white
+> violet-tinted canvas, deep violet-black dark mode. Space Grotesk headlines + Inter body, 10px corners,
+> confident spacing, tonal layering + 1px outlines + soft violet shadows. Screens: landing hero; deck
+> editor (slide rail + editable slide + Investor Lens panel); "My decks" list with score badges. Light + dark.
 
 ## Open questions / assumptions
-- **App name / logo** *(assumed — confirm later; working name "PitchReady")*.
+- Readiness-gauge violet→gold sweep + input focus-glow are Stitch details deferred to a later polish pass.
 
 ---
-*Source: raw/design/2026-07-04-ink-and-gold-premium/ (design discovery interview).*
+*Source: raw/design/2026-07-06-vibrant-violet/ (Stitch export + restyle interview).*

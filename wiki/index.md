@@ -18,12 +18,13 @@ that index them.
 ## By area
 
 - ⭐ **Project charter** — [charter.md](charter.md): the north star — a pitch-deck builder + fundraising coach for anyone raising capital (Tier 0 build).
-- ⭐ **Design system** — [design-system.md](design-system.md): the look-and-feel north star — "ink & gold" elegant/premium (Fraunces + Inter), read before any UI is built.
+- ⭐ **Design system** — [design-system.md](design-system.md): the look-and-feel north star — "vibrant violet" bold-but-credible (Space Grotesk + Inter, violet + gold), read before any UI is built.
 - **Built app** — [build.md](build.md): PitchReady — the runnable web app in `app/` (its own repo), how to run it, routes.
 - **Idea vetting** — [vetting.md](vetting.md): `roast` verdicts + `storm-research` briefings.
 
 ## Recent additions
 
+- 2026-07-06 — [Design System](design-system.md): restyle to "vibrant violet" (bold-but-credible; Space Grotesk + Inter) from a Stitch export; app re-themed.
 - 2026-07-04 — [Build Index](build.md): PitchReady web app scaffolded in `app/` (5 screens, Investor Lens coaching, ink & gold theme).
 - 2026-07-04 — [Design System](design-system.md): "ink & gold" elegant/premium look for the pitch-deck builder (Fraunces + Inter, indigo + gold).
 - 2026-07-04 — [Project Charter](charter.md): pitch-deck builder for capital-seekers (vetted RESHAPE → building the narrative-coaching reshape).
