@@ -6,6 +6,7 @@ updated: 2026-06-29
 
 # Change Log
 
+- 2026-07-06 — build-app — delete-first cut (acting on musk-algorithm recs #2+#3): removed the inert discovery scaffolding (app/src/lib/structured-data.ts, public/llms.txt — invisible to crawlers on an unprerendered SPA) + observability scaffolding (app/src/lib/observability.ts — no users/keys) + all wiring (Home useEffect, main.tsx, vite-env.d.ts env types, README discovery section); both return at the deploy/prerender tier; typecheck + production build clean — applied
 - 2026-07-06 — musk-algorithm — ran the algorithm on the Big Dreem app (app/) → outputs/algorithm/2026-07-06-big-dreem-app/ALGORITHM.md — auto
 - 2026-07-06 — build-app — re-themed Big Dreem to the vibrant-violet system: new HSL tokens (violet primary #7c3aed + warm-gold accent, deep-violet dark) + --radius 10px + Space Grotesk display font (app/src/index.css, tailwind.config.ts serif→Space Grotesk, index.html fonts + bg + theme-color) + de-pilled buttons (rounded-lg) + violet deck surfaces (SlideView) + violet favicon; typecheck clean — applied
 - 2026-07-06 — define-design — restyle: wrote vibrant-violet design system (wiki/design-system.md) from raw/design/2026-07-06-vibrant-violet/ (Stitch export — bold-but-credible: vibrant violet + warm gold, Space Grotesk + Inter, 10px, tonal layering); retired the ink & gold direction — auto

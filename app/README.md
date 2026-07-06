@@ -37,15 +37,6 @@ Other scripts: `npm run build`, `npm run preview`, `npm run typecheck`.
   (Loamly) so the coaching contrast is visible immediately. The generator (`deckStructure.ts`)
   and the coaching rules (`coaching.ts`) share one structure so they never drift.
 
-## Discovery / AI legibility (honest note)
-
-`public/llms.txt` and the schema.org JSON-LD (injected on the home page) help AI assistants and
-search engines understand the app. They **aid** legibility — they are **not** a guarantee of AI
-visibility, and they do **not** make the app agent-operable (that would need a real read-only
-agent surface, e.g. an MCP server). Because this is a **client-rendered SPA**, the JSON-LD is
-seen by agents/crawlers that execute JavaScript; full crawler pickup is an SSR/prerender concern
-for the deploy tier.
-
 ## Later tiers (not in this build)
 
 Live AI generation (keyed) → accounts + cloud save (`build-backend`) → PPTX / Google Slides

@@ -1,10 +1,8 @@
-import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, Target, TrendingUp, Sparkles } from "lucide-react";
 import { app } from "@/config/app";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { setStructuredData, appStructuredData } from "@/lib/structured-data";
 import { useDecks } from "@/data/store";
 import { analyzeDeck } from "@/data/coaching";
 import { DeckScoreRing } from "@/components/DeckScoreRing";
@@ -28,10 +26,6 @@ const PILLARS = [
 ];
 
 export default function Home() {
-  useEffect(() => {
-    setStructuredData(appStructuredData);
-  }, []);
-
   const decks = useDecks();
   const examples = decks.slice(0, 2);
 
